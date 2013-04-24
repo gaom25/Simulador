@@ -1,4 +1,4 @@
-class Hilo extends java.lang.Thread {
+class Hilo implements Runnable {
   private int varComp = 100000;
   public void run(){
       while(varComp > 0){
