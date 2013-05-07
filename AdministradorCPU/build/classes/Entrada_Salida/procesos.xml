@@ -1,0 +1,23 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>52</prioridadEstatica>
+		<tiempoCPU>3</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>73</prioridadEstatica>
+		<tiempoCPU>19</tiempoCPU>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>3</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>107</prioridadEstatica>
+		<tiempoCPU>1</tiempoCPU>
+		<tiempoEntrada>3</tiempoEntrada>
+	</proceso>
+</procesos>
