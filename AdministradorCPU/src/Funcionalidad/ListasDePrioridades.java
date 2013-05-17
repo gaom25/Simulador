@@ -44,6 +44,7 @@ public class ListasDePrioridades {
         }
     }
 
+// ========================     Getters/Setters         ========================
     public int getNumProcesos() {
         return numProcesos;
     }
@@ -51,54 +52,69 @@ public class ListasDePrioridades {
     public void setNumProcesos(int numProcesos) {
         this.numProcesos = numProcesos;
     }
+// ========================     FIN Getters/Setters     ========================
 
-
-    public int insertarProceso(Proceso p){
+    public boolean insertarProceso(Proceso p){
         int prioridad = p.getPrioridadDinamica();
+        boolean agrego = false;
         
-        if (prioridad < this.menorPrioridadNoVacia)
-            this.menorPrioridadNoVacia = prioridad;
-        
-        this.listas[prioridad].add(p);
-        this.numProcesos++;
-        return this.numProcesos;
+        if (this.listas[prioridad].indexOf(p) == -1){
+            
+            if (prioridad < this.menorPrioridadNoVacia)
+                this.menorPrioridadNoVacia = prioridad;
+
+            agrego = this.listas[prioridad].add(p);
+            if (agrego) this.numProcesos++;
+        }
+
+        return agrego;
     }
     
-    public int eliminarProceso(Proceso p){
+    public boolean eliminarProceso(Proceso p){
         int prioridad = p.getPrioridadDinamica();
-        int indice = this.listas[prioridad].indexOf(p);
-        this.listas[prioridad].remove(indice);
+        boolean elimino = this.listas[prioridad].remove(p);
         
-        this.numProcesos--;
+        if (elimino){
+            this.numProcesos--;
         
-        if (this.numProcesos == 0) this.menorPrioridadNoVacia = 140;
-        else{
-            if (this.listas[prioridad].size() == 0)
-                for (int i = prioridad+1; i < listas.length; i++) {
-                    if (this.listas[i].size() != 0){
-                        this.menorPrioridadNoVacia = i;
-                        break;
+            if (this.numProcesos == 0) this.menorPrioridadNoVacia = 140;
+            else{
+                if (this.listas[prioridad].size() == 0)
+                    for (int i = prioridad+1; i < listas.length; i++) {
+                        if (this.listas[i].size() != 0){
+                            this.menorPrioridadNoVacia = i;
+                            break;
+                        }
                     }
-                }
+            }
         }
         
-        return this.numProcesos;
+        return elimino;
+    }
+    
+    public Proceso obtenerMejorProceso() {
+        if (this.menorPrioridadNoVacia != 140)
+            return this.listas[this.menorPrioridadNoVacia].remove(0);
+        return null;
     }
     
     @Override
     public String toString() {
-        String s = "ListasDePrioridades{"+ "menorPrioridadNoVacia=" + 
+/*        String s = "ListasDePrioridades{"+ "menorPrioridadNoVacia=" + 
                 menorPrioridadNoVacia + ", numProcesos=" + numProcesos + ", listas= \n";
         for (int i = 0; i < listas.length; i++)
             s += "\t\t\t\t\t\t"+ i + ": {" + listas[i].toString() + "}\n";    
         
         s += "\t\t}";
-        return s;
-    }
-
-    public Proceso obtenerMejorProceso() {
-        if (this.menorPrioridadNoVacia != 140)
-            return this.listas[this.menorPrioridadNoVacia].remove(0);
-        return null;
+*/
+        String s = "{ ";
+        int aux = 0;
+        for (int i = 0; i < listas.length; i++) {
+            for (int j = 0; j < listas[i].size(); j++) {
+                s += listas[i].get(j).toString() + ", ";
+                if( ++aux == 5) s += "\n";
+            }
+        }
+        return s + "}";
     }
 }

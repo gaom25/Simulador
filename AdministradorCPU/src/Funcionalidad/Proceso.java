@@ -20,11 +20,12 @@ public class Proceso {
     
     private short   estado;             // state
     private int     prioridadDinamica;  // prior
-    private int     tiempoDurmiendo;    // sleep_avg
+    private int     tiempoDurmiendo;    // sleep_avg (ms)
     private int     quantum;            // time_slice
     private boolean esPrimerQuantum;    // first_time_slice
     
-
+    private int     tiempoEsperando;    // (ms)
+    
     public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, int tiempoCPU, int tiempoEntrada) {
         this.pid = pid;
         this.esTiempoReal = esTiempoReal;
@@ -40,6 +41,7 @@ public class Proceso {
         this.esPrimerQuantum = true;
     }
 
+// ========================     Getters/Setters         ========================    
     public int getPid() {
         return pid;
     }
@@ -48,7 +50,7 @@ public class Proceso {
         this.pid = pid;
     }
 
-    public boolean isEsTiempoReal() {
+    public boolean esTiempoReal() {
         return esTiempoReal;
     }
 
@@ -112,7 +114,7 @@ public class Proceso {
         this.quantum = quantum;
     }
 
-    public boolean isEsPrimerQuantum() {
+    public boolean esPrimerQuantum() {
         return esPrimerQuantum;
     }
 
@@ -120,14 +122,26 @@ public class Proceso {
         this.esPrimerQuantum = esPrimerQuantum;
     }
 
+    public int getTiempoEsperando() {
+        return tiempoEsperando;
+    }
+
+    public void setTiempoEsperando(int tiempoEsperando) {
+        this.tiempoEsperando = tiempoEsperando;
+    }
+// ========================     FIN Getters/Setters     ========================
+    
     @Override
     public String toString() {
-        return "Proceso{" + "pid=" + pid + ", esTiempoReal=" + esTiempoReal + 
+/*        return "Proceso{" + "pid=" + pid + ", esTiempoReal=" + esTiempoReal + 
                 ", prioridadEstatica=" + prioridadEstatica + ", tiempoCPU=" + 
                 tiempoCPU + ", tiempoEntrada=" + tiempoEntrada + ", estado=" + 
                 estado + ", prioridadDinamica=" + prioridadDinamica + 
                 ", tiempoDurmiendo=" + tiempoDurmiendo + ", quantum=" + 
                 quantum + ", esPrimerQuantum=" + esPrimerQuantum + '}';
+*/
+        return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + "," 
+                   + quantum + "," + tiempoCPU +"]";
     }
 
     @Override

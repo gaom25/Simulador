@@ -19,13 +19,13 @@ import org.w3c.dom.NodeList;
  */
 public class LectorXML {
 
-    public static ArrayList<Proceso> obtenerProcesos(){
+    public static ArrayList<Proceso> obtenerProcesos(String nombreArch){
         
         ArrayList<Proceso> procesos = new ArrayList<Proceso>();
         
         try{
             
-            File archivo = new File("src/Entrada_Salida/procesos.xml");
+            File archivo = new File(nombreArch);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document documento = db.parse(archivo);
