@@ -17,8 +17,9 @@ public class Planificador extends Thread{
     Cpu cpu;
     ArrayList<Proceso> listaFinalizados;
     DispositivoIO dispositivoIO;
+    Reloj reloj;
     
-    public Planificador(String NombreArch) {
+    public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
         ArrayList<Proceso> procesos = LectorXML.obtenerProcesos(NombreArch);
         // Crea 140 listas: una para c/prioridad. Activos tendra los procesos en procesos.xml
@@ -33,6 +34,8 @@ public class Planificador extends Thread{
         
         listaFinalizados = new ArrayList<Proceso>();
         dispositivoIO = new DispositivoIO();
+        
+        this.reloj = reloj;
     }
 
 // ========================     Getters/Setters         ========================
@@ -83,7 +86,7 @@ public class Planificador extends Thread{
     }
     
     // Funcion: scheduler_tick()                                           *****
-    public int actualizarQuantum(Proceso p, int numTicks){
+    public int actualizarQuantum(Proceso p){
         // OJO: 4: adquiere lock de runqueue
         // 5:
         int prioridadEstatica = p.getPrioridadEstatica();
@@ -108,7 +111,7 @@ public class Planificador extends Thread{
                 this.actualizarPrioridadDinamica(p);
 
                 if (cpu.getRunqueue().getTiempoPrimerExpirado() == 0) 
-                    cpu.getRunqueue().setTiempoPrimerExpirado(numTicks);
+                    cpu.getRunqueue().setTiempoPrimerExpirado(reloj.getNumTicks());
                 // f: Asumimos que siempre añadiremos a expirados
                 cpu.getRunqueue().insertarProcesoExpirado(p);
             }

@@ -136,11 +136,11 @@ public class ModeloTabla implements TableModel
                 // un Entero
                 return Integer.class;
           case 1:
-                // La columna uno contiene la prioridad del proceso, que es
+                // La columna cero contiene la prioridad del proceso, que es
                 // un Entero
                 return Integer.class;
           case 2:
-                // La columna dos contiene el quantum del proceso, que es
+                // La columna cero contiene el quantum del proceso, que es
                 // un Entero
                 return Integer.class;
             default:

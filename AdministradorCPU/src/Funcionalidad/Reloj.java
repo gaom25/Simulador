@@ -51,12 +51,10 @@ public class Reloj extends Thread{
     @Override
     public void run() {
         cpu.start();
-        System.out.println("hola");
         if (cpu != null){
-            System.out.println("hola2");
             numTicks++;
             while(true){
-                System.out.println("hola3");
+                System.out.println("Reloj: hola CPU");
                 cpu.notifica();
                 try {
                     Reloj.sleep(tick);

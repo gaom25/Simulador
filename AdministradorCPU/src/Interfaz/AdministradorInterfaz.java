@@ -269,13 +269,14 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // Obtenemos del campo de texto el nombre del archivo que contiene
         // la informacion de los procesos.
         
-        IniciarSimulacion(jTextField1.getText());
+        //IniciarSimulacion(jTextField1.getText());
+        IniciarSimulacion("src/Entrada_Salida/procesos.xml");
     }                                         
 
     /* Metodo que inicia la simulacion a partir del nombre del archivo */
     public void IniciarSimulacion(String nombreArchivo){
         reloj = new Reloj(1000);
-       planificador= new Planificador(nombreArchivo) ;
+        planificador= new Planificador(nombreArchivo, reloj);
         reloj.setCpu(planificador.getCpu());
         System.out.println(reloj.toString());
         planificador.setName("Planificador");
