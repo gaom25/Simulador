@@ -15,7 +15,7 @@ public class Proceso {
     private int     pid;
     private boolean esTiempoReal;
     private int     prioridadEstatica;  // static_prior
-    private int     tiempoCPU; 
+    private int     tiempoCPU;
     private int     tiempoEntrada;
     
     private short   estado;             // state

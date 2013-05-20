@@ -95,15 +95,20 @@ public class Planificador extends Thread{
         // Siempre es eliminado el proceso de Activos
         p.setQuantum(--quantum);
         // OJO: HAY que decrementar p.sleep_avg en Reloj.tick
-        if (quantum == 0) {
+        if (quantum == 0){
+            // Suponiendo que tiempoCPU es el numero de veces que el proceso 
+            // necesita utilizar el CPU:
+            p.setTiempoCPU(p.getTiempoCPU()-1);
+            // Fin
+            
             quantum = (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5);
             p.setQuantum( quantum );
             p.setEsPrimerQuantum(false);
 
             if (p.esTiempoReal()) { // Suponemos que son Round Robin                
                 // set_tsk_need_resched(current):
-                cpu.setProcesoActual(null);
-                cpu.getRunqueue().setProcesoActual(null);
+                //cpu.setProcesoActual(null);                   *** Creo que no hace falta
+                //cpu.getRunqueue().setProcesoActual(null);     *** Creo que no hace falta
                 // FIN set_tsk_need_resched(current):
                 // Se inserta a activos:
                 cpu.getRunqueue().getActivos().insertarProceso(p);
