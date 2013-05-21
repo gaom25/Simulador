@@ -11,17 +11,18 @@ import java.util.logging.Logger;
  *
  * @author hector
  */
-public class Cpu extends Thread{
-    private short           cpuId;
-    private Proceso         procesoActual;
-    private Runqueue        runqueue;
-    private Planificador    planificador;
-    private int             tiempoOcioso; // (ms)
+public class Cpu extends Thread {
+
+    private short cpuId;
+    private Proceso procesoActual;
+    private Runqueue runqueue;
+    private Planificador planificador;
+    private int tiempoOcioso; // (ms)
 
     public Cpu(short id, Runqueue runqueue) {
         this.cpuId = id;
         this.runqueue = runqueue;
-        
+
         procesoActual = null;
         planificador = null;
         tiempoOcioso = 0;
@@ -71,9 +72,9 @@ public class Cpu extends Thread{
     // ========================     FIN Getters/Setters     ========================
     @Override
     public void run() {
-        synchronized(this){
+        synchronized (this) {
             planificador.asignarCPU();
-            while(true){
+            while (true) {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
@@ -86,14 +87,14 @@ public class Cpu extends Thread{
             }
         }
     }
-    
-    public synchronized void notifica(){
+
+    public synchronized void notifica() {
         this.notify();
     }
-    
+
     @Override
     public String toString() {
-        return "Cpu{" + "id=" + cpuId + ", procesoActual=" + procesoActual + 
-                ", runqueue=\n\t\t" + runqueue + '}';
+        return "Cpu{" + "id=" + cpuId + ", procesoActual=" + procesoActual
+                + ", runqueue=\n\t\t" + runqueue + '}';
     }
 }
