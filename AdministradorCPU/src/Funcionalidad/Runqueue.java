@@ -98,7 +98,7 @@ public class Runqueue {
     }
 // ========================     FIN Getters/Setters     ========================
     
-    public void intercambioActivosExpirados(){
+    public synchronized void intercambioActivosExpirados(){
         ListasDePrioridades tmp = activos;
         activos = expirados;
         expirados = tmp;
@@ -107,11 +107,11 @@ public class Runqueue {
         prioridadMejorExpirado = 140;
     }
     
-    public Proceso obtenerMejorProceso(){
+    public synchronized  Proceso obtenerMejorProceso(){
         return activos.obtenerMejorProceso();
     }
  
-    public boolean insertarProcesoActivo(Proceso p){
+    public synchronized  boolean insertarProcesoActivo(Proceso p){
         
         if (p.getEstado() == Constantes.TASK_RUNNING)
             if (activos.insertarProceso(p)){
@@ -122,7 +122,7 @@ public class Runqueue {
         return false;
     }
  
-    public boolean insertarProcesoExpirado(Proceso p){
+    public synchronized  boolean insertarProcesoExpirado(Proceso p){
         boolean insertado = false;
         
         if (p.getEstado() == Constantes.TASK_RUNNING)
@@ -137,7 +137,7 @@ public class Runqueue {
         return insertado;
     }
  
-    public boolean eliminarProcesoActivo(Proceso p){
+    public synchronized  boolean eliminarProcesoActivo(Proceso p){
         if (activos.eliminarProceso(p)){
             numProcesos--;
             return true;
@@ -145,7 +145,7 @@ public class Runqueue {
         return false;
     }
     
-    public boolean eliminarProcesoExpirado(Proceso p){
+    public synchronized  boolean eliminarProcesoExpirado(Proceso p){
         if (expirados.eliminarProceso(p)){
             numProcesos--;
             return true;
@@ -153,7 +153,7 @@ public class Runqueue {
         return false;
     }
     
-    public void aumentarNumProcesosCambiados(){
+    public synchronized  void aumentarNumProcesosCambiados(){
         numProcesosCambiados++;
     }
 

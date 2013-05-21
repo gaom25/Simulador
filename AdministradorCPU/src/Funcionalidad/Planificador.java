@@ -8,6 +8,8 @@ package Funcionalidad;
 
 import java.util.ArrayList;
 import Constantes.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -86,7 +88,8 @@ public class Planificador extends Thread{
     }
     
     // Funcion: scheduler_tick()                                           *****
-    public int actualizarQuantum(Proceso p){
+    public void actualizarQuantum(Proceso p){
+        Boolean asigno = false;
         // OJO: 4: adquiere lock de runqueue
         // 5:
         int prioridadEstatica = p.getPrioridadEstatica();
@@ -94,53 +97,68 @@ public class Planificador extends Thread{
         
         // Siempre es eliminado el proceso de Activos
         p.setQuantum(--quantum);
+        // Disminuye num de Ticks que necesita para terminar ejecucion
+        p.setTiempoCPU(p.getTiempoCPU()-1);
         // OJO: HAY que decrementar p.sleep_avg en Reloj.tick
         if (quantum == 0){
-            // Suponiendo que tiempoCPU es el numero de veces que el proceso 
-            // necesita utilizar el CPU:
-            p.setTiempoCPU(p.getTiempoCPU()-1);
-            // Fin
+            // set_tsk_need_resched(current):
+            cpu.setProcesoActual(null);
+            cpu.getRunqueue().setProcesoActual(null);
+            // FIN set_tsk_need_resched(current):
             
-            quantum = (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5);
-            p.setQuantum( quantum );
-            p.setEsPrimerQuantum(false);
+            // Si todavia le queda trabajo al proceso
+            if (p.getTiempoCPU() != 0){
+            
+                quantum = (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5);
+                p.setQuantum( java.lang.Math.min(quantum,p.getTiempoCPU()) );
+                p.setEsPrimerQuantum(false);
 
-            if (p.esTiempoReal()) { // Suponemos que son Round Robin                
-                // set_tsk_need_resched(current):
-                //cpu.setProcesoActual(null);                   *** Creo que no hace falta
-                //cpu.getRunqueue().setProcesoActual(null);     *** Creo que no hace falta
-                // FIN set_tsk_need_resched(current):
-                // Se inserta a activos:
-                cpu.getRunqueue().getActivos().insertarProceso(p);
-            } else {
-                this.actualizarPrioridadDinamica(p);
+                if (p.esTiempoReal()) { // Suponemos que son Round Robin                
+                    // Se inserta a activos:
+                    cpu.getRunqueue().getActivos().insertarProceso(p);
+                } else {
+                    this.actualizarPrioridadDinamica(p);
 
-                if (cpu.getRunqueue().getTiempoPrimerExpirado() == 0) 
-                    cpu.getRunqueue().setTiempoPrimerExpirado(reloj.getNumTicks());
-                // f: Asumimos que siempre añadiremos a expirados
-                cpu.getRunqueue().insertarProcesoExpirado(p);
+                    if (cpu.getRunqueue().getTiempoPrimerExpirado() == 0) 
+                        cpu.getRunqueue().setTiempoPrimerExpirado(reloj.getNumTicks());
+                    // f: Asumimos que siempre añadiremos a expirados
+                    cpu.getRunqueue().insertarProcesoExpirado(p);
+                }
+                
+            }else{
+                listaFinalizados.add(p);
             }
             
-            this.asignarCPU(); // OJO
+            System.out.println("actualizacion valores: "+ p.toString());
+            
+            asigno = this.asignarCPU(); // OJO
         }
-       
-        return quantum;
     }
     
     // Funcion: try_to_wake_up()                                          *****
-    public boolean despiertaProceso(Proceso p, int numTicks){
+    public boolean despiertaProceso(Proceso p){
         boolean despertado = false;
         int prioridadDinamica;
         
         if (p.getEstado() == Constantes.TASK_INTERRUPTIBLE){
-            prioridadDinamica = this.reCalcularPrioridadDinamica(p, numTicks);
+            prioridadDinamica = this.reCalcularPrioridadDinamica(p, reloj.getNumTicks());
             p.setEstado(Constantes.TASK_RUNNING);
-            cpu.getRunqueue().insertarProcesoActivo(p);
-            if (cpu.getProcesoActual().getPrioridadDinamica() < prioridadDinamica){
-                cpu.setProcesoActual(null);
-                cpu.getRunqueue().setProcesoActual(null);
-                this.asignarCPU();
+            // Si CPU esta ocioso (porque no runqueue esta vacia)
+            if (cpu.getProcesoActual() == null){
+                cpu.setProcesoActual(p);
+                cpu.getRunqueue().setProcesoActual(p);
+            }else{
+                cpu.getRunqueue().insertarProcesoActivo(p);
+                // Se verifica si tiene mayor o menor prioridad que el que esta en CPU
+                if (cpu.getProcesoActual().getPrioridadDinamica() < prioridadDinamica){
+
+                    cpu.getRunqueue().insertarProcesoActivo(cpu.getProcesoActual());
+                    cpu.setProcesoActual(null);
+                    cpu.getRunqueue().setProcesoActual(null);
+                    this.asignarCPU();
+                }
             }
+            
             despertado = true;
         }
         
@@ -156,9 +174,11 @@ public class Planificador extends Thread{
     }
 
     // Funcion: schedule()                                                 *****
-    public void asignarCPU(){
+    public boolean asignarCPU(){
         Proceso p = cpu.getRunqueue().obtenerMejorProceso();
+        
         if (p != null){
+            cpu.getRunqueue().eliminarProcesoActivo(p);
             cpu.setProcesoActual(p);
             cpu.getRunqueue().setProcesoActual(p);
         }else{
@@ -166,21 +186,16 @@ public class Planificador extends Thread{
             p = cpu.getRunqueue().obtenerMejorProceso();
             
             if (p != null){
+                cpu.getRunqueue().eliminarProcesoActivo(p);
                 // OJO: Procesos convecionales: pag 281
                 cpu.setProcesoActual(p);
                 cpu.getRunqueue().setProcesoActual(p);
-            }else
-                this.finalizarSimulacion();
+            }
         }
+        
         // OJO: Se debe terminar la ejecucion en finalizarSimulacion()
-        cpu.getRunqueue().aumentarNumProcesosCambiados();
-    }
-    
-    public void finalizarSimulacion(){
-        System.out.println("TERMINO SIMULACION!!");
-        // Detener todos los hilos
-        // Mostrar estadisticas
-        // Terminar simulacion
+        if (p == null){  System.out.println("RUNQUEUE VACIA!!"); return false; }
+        else{            cpu.getRunqueue().aumentarNumProcesosCambiados(); return true; }
     }
     
     @Override

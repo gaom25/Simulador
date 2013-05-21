@@ -94,7 +94,7 @@ public class ListasDePrioridades {
     
     public Proceso obtenerMejorProceso() {
         if (this.menorPrioridadNoVacia != 140)
-            return this.listas[this.menorPrioridadNoVacia].remove(0);
+            return this.listas[this.menorPrioridadNoVacia].get(0);
         return null;
     }
     

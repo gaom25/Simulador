@@ -280,6 +280,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         reloj.setCpu(planificador.getCpu());
         System.out.println(reloj.toString());
         planificador.setName("Planificador");
+        planificador.asignarCPU();
         reloj.setName("Reloj");
         reloj.start();
     }

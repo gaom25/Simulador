@@ -37,7 +37,7 @@ public class Proceso {
         if (esTiempoReal)   this.prioridadDinamica = 100;
         else                this.prioridadDinamica = prioridadEstatica;
         this.tiempoDurmiendo = 0;
-        this.quantum = (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5);
+        this.quantum = java.lang.Math.min( tiempoCPU, (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5) );
         this.esPrimerQuantum = true;
     }
 

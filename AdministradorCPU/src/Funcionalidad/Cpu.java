@@ -16,7 +16,7 @@ public class Cpu extends Thread{
     private Proceso         procesoActual;
     private Runqueue        runqueue;
     private Planificador    planificador;
-    private int             tiempoOcioso; // (ms)
+    private int             tiempoOcioso; // numTicks ocioso
 
     public Cpu(short id, Runqueue runqueue) {
         this.cpuId = id;
@@ -72,7 +72,6 @@ public class Cpu extends Thread{
     @Override
     public void run() {
         synchronized(this){
-            planificador.asignarCPU();
             while(true){
                 try {
                     wait();
@@ -80,9 +79,11 @@ public class Cpu extends Thread{
                     System.out.println("ERROR DURMIENDO CPU");
                     return;
                 }
-                System.out.println("CPU: hola Reloj");
-                planificador.actualizarQuantum(procesoActual);
-                System.out.println(this.toString());
+                
+                if (procesoActual != null)
+                    planificador.actualizarQuantum(procesoActual);
+                else
+                    tiempoOcioso++;
             }
         }
     }

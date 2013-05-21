@@ -54,7 +54,7 @@ public class Reloj extends Thread{
         if (cpu != null){
             numTicks++;
             while(true){
-                System.out.println("Reloj: hola CPU");
+                //System.out.println("Reloj: hola CPU");
                 cpu.notifica();
                 try {
                     Reloj.sleep(tick);
