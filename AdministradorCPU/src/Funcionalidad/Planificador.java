@@ -105,7 +105,15 @@ public class Planificador extends Thread {
             quantum = (140 - prioridadEstatica) * (prioridadEstatica < 120 ? 20 : 5);
             p.setQuantum(quantum);
             p.setEsPrimerQuantum(false);
+            /**
+             * Hector me dijistes si calculaba el bono, no lo se, pues
+             * los procesos 1 y 2 son de tiempo real y con la guardia de abajo
+             * siempre inserta el proceso sin recalcular su prioridad dinamica
+             * por eso no se ve el bono, solo el proceso 3 tiene para calcular
+             * el bono pero nunca entra a tomar tiempo en CPU
+             */
 
+            
             if (p.esTiempoReal()) { // Suponemos que son Round Robin                
                 // set_tsk_need_resched(current):
                 //cpu.setProcesoActual(null);                   *** Creo que no hace falta
