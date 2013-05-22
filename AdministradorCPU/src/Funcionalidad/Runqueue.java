@@ -125,14 +125,17 @@ public class Runqueue {
     public synchronized  boolean insertarProcesoExpirado(Proceso p){
         boolean insertado = false;
         
-        if (p.getEstado() == Constantes.TASK_RUNNING)
+        if (p.getEstado() == Constantes.TASK_RUNNING) {
             insertado = expirados.insertarProceso(p);
+        }
         
-        if (insertado && this.prioridadMejorExpirado > p.getPrioridadEstatica())
+        if (insertado && this.prioridadMejorExpirado > p.getPrioridadEstatica()){
             this.prioridadMejorExpirado = p.getPrioridadEstatica();
+        }
         
-        if (insertado)
+        if (insertado){
             numProcesos++;
+        }
             
         return insertado;
     }

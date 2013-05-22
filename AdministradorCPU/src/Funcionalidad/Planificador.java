@@ -15,28 +15,29 @@ import java.util.logging.Logger;
  *
  * @author hector
  */
-public class Planificador extends Thread{
+public class Planificador extends Thread {
+
     Cpu cpu;
     ArrayList<Proceso> listaFinalizados;
     DispositivoIO dispositivoIO;
     Reloj reloj;
-    
+
     public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
         ArrayList<Proceso> procesos = LectorXML.obtenerProcesos(NombreArch);
         // Crea 140 listas: una para c/prioridad. Activos tendra los procesos en procesos.xml
-        ListasDePrioridades listasActivos   = new ListasDePrioridades(procesos);
+        ListasDePrioridades listasActivos = new ListasDePrioridades(procesos);
         ListasDePrioridades listasExpirados = new ListasDePrioridades();
         // Crea "cola de listos"
         Runqueue colaListos = new Runqueue(listasActivos, listasExpirados);
         // Asocia al CPU su runqueue: es una por c/CPU.
-        cpu = new Cpu( (short) 1, colaListos);
+        cpu = new Cpu((short) 1, colaListos);
         cpu.setPlanificador(this);
         cpu.setName("Cpu");
-        
+
         listaFinalizados = new ArrayList<Proceso>();
         dispositivoIO = new DispositivoIO();
-        
+
         this.reloj = reloj;
     }
 
@@ -56,7 +57,7 @@ public class Planificador extends Thread{
     public void setListaFinalizados(ArrayList<Proceso> listaFinalizados) {
         this.listaFinalizados = listaFinalizados;
     }
-    
+
     public DispositivoIO getDispositivoIO() {
         return dispositivoIO;
     }
@@ -65,28 +66,28 @@ public class Planificador extends Thread{
         this.dispositivoIO = dispositivoIO;
     }
 // ========================     FIN Getters/Setters     ========================
-    
-    public boolean insertarListaFinalizados(Proceso p){
+
+    public boolean insertarListaFinalizados(Proceso p) {
         boolean agrego = false;
-        if (listaFinalizados.indexOf(p) == -1){
+        if (listaFinalizados.indexOf(p) == -1) {
             p.setEstado(Constantes.EXIT_DEAD);
             agrego = this.listaFinalizados.add(p);
         }
         return agrego;
     }
-    
-    public int obtenerBono(Proceso p){
-        return p.getTiempoDurmiendo()/100;
+
+    public int obtenerBono(Proceso p) {
+        return p.getTiempoDurmiendo() / 100;
     }
-    
-    public int actualizarPrioridadDinamica(Proceso p){
+
+    public int actualizarPrioridadDinamica(Proceso p) {
         int prioridadDinamica = java.lang.Math.max(100,
-                        java.lang.Math.min(p.getPrioridadEstatica() - this.obtenerBono(p) + 5, 139) );
-                
+                java.lang.Math.min(p.getPrioridadEstatica() - this.obtenerBono(p) + 5, 139));
+
         p.setPrioridadDinamica(prioridadDinamica);
         return prioridadDinamica;
     }
-    
+
     // Funcion: scheduler_tick()                                           *****
     public void actualizarQuantum(Proceso p){
         Boolean asigno = false;
@@ -94,7 +95,7 @@ public class Planificador extends Thread{
         // 5:
         int prioridadEstatica = p.getPrioridadEstatica();
         int quantum = p.getQuantum();
-        
+
         // Siempre es eliminado el proceso de Activos
         p.setQuantum(--quantum);
         // Disminuye num de Ticks que necesita para terminar ejecucion
@@ -134,7 +135,7 @@ public class Planificador extends Thread{
             asigno = this.asignarCPU(); // OJO
         }
     }
-    
+
     // Funcion: try_to_wake_up()                                          *****
     public boolean despiertaProceso(Proceso p){
         boolean despertado = false;
@@ -161,16 +162,16 @@ public class Planificador extends Thread{
             
             despertado = true;
         }
-        
-       return despertado;
+
+        return despertado;
     }
-    
+
     // Funcion: recalc_task_prior()                                        *****
-    public int reCalcularPrioridadDinamica(Proceso p, int numTicks){
+    public int reCalcularPrioridadDinamica(Proceso p, int numTicks) {
         int prioridadDinamica = this.actualizarPrioridadDinamica(p);
         /*NOOOOOOOOO creo que sea necesaria esta funcion*/
         return prioridadDinamica;
-        
+
     }
 
     // Funcion: schedule()                                                 *****
@@ -181,7 +182,7 @@ public class Planificador extends Thread{
             cpu.getRunqueue().eliminarProcesoActivo(p);
             cpu.setProcesoActual(p);
             cpu.getRunqueue().setProcesoActual(p);
-        }else{
+        } else {
             cpu.getRunqueue().intercambioActivosExpirados();
             p = cpu.getRunqueue().obtenerMejorProceso();
             
@@ -197,7 +198,7 @@ public class Planificador extends Thread{
         if (p == null){  System.out.println("RUNQUEUE VACIA!!"); return false; }
         else{            cpu.getRunqueue().aumentarNumProcesosCambiados(); return true; }
     }
-    
+
     @Override
     public void run() {
         super.run(); // ***** OJO
