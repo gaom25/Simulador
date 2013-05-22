@@ -1,0 +1,27 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>50</prioridadEstatica>
+		<tiempoCPU>3000</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>139</prioridadEstatica>
+		<tiempoCPU>3100</tiempoCPU>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>3</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>101</prioridadEstatica>
+		<tiempoCPU>320</tiempoCPU>
+                <tiempoIO>20</tiempoIO>
+                <tiempoCPU>3200</tiempoCPU>
+		<tiempoEntrada>3</tiempoEntrada>
+	</proceso>
+</procesos>
+<!--3 procesos uno real, uno IO y otro batch, se supone que aqui si se notara el
+tiempo que estuvo el proceso 3 en la cola de listos pero sin hacer nada-->

@@ -1,0 +1,31 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>100</prioridadEstatica>
+		<tiempoCPU>3000</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>139</prioridadEstatica>
+		<tiempoCPU>3100</tiempoCPU>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>3</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>3200</tiempoCPU>
+		<tiempoEntrada>3</tiempoEntrada>
+	</proceso>
+        <proceso>
+		<pid>4</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>115</prioridadEstatica>
+		<tiempoCPU>3250</tiempoCPU>
+		<tiempoEntrada>4</tiempoEntrada>
+	</proceso>
+</procesos>
+<!--Todos procesos batch con los numeros limites para la prioridad estatica-->

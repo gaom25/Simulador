@@ -1,0 +1,19 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>50</prioridadEstatica>
+		<tiempoCPU>20</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>40</prioridadEstatica>
+		<tiempoCPU>25</tiempoCPU>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+</procesos>
+<!--procesos ociosos de los segunda forma, 2 procesos de tiempo real,
+en teoria es ocioso por el quantum de los tiempo real es alto, mas lo que duran
+es muy poco-->
