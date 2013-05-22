@@ -4,10 +4,6 @@
 		<esTiempoReal>true</esTiempoReal>
 		<prioridadEstatica>52</prioridadEstatica>
 		<tiempoCPU>3000</tiempoCPU>
-
-                <tiempoCPU>3200</tiempoCPU>
-		
-                <tiempoCPU>3400</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 	<proceso>

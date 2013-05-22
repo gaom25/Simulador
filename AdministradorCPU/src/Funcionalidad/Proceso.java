@@ -5,6 +5,7 @@
  * Esta clase simula la estructura Process Descriptor
  */
 package Funcionalidad;
+
 import Constantes.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,32 +15,42 @@ import java.util.List;
  * @author hector
  */
 public class Proceso {
-    private int     pid;
-    private boolean esTiempoReal;
-    private int     prioridadEstatica;  // static_prior
-    private ArrayList<int[]> tiemposCPU;   // Cada tiempo que pasa en CPU
-    private ArrayList<int[]> tiemposIO;   // Cada tiempo que pasa en IO
-    private int     tiempoEntrada;
-    private short   estado;             // state
-    private int     prioridadDinamica;  // prior
-    private int     tiempoDurmiendo;    // sleep_avg (ms)
-    private int     quantum;            // time_slice
-    private boolean esPrimerQuantum;    // first_time_slice
-    private int     tiempoEsperando;    // (ms)
-    private boolean terminado;          // Indica si esperar o finalizar
-    
 
-    
-    public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<int[]> tiempoCPU, ArrayList<int[]> tiempoIO, int tiempoEntrada) {
+    private int pid;
+    private boolean esTiempoReal;
+    private int prioridadEstatica;  // static_prior
+    private ArrayList<Integer> tiemposCPU;   // Cada tiempo que pasa en CPU
+    private ArrayList<Integer> tiemposIO;   // Cada tiempo que pasa en IO
+    private int tiempoEntrada;
+    private short estado;             // state
+    private int prioridadDinamica;  // prior
+    private int tiempoDurmiendo;    // sleep_avg (ms)
+    private int quantum;            // time_slice
+    private boolean esPrimerQuantum;    // first_time_slice
+    private int tiempoEsperando;    // (ms)
+    private boolean terminado;          // Indica si esperar o finalizar
+
+    public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<Integer> tiempoCPU, ArrayList<Integer> tiempoIO, int tiempoEntrada) {
         this.pid = pid;
         this.esTiempoReal = esTiempoReal;
         this.prioridadEstatica = prioridadEstatica;
         this.tiemposCPU = tiempoCPU;
         this.tiemposIO = tiempoIO;
+        /*Con estos dos ponemos un 0 al final de la lista, esto para cuidar
+         que agarre tiempo raros*/
+        if (this.tiemposCPU != null) {
+            this.tiemposCPU.add(0);
+        }
+        if (this.tiemposIO != null) {
+            this.tiemposIO.add(0);
+        }
         this.tiempoEntrada = tiempoEntrada;
         this.estado = Constantes.TASK_RUNNING;
-        if (esTiempoReal)   this.prioridadDinamica = 100;
-        else                this.prioridadDinamica = prioridadEstatica;
+        if (esTiempoReal) {
+            this.prioridadDinamica = 100;
+        } else {
+            this.prioridadDinamica = prioridadEstatica;
+        }
         this.tiempoDurmiendo = 0;
         //this.quantum = java.lang.Math.min( tiempoCPU, (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5) );
         this.esPrimerQuantum = true;
@@ -70,13 +81,29 @@ public class Proceso {
         this.prioridadEstatica = prioridadEstatica;
     }
 
-    public ArrayList<int[]> getTiempoCPU() {
-        return tiemposCPU;
+    public int getTiemposCPU() {
+        return (int) tiemposCPU.get(0);
     }
 
-    
-    public ArrayList<int[]> getTiempoIO() {
-        return tiemposIO;
+    public void setTiemposCPU(int tiemposCPU) {
+        if (tiemposCPU == 0) {
+            this.tiemposCPU.remove(0);
+        } else {
+            this.tiemposCPU.set(0, tiemposCPU);
+        }
+    }
+
+    public int getTiemposIO() {
+        return (int) tiemposIO.get(0);
+    }
+
+    public void setTiemposIO(int tiemposIO) {
+        if (tiemposIO == 0) {
+            this.tiemposIO.remove(0);
+        } else {
+
+            this.tiemposIO.set(0, tiemposIO);
+        }
     }
 
     public int getTiempoEntrada() {
@@ -134,7 +161,7 @@ public class Proceso {
     public void setTiempoEsperando(int tiempoEsperando) {
         this.tiempoEsperando = tiempoEsperando;
     }
-    
+
     public boolean getTerminado() {
         return terminado;
     }
@@ -143,20 +170,18 @@ public class Proceso {
         this.terminado = terminado;
     }
 
-     
 // ========================     FIN Getters/Setters     ========================
-    
     @Override
     public String toString() {
-/*        return "Proceso{" + "pid=" + pid + ", esTiempoReal=" + esTiempoReal + 
-                ", prioridadEstatica=" + prioridadEstatica + ", tiempoCPU=" + 
-                tiempoCPU + ", tiempoEntrada=" + tiempoEntrada + ", estado=" + 
-                estado + ", prioridadDinamica=" + prioridadDinamica + 
-                ", tiempoDurmiendo=" + tiempoDurmiendo + ", quantum=" + 
-                quantum + ", esPrimerQuantum=" + esPrimerQuantum + '}';
-*/
-        return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + "," 
-                   + quantum +"]";
+        /*        return "Proceso{" + "pid=" + pid + ", esTiempoReal=" + esTiempoReal + 
+         ", prioridadEstatica=" + prioridadEstatica + ", tiempoCPU=" + 
+         tiempoCPU + ", tiempoEntrada=" + tiempoEntrada + ", estado=" + 
+         estado + ", prioridadDinamica=" + prioridadDinamica + 
+         ", tiempoDurmiendo=" + tiempoDurmiendo + ", quantum=" + 
+         quantum + ", esPrimerQuantum=" + esPrimerQuantum + '}';
+         */
+        return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + ","
+                + quantum + ","+ tiemposCPU.get(0)+"]";
     }
 
     @Override
@@ -173,5 +198,4 @@ public class Proceso {
         }
         return true;
     }
-    
 }

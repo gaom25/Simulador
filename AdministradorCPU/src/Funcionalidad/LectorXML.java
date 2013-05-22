@@ -40,8 +40,8 @@ public class LectorXML {
                     boolean esTiempoReal = Boolean.parseBoolean(obtenerValor("esTiempoReal", (Element) nodo));
                     int prioridadEstatica = Integer.parseInt( obtenerValor("prioridadEstatica",(Element) nodo));
                    
-                    ArrayList<int[]> tiemposCPU = obtenerTiempos("tiempoCPU",(Element) nodo);
-                    ArrayList<int[]> tiemposIO = obtenerTiempos("tiempoIO", (Element) nodo);
+                    ArrayList<Integer> tiemposCPU = obtenerTiempos("tiempoCPU",(Element) nodo);
+                    ArrayList<Integer> tiemposIO = obtenerTiempos("tiempoIO", (Element) nodo);
                     
                     int tiempoEntrada = Integer.parseInt( obtenerValor("tiempoEntrada",(Element) nodo));
                    
@@ -62,26 +62,22 @@ public class LectorXML {
         return elemento.getElementsByTagName(etiqueta).item(0).getChildNodes().item(0).getNodeValue();
     }
     
-    private static ArrayList<int[]> obtenerTiempos(String etiqueta, Element elemento){
-        ArrayList<int[]> t = null;
+    private static ArrayList<Integer> obtenerTiempos(String etiqueta, Element elemento){
+        ArrayList<Integer> t = null;
         
         NodeList e = elemento.getElementsByTagName(etiqueta);
           
-        int n = e.getLength();
-        int a[] = new int[n]; 
+        int n = e.getLength(); 
       
         if ( e.getLength() > 0 && e != null){
           
-            t = new ArrayList<int[]>();
+            t = new ArrayList<Integer>();
             for (int i = 0; i < e.getLength(); i++) {
  
                 Element eletmp = (Element) e.item(i);
                 NodeList listatmp  = eletmp.getChildNodes();
-                a[i] =  Integer.parseInt(listatmp.item(0).getNodeValue());
+                t.add(Integer.parseInt(listatmp.item(0).getNodeValue()));
             }
-            
-    
-            t.add(0,a);
         }
         
         

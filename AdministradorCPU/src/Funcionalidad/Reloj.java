@@ -15,10 +15,12 @@ public class Reloj extends Thread{
     private int tick;   // frecuencia de alarma de tiempo (ms)
     private int numTicks;
     private Cpu cpu;    // CPU al que se le notifica c/tick
+    private DispositivoIO dispositivo;
 
     public Reloj(int tick) {
         this.tick = tick;
         this.cpu = null;
+        this.dispositivo = null;
         numTicks = 0;
     }
 

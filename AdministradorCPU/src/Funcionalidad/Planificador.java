@@ -36,7 +36,6 @@ public class Planificador extends Thread {
         cpu.setName("Cpu");
 
         listaFinalizados = new ArrayList<Proceso>();
-        dispositivoIO = new DispositivoIO();
 
         this.reloj = reloj;
     }
@@ -95,23 +94,22 @@ public class Planificador extends Thread {
         // 5:
         int prioridadEstatica = p.getPrioridadEstatica();
         int quantum = p.getQuantum();
-
         // Siempre es eliminado el proceso de Activos
         p.setQuantum(--quantum);
         // Disminuye num de Ticks que necesita para terminar ejecucion
-        p.setTiempoCPU(p.getTiempoCPU()-1);
+        p.setTiemposCPU(p.getTiemposCPU()-1);
         // OJO: HAY que decrementar p.sleep_avg en Reloj.tick
-        if (quantum == 0){
+        if (quantum <= 0){
             // set_tsk_need_resched(current):
             cpu.setProcesoActual(null);
             cpu.getRunqueue().setProcesoActual(null);
             // FIN set_tsk_need_resched(current):
             
             // Si todavia le queda trabajo al proceso
-            if (p.getTiempoCPU() != 0){
+            if (p.getTiemposCPU() != 0){
             
                 quantum = (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5);
-                p.setQuantum( java.lang.Math.min(quantum,p.getTiempoCPU()) );
+                p.setQuantum( java.lang.Math.min(quantum,p.getTiemposCPU()) );
                 p.setEsPrimerQuantum(false);
 
                 if (p.esTiempoReal()) { // Suponemos que son Round Robin                
