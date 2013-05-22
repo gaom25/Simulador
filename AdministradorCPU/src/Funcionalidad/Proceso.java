@@ -13,17 +13,18 @@ import Constantes.*;
  */
 public class Proceso {
     private int     pid;
-    private boolean esTiempoReal;
+    
+/** Este campo se puede quitar segun lo que dijo Yudith. peor implica quitarlo de todos los 
+ get, set, y de las llamas a procesos. */  private boolean esTiempoReal;
+ 
     private int     prioridadEstatica;  // static_prior
     private int     tiempoCPU;
     private int     tiempoEntrada;
-    
     private short   estado;             // state
     private int     prioridadDinamica;  // prior
     private int     tiempoDurmiendo;    // sleep_avg (ms)
     private int     quantum;            // time_slice
     private boolean esPrimerQuantum;    // first_time_slice
-    
     private int     tiempoEsperando;    // (ms)
     
     public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, int tiempoCPU, int tiempoEntrada) {
