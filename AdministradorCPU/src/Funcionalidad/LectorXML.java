@@ -35,14 +35,19 @@ public class LectorXML {
             for (int i = 0; i < nodos.getLength(); i++) {
                 Node nodo = nodos.item(i);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE){
-                    Proceso proceso = new Proceso(
-                        Integer.parseInt(    obtenerValor("pid",              (Element) nodo)),
-                        Boolean.parseBoolean(obtenerValor("esTiempoReal",     (Element) nodo)),
-                        Integer.parseInt(    obtenerValor("prioridadEstatica",(Element) nodo)),
-                        Integer.parseInt(    obtenerValor("tiempoCPU",        (Element) nodo)),
-                        Integer.parseInt(    obtenerValor("tiempoEntrada",    (Element) nodo))
-                     );
-                    procesos.add(proceso);
+                   
+                    int pid = Integer.parseInt(obtenerValor("pid", (Element) nodo));
+                    boolean esTiempoReal = Boolean.parseBoolean(obtenerValor("esTiempoReal", (Element) nodo));
+                    int prioridadEstatica = Integer.parseInt( obtenerValor("prioridadEstatica",(Element) nodo));
+                   
+                    ArrayList<int[]> tiemposCPU = obtenerTiempos("tiempoCPU",(Element) nodo);
+                    ArrayList<int[]> tiemposIO = obtenerTiempos("tiempoIO", (Element) nodo);
+                    
+                    int tiempoEntrada = Integer.parseInt( obtenerValor("tiempoEntrada",(Element) nodo));
+                   
+                   
+                     Proceso proceso = new Proceso(pid, esTiempoReal, prioridadEstatica, tiemposCPU, tiemposIO, tiempoEntrada);
+                     procesos.add(proceso);
                 }
             }
             
@@ -55,5 +60,32 @@ public class LectorXML {
     
     private static String obtenerValor(String etiqueta, Element elemento){
         return elemento.getElementsByTagName(etiqueta).item(0).getChildNodes().item(0).getNodeValue();
+    }
+    
+    private static ArrayList<int[]> obtenerTiempos(String etiqueta, Element elemento){
+        ArrayList<int[]> t = null;
+        
+        NodeList e = elemento.getElementsByTagName(etiqueta);
+          
+        int n = e.getLength();
+        int a[] = new int[n]; 
+      
+        if ( e.getLength() > 0 && e != null){
+          
+            t = new ArrayList<int[]>();
+            for (int i = 0; i < e.getLength(); i++) {
+ 
+                Element eletmp = (Element) e.item(i);
+                NodeList listatmp  = eletmp.getChildNodes();
+                a[i] =  Integer.parseInt(listatmp.item(0).getNodeValue());
+            }
+            
+    
+            t.add(0,a);
+        }
+        
+        
+            
+       return t;
     }
 }

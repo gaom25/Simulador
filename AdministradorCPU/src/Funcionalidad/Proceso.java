@@ -6,6 +6,8 @@
  */
 package Funcionalidad;
 import Constantes.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,12 +15,10 @@ import Constantes.*;
  */
 public class Proceso {
     private int     pid;
-    
-/** Este campo se puede quitar segun lo que dijo Yudith. peor implica quitarlo de todos los 
- get, set, y de las llamas a procesos. */  private boolean esTiempoReal;
- 
+    private boolean esTiempoReal;
     private int     prioridadEstatica;  // static_prior
-    private int     tiempoCPU;
+    private ArrayList<int[]> tiemposCPU;   // Cada tiempo que pasa en CPU
+    private ArrayList<int[]> tiemposIO;   // Cada tiempo que pasa en IO
     private int     tiempoEntrada;
     private short   estado;             // state
     private int     prioridadDinamica;  // prior
@@ -26,19 +26,22 @@ public class Proceso {
     private int     quantum;            // time_slice
     private boolean esPrimerQuantum;    // first_time_slice
     private int     tiempoEsperando;    // (ms)
+    private boolean terminado;          // Indica si esperar o finalizar
     
-    public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, int tiempoCPU, int tiempoEntrada) {
+
+    
+    public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<int[]> tiempoCPU, ArrayList<int[]> tiempoIO, int tiempoEntrada) {
         this.pid = pid;
         this.esTiempoReal = esTiempoReal;
         this.prioridadEstatica = prioridadEstatica;
-        this.tiempoCPU = tiempoCPU;
+        this.tiemposCPU = tiempoCPU;
+        this.tiemposIO = tiempoIO;
         this.tiempoEntrada = tiempoEntrada;
-        
         this.estado = Constantes.TASK_RUNNING;
         if (esTiempoReal)   this.prioridadDinamica = 100;
         else                this.prioridadDinamica = prioridadEstatica;
         this.tiempoDurmiendo = 0;
-        this.quantum = java.lang.Math.min( tiempoCPU, (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5) );
+        //this.quantum = java.lang.Math.min( tiempoCPU, (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5) );
         this.esPrimerQuantum = true;
     }
 
@@ -67,12 +70,13 @@ public class Proceso {
         this.prioridadEstatica = prioridadEstatica;
     }
 
-    public int getTiempoCPU() {
-        return tiempoCPU;
+    public ArrayList<int[]> getTiempoCPU() {
+        return tiemposCPU;
     }
 
-    public void setTiempoCPU(int tiempoCPU) {
-        this.tiempoCPU = tiempoCPU;
+    
+    public ArrayList<int[]> getTiempoIO() {
+        return tiemposIO;
     }
 
     public int getTiempoEntrada() {
@@ -130,6 +134,16 @@ public class Proceso {
     public void setTiempoEsperando(int tiempoEsperando) {
         this.tiempoEsperando = tiempoEsperando;
     }
+    
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado) {
+        this.terminado = terminado;
+    }
+
+     
 // ========================     FIN Getters/Setters     ========================
     
     @Override
@@ -142,7 +156,7 @@ public class Proceso {
                 quantum + ", esPrimerQuantum=" + esPrimerQuantum + '}';
 */
         return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + "," 
-                   + quantum + "," + tiempoCPU +"]";
+                   + quantum +"]";
     }
 
     @Override
