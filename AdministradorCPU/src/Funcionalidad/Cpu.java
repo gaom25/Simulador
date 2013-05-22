@@ -69,13 +69,14 @@ public class Cpu extends Thread{
     }
 
     // ========================     FIN Getters/Setters     ========================
+   
     @Override
     public void run() {
         synchronized(this){
             while(true){
                 try {
                     wait();
-                } catch (InterruptedException ex) {
+                }catch (InterruptedException ex) {
                     System.out.println("ERROR DURMIENDO CPU");
                     return;
                 }
