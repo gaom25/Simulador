@@ -46,6 +46,22 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         this.modeloTabla3 = modeloTabla3;
     }
 
+     public Planificador getPlanificador() {
+        return planificador;
+    }
+
+    public void setPlanificador(Planificador planificador) {
+        this.planificador = planificador;
+    }
+
+    public Reloj getReloj() {
+        return reloj;
+    }
+
+    public void setReloj(Reloj reloj) {
+        this.reloj = reloj;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,9 +80,9 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(modeloTabla1);
-        jTable2 = new javax.swing.JTable(modeloTabla1);
-        jTable3 = new javax.swing.JTable(modeloTabla1); 
+        jTable1 = new javax.swing.JTable(modeloTabla2);// Expirados
+        jTable2 = new javax.swing.JTable(modeloTabla1);// Activos
+        jTable3 = new javax.swing.JTable(modeloTabla3);// IO
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -86,17 +102,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
 
         jTable3.setBackground(new java.awt.Color(255, 137, 0));
         jTable3.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"04", "11", null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "PID", "Prioridad", "Quantum"
-            }
-        ));
+        
         jScrollPane3.setViewportView(jTable3);
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
@@ -115,32 +121,12 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
 
         jTable1.setBackground(new java.awt.Color(210, 33, 33));
         jTable1.setFont(new java.awt.Font("DejaVu Sans Condensed", 1, 13)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"01", "20", "10"},
-                {"02", "10", "5"},
-                {"03", "5", "2"},
-                {null, null, null}
-            },
-            new String [] {
-                "PID", "Prioridad", "Quantum"
-            }
-        ));
+        
         jScrollPane1.setViewportView(jTable1);
 
         jTable2.setBackground(new java.awt.Color(45, 209, 45));
         jTable2.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"01", "20", "10"},
-                {"02", "10", "5"},
-                {"03", "5", "2"},
-                {null, null, null}
-            },
-            new String [] {
-                "PID", "Prioridad", "Quantum"
-            }
-        ));
+        
         jScrollPane2.setViewportView(jTable2);
 
         jTextField1.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
@@ -258,6 +244,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         );
 
         pack();
+        this.setVisible(true);
     }// </editor-fold>                        
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -270,8 +257,10 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos8.xml");
-    }                                         
+        IniciarSimulacion("src/Entrada_Salida/procesos3.xml");
+    }                       
+    
+    
 
     /* Metodo que inicia la simulacion a partir del nombre del archivo */
     public void IniciarSimulacion(String nombreArchivo){
@@ -284,13 +273,14 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         planificador.asignarCPU();
         reloj.setName("Reloj");
         reloj.start();
+        
     }
     
  
     // Variables declaration - do not modify                     
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
+    public javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
@@ -308,6 +298,8 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     Planificador planificador;
     Reloj reloj;
+
+   
     DispositivoIO dispositivo;
     // End of variables declaration                   
 }

@@ -24,6 +24,10 @@ public class ListasDePrioridades {
         }
         this.menorPrioridadNoVacia = 140;
     }
+
+    public ArrayList<Proceso>[] getListas() {
+        return listas;
+    }
     
     public ListasDePrioridades(ArrayList<Proceso> procesos){
         Proceso p;
