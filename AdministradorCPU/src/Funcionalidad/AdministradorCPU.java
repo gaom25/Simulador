@@ -73,13 +73,6 @@ public class AdministradorCPU {
             } catch ( java.lang.InterruptedException ie) {
                 System.out.println(ie);
             }
-        }
-        
-       
-    
-        
-        
-        
+        }        
     }
-    
 }
