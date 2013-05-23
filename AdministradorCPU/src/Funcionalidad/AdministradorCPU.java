@@ -39,12 +39,17 @@ public class AdministradorCPU {
                     activos = interfaz.getPlanificador().getCpu().getRunqueue().getActivos();
                     expirados = interfaz.getPlanificador().getCpu().getRunqueue().getExpirados();
                     
-                    // Limpio la tabla
+                    // Limpio la tabla de activos
                     for(int k=0;k<interfaz.getModeloTabla1().getRowCount();k++){
                         interfaz.getModeloTabla1().borraProceso(k);
                     }
                     
+                    // Limpio la tabla de expirados
+                    for(int k=0;k<interfaz.getModeloTabla2().getRowCount();k++){
+                        interfaz.getModeloTabla2().borraProceso(k);
+                    }
                     
+                    // Actualizamos lista de activos
                     ArrayList<Proceso>[] p = activos.getListas();
                     for(int i = 0; i < p.length;i++ ){
                         if(!(p[i].isEmpty())){
@@ -53,6 +58,16 @@ public class AdministradorCPU {
                             }
                         }
                     }
+                    // Actualizamos lista de expirados
+                    ArrayList<Proceso>[] pExp = expirados.getListas();
+                    for(int i = 0; i < pExp.length;i++ ){
+                        if(!(pExp[i].isEmpty())){
+                            for(int j = 0; j<pExp[i].size(); j++){
+                                interfaz.getModeloTabla2().anhadeProceso(pExp[i].get(j));
+                            }
+                        }
+                    }
+                    
                 }
             
             } catch ( java.lang.InterruptedException ie) {
