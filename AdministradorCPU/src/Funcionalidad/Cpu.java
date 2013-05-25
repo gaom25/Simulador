@@ -81,8 +81,12 @@ public class Cpu extends Thread{
                     return;
                 }
                 
-                if (procesoActual != null)
+                if (procesoActual != null) {
                     planificador.actualizarQuantum(procesoActual);
+                }
+                else if (planificador.hayDormido()) {
+                    planificador.BuscaDespierta();
+                }
                 else
                     tiempoOcioso++;
             }
@@ -90,7 +94,7 @@ public class Cpu extends Thread{
     }
 
     public synchronized void notifica() {
-        this.notify();
+        this.notifyAll();
     }
 
     @Override

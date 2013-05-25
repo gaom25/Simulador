@@ -257,7 +257,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos3.xml");
+        IniciarSimulacion("src/Entrada_Salida/procesos7.xml");
     }                       
     
     
@@ -268,6 +268,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         dispositivo = new DispositivoIO();
         planificador= new Planificador(nombreArchivo, reloj);
         reloj.setCpu(planificador.getCpu());
+        reloj.setDispositivo(planificador.getDispositivoIO());
         System.out.println(reloj.toString());
         planificador.setName("Planificador");
         planificador.asignarCPU();

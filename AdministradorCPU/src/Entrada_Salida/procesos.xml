@@ -4,20 +4,9 @@
 		<esTiempoReal>true</esTiempoReal>
 		<prioridadEstatica>52</prioridadEstatica>
 		<tiempoCPU>3000</tiempoCPU>
+                <tiempoIO>200</tiempoIO>
+                <tiempoCPU>3000</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>
-	<proceso>
-		<pid>2</pid>
-		<esTiempoReal>true</esTiempoReal>
-		<prioridadEstatica>73</prioridadEstatica>
-		<tiempoCPU>19</tiempoCPU>
-		<tiempoEntrada>2</tiempoEntrada>
-	</proceso>
-	<proceso>
-		<pid>3</pid>
-		<esTiempoReal>false</esTiempoReal>
-		<prioridadEstatica>107</prioridadEstatica>
-		<tiempoCPU>3200</tiempoCPU>
-		<tiempoEntrada>3</tiempoEntrada>
-	</proceso>
+	
 </procesos>

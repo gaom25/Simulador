@@ -41,6 +41,14 @@ public class Reloj extends Thread{
         this.cpu = cpu;
     }
 
+    public DispositivoIO getDispositivo() {
+        return dispositivo;
+    }
+
+    public void setDispositivo(DispositivoIO dispositivo) {
+        this.dispositivo = dispositivo;
+    }
+    
     public int getNumTicks() {
         return numTicks;
     }
@@ -53,11 +61,13 @@ public class Reloj extends Thread{
     @Override
     public void run() {
         cpu.start();
+        dispositivo.start();
         if (cpu != null){
             numTicks++;
             while(true){
                 //System.out.println("Reloj: hola CPU");
                 cpu.notifica();
+                dispositivo.notifica();
                 try {
                     Reloj.sleep(tick);
                 } catch (InterruptedException ex) {

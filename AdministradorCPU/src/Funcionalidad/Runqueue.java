@@ -125,7 +125,7 @@ public class Runqueue {
     public synchronized  boolean insertarProcesoExpirado(Proceso p){
         boolean insertado = false;
         
-        if (p.getEstado() == Constantes.TASK_RUNNING) {
+        if (p.getEstado() == Constantes.TASK_RUNNING || p.getEstado() == Constantes.TASK_INTERRUPTIBLE) {
             insertado = expirados.insertarProceso(p);
         }
         

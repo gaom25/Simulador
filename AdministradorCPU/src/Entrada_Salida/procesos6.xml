@@ -3,9 +3,8 @@
 		<pid>1</pid>
 		<esTiempoReal>false</esTiempoReal>
 		<prioridadEstatica>110</prioridadEstatica>
-		<tiempoCPU>300</tiempoCPU>
+		<tiempoCPU>400</tiempoCPU>
                 <tiempoIO>2000</tiempoIO>
-                <tiempoCPU>4000</tiempoCPU>
 		<tiempoEntrada>1</tiempoEntrada>
 	</proceso>
 	<proceso>
@@ -14,7 +13,6 @@
 		<prioridadEstatica>120</prioridadEstatica>
 		<tiempoCPU>300</tiempoCPU>
                 <tiempoIO>2100</tiempoIO>
-                <tiempoCPU>4100</tiempoCPU>
 		<tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 </procesos>

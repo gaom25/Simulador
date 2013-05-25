@@ -3,14 +3,17 @@
 		<pid>1</pid>
 		<esTiempoReal>true</esTiempoReal>
 		<prioridadEstatica>50</prioridadEstatica>
-		<tiempoCPU>20</tiempoCPU>
+		<tiempoCPU>200</tiempoCPU>
+                <tiempoIO>200</tiempoIO>
 		<tiempoEntrada>1</tiempoEntrada>
 	</proceso>
 	<proceso>
 		<pid>2</pid>
 		<esTiempoReal>true</esTiempoReal>
 		<prioridadEstatica>40</prioridadEstatica>
-		<tiempoCPU>25</tiempoCPU>
+		<tiempoCPU>400</tiempoCPU>
+                <tiempoIO>500</tiempoIO>
+                <tiempoCPU>2500</tiempoCPU>
 		<tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 </procesos>

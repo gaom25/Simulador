@@ -44,6 +44,7 @@ public class Proceso {
         if (this.tiemposIO != null) {
             this.tiemposIO.add(0);
         }
+        
         this.tiempoEntrada = tiempoEntrada;
         this.estado = Constantes.TASK_RUNNING;
         if (esTiempoReal) {
@@ -82,8 +83,14 @@ public class Proceso {
     }
 
     public int getTiemposCPU() {
-        return (int) tiemposCPU.get(0);
+        
+        if (tiemposCPU.get(0) != null){
+            return (int) tiemposCPU.get(0);
+        }else{
+            return -1;
+        }
     }
+    
 
     public void setTiemposCPU(int tiemposCPU) {
         if (tiemposCPU == 0) {
@@ -93,15 +100,21 @@ public class Proceso {
         }
     }
 
+    
     public int getTiemposIO() {
-        return (int) tiemposIO.get(0);
+        
+        if (tiemposIO != null){
+            return (int) tiemposIO.get(0);
+        }else{
+            return -1;
+        }
     }
-
+    
     public void setTiemposIO(int tiemposIO) {
+       
         if (tiemposIO == 0) {
             this.tiemposIO.remove(0);
         } else {
-
             this.tiemposIO.set(0, tiemposIO);
         }
     }
