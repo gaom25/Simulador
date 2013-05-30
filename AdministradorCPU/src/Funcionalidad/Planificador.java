@@ -242,6 +242,9 @@ public class Planificador extends Thread {
 
     // Funcion: schedule()                                                 *****
     public boolean asignarCPU() {
+        System.out.println("RUNQUEUE");
+        System.out.println(cpu.getRunqueue().toString());
+        
         Proceso p = cpu.getRunqueue().obtenerMejorProceso();
 
         if (p != null) {
