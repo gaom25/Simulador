@@ -159,6 +159,11 @@ public class Runqueue {
     public synchronized  void aumentarNumProcesosCambiados(){
         numProcesosCambiados++;
     }
+    
+    public synchronized void aumentarTiempoEnEspera(){
+        activos.aumentarTiempoEnEspera();
+        expirados.aumentarTiempoEnEspera();
+    }
 
     @Override
     public String toString() {

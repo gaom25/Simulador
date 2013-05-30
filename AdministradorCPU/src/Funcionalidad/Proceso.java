@@ -18,17 +18,17 @@ public class Proceso {
 
     private int pid;
     private boolean esTiempoReal;
-    private int prioridadEstatica;  // static_prior
-    private ArrayList<Integer> tiemposCPU;   // Cada tiempo que pasa en CPU
+    private int prioridadEstatica;          // static_prior
+    private ArrayList<Integer> tiemposCPU;  // Cada tiempo que pasa en CPU
     private ArrayList<Integer> tiemposIO;   // Cada tiempo que pasa en IO
     private int tiempoEntrada;
-    private short estado;             // state
-    private int prioridadDinamica;  // prior
-    private int tiempoDurmiendo;    // sleep_avg (ms)
-    private int quantum;            // time_slice
-    private boolean esPrimerQuantum;    // first_time_slice
-    private int tiempoEsperando;    // (ms)
-    private boolean terminado;          // Indica si esperar o finalizar
+    private short estado;                   // state
+    private int prioridadDinamica;          // prior
+    private int tiempoDurmiendo;            // sleep_avg (ticks)
+    private int quantum;                    // time_slice
+    private boolean esPrimerQuantum;        // first_time_slice
+    private int tiempoEsperando;            // (ticks)
+    private boolean terminado;              // Indica si esperar o finalizar
 
     public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<Integer> tiempoCPU, ArrayList<Integer> tiempoIO, int tiempoEntrada) {
         this.pid = pid;
@@ -36,6 +36,7 @@ public class Proceso {
         this.prioridadEstatica = prioridadEstatica;
         this.tiemposCPU = tiempoCPU;
         this.tiemposIO = tiempoIO;
+        
         /*Con estos dos ponemos un 0 al final de la lista, esto para cuidar
          que agarre tiempo raros*/
         if (this.tiemposCPU != null) {
@@ -53,8 +54,11 @@ public class Proceso {
             this.prioridadDinamica = prioridadEstatica;
         }
         this.tiempoDurmiendo = 0;
-        //this.quantum = java.lang.Math.min( tiempoCPU, (140 - prioridadEstatica)*(prioridadEstatica < 120 ? 20 : 5) );
         this.esPrimerQuantum = true;
+
+        this.quantum = (140 - prioridadEstatica) * (prioridadEstatica < 120 ? 20 : 5);
+        this.quantum = java.lang.Math.min(this.quantum, tiempoCPU.get(0));
+
     }
 
 // ========================     Getters/Setters         ========================    
@@ -91,7 +95,6 @@ public class Proceso {
         }
     }
     
-
     public void setTiemposCPU(int tiemposCPU) {
         if (tiemposCPU == 0) {
             this.tiemposCPU.remove(0);
@@ -99,7 +102,6 @@ public class Proceso {
             this.tiemposCPU.set(0, tiemposCPU);
         }
     }
-
     
     public int getTiemposIO() {
         
@@ -184,17 +186,28 @@ public class Proceso {
     }
 
 // ========================     FIN Getters/Setters     ========================
+    
+    public void decrementarTiempoDurmiendo(){
+        if (tiempoDurmiendo > 0) tiempoDurmiendo--;
+    }
+    
+    public void aumentarTiempoDurmiendo(){
+        if (tiempoDurmiendo < 1000) tiempoDurmiendo++;
+    }
+    
+    public void aumentarTiempoEnEspera(){
+        tiempoEsperando++;
+    }
+    
     @Override
     public String toString() {
-        /*        return "Proceso{" + "pid=" + pid + ", esTiempoReal=" + esTiempoReal + 
-         ", prioridadEstatica=" + prioridadEstatica + ", tiempoCPU=" + 
-         tiempoCPU + ", tiempoEntrada=" + tiempoEntrada + ", estado=" + 
-         estado + ", prioridadDinamica=" + prioridadDinamica + 
-         ", tiempoDurmiendo=" + tiempoDurmiendo + ", quantum=" + 
-         quantum + ", esPrimerQuantum=" + esPrimerQuantum + '}';
-         */
+/*
         return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + ","
-                + quantum + ","+ tiemposCPU.get(0)+"]";
+                + quantum + ","+ tiemposCPU.toString()+ "," + tiemposIO.toString() + "]";
+*/      
+        
+        return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + ","
+                + quantum + ","+ tiemposCPU.get(0) + "]";
     }
 
     @Override

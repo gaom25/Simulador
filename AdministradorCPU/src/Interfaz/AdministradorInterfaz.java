@@ -144,7 +144,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
+        
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         jLabel1.setText("Nombre del archivo .XML : ");
 
@@ -244,7 +244,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         );
 
         pack();
-        this.setVisible(true);
+        //this.setVisible(true);
     }// </editor-fold>                        
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -257,24 +257,29 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos7.xml");
+        IniciarSimulacion("src/Entrada_Salida/procesos1.xml");
     }                       
     
     
+    public DispositivoIO getDispositivo() {
+        return dispositivo;
+    }
 
     /* Metodo que inicia la simulacion a partir del nombre del archivo */
     public void IniciarSimulacion(String nombreArchivo){
         reloj = new Reloj(1);
-        dispositivo = new DispositivoIO();
+        dispositivo = new DispositivoIO(); // En planificador se le asigna el planificador
         planificador= new Planificador(nombreArchivo, reloj);
         reloj.setCpu(planificador.getCpu());
         reloj.setDispositivo(planificador.getDispositivoIO());
+        
         System.out.println(reloj.toString());
+        System.out.println("----------------------------------------------------");
+        
         planificador.setName("Planificador");
         planificador.asignarCPU();
         reloj.setName("Reloj");
         reloj.start();
-        
     }
     
  

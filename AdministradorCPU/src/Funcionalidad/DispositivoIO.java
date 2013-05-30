@@ -31,7 +31,7 @@ public class DispositivoIO extends Thread {
         return colaBloqueados;
     }
 
-    public void setColaBloqueados(ArrayList<Proceso> colaBloqueados) {
+    public synchronized void setColaBloqueados(ArrayList<Proceso> colaBloqueados) {
         this.colaBloqueados = colaBloqueados;
     }
 
@@ -52,54 +52,31 @@ public class DispositivoIO extends Thread {
     }
 
 // ========================     FIN Getters/Setters     ========================
-    public boolean insertarColaBloqueados(Proceso p) {
+    public synchronized boolean insertarColaBloqueados(Proceso p) {
         boolean agrego = false;
+        // Si no esta: lo agrego
         if (colaBloqueados.indexOf(p) == -1) {
-            planificador.getCpu().getRunqueue().getActivos().eliminarProceso(p);
+            // NO VA! --> no estará ahi nunca segun lo pensado
+            //planificador.getCpu().getRunqueue().getActivos().eliminarProceso(p);
             p.setEstado(Constantes.TASK_INTERRUPTIBLE);
             agrego = this.colaBloqueados.add(p);
         }
         return agrego;
     }
 
-    public boolean eliminarColaBloqueados(Proceso p) {
-        return colaBloqueados.remove(p);
+    public synchronized Proceso popProceso() {
+        if ( !colaBloqueados.isEmpty() ) return colaBloqueados.remove(0);
+        else                             return null;
     }
 
-    public void popProceso() {
-        this.colaBloqueados.remove(0);
-    }
-
-    /*Es desde uno pues el primero no se supone que esta dormido esta
-     activo haciendo I/O*/
     public void aumentarTiempo() {
-        /*aumentaria el tiempo si es que hay algo en las cola, si no pasa de largo*/
-        if (colaBloqueados.size() > 0) {
-            for (int i = 1; i < colaBloqueados.size(); i++) {
-                Proceso p = colaBloqueados.get(i);
-                p.setTiempoDurmiendo(p.getTiempoDurmiendo() + 1);
-            }
-
-            Proceso enIO = colaBloqueados.get(0);
-            int Tactual = enIO.getTiemposIO();
-
-            enIO.setTiemposIO(Tactual - 1);
-
-                    
-            if ((enIO.getTiemposIO() == 0) && (enIO.getTiemposCPU() != 0)) {
-                /*Lo mando a la cola de expirados del cpu */
-                this.popProceso();
-                planificador.insertarListaExpirados(enIO);
-                System.out.println("Proceso movido a la cola de expirados" + enIO.toString());
-            } else if (enIO.getTiemposIO() == 0) {
-                /*Lo mando a la cola de finalizados */
-                this.popProceso();
-                planificador.insertarListaFinalizados(enIO);
-                System.out.println("Proceso terminado en IO" + enIO.toString());
-            }
-        }
+        if (colaBloqueados.size() > 0)
+            for (int i = 0; i < colaBloqueados.size(); i++)
+                colaBloqueados.get(i).aumentarTiempoDurmiendo();
+        // OJO: ???
+        if (procesoActual != null) procesoActual.aumentarTiempoDurmiendo();
     }
-
+                
     @Override
     public void run() {
         synchronized (this) {
@@ -112,6 +89,26 @@ public class DispositivoIO extends Thread {
                 }
 
                 this.aumentarTiempo();
+                
+                if (procesoActual != null){
+                    
+                    procesoActual.setTiemposIO(procesoActual.getTiemposIO() - 1);
+                    // Termino IO
+                    if (procesoActual.getTiemposIO() == 0) {
+                        // Tiene que hacer CPU ****         != -1 ??
+                        if ( (procesoActual.getTiemposIO()  ==  0) && 
+                             (procesoActual.getTiemposCPU() != -1)   ) {
+
+                            System.out.println("Proceso "+ (planificador.despiertaProceso(procesoActual) ? "": "NO ") 
+                                    + "Despertado "+procesoActual.toString() );
+                        } else {
+                            /*Lo mando a la cola de finalizados */
+                            planificador.insertarListaFinalizados(procesoActual);
+                            System.out.println("Proceso TERMINO");
+                        }
+                        procesoActual = null;
+                    }
+                } else procesoActual = popProceso();
            }
         }
     }

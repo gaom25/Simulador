@@ -4,6 +4,7 @@
         <esTiempoReal>true</esTiempoReal>
         <prioridadEstatica>1</prioridadEstatica>
         <tiempoCPU>3000</tiempoCPU>
+        <tiempoIO>500</tiempoIO>
         <tiempoEntrada>1</tiempoEntrada>
     </proceso>
     <proceso>
@@ -11,6 +12,7 @@
         <esTiempoReal>true</esTiempoReal>
         <prioridadEstatica>99</prioridadEstatica>
         <tiempoCPU>5000</tiempoCPU>
+        <tiempoIO>800</tiempoIO>
         <tiempoEntrada>10</tiempoEntrada>
     </proceso>
     <proceso>
@@ -18,6 +20,8 @@
         <esTiempoReal>false</esTiempoReal>
         <prioridadEstatica>100</prioridadEstatica>
         <tiempoCPU>320</tiempoCPU>
+        
+                <tiempoIO>1500</tiempoIO>
         <tiempoEntrada>2</tiempoEntrada>
     </proceso>
     <proceso>
@@ -25,6 +29,8 @@
         <esTiempoReal>false</esTiempoReal>
         <prioridadEstatica>139</prioridadEstatica>
         <tiempoCPU>310</tiempoCPU>
+        
+                <tiempoIO>2000</tiempoIO>
         <tiempoEntrada>3</tiempoEntrada>
     </proceso>
     <proceso>
@@ -32,6 +38,8 @@
         <esTiempoReal>false</esTiempoReal>
         <prioridadEstatica>120</prioridadEstatica>
         <tiempoCPU>300</tiempoCPU>
+        
+                <tiempoIO>5000</tiempoIO>
         <tiempoEntrada>4</tiempoEntrada>
     </proceso>
     <proceso>
@@ -39,6 +47,8 @@
         <esTiempoReal>false</esTiempoReal>
         <prioridadEstatica>130</prioridadEstatica>
         <tiempoCPU>400</tiempoCPU>
+        
+                <tiempoIO>1200</tiempoIO>
         <tiempoEntrada>5</tiempoEntrada>
     </proceso>
     <proceso>

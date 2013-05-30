@@ -41,7 +41,7 @@ public class LectorXML {
                     int prioridadEstatica = Integer.parseInt( obtenerValor("prioridadEstatica",(Element) nodo));
                    
                     ArrayList<Integer> tiemposCPU = obtenerTiempos("tiempoCPU",(Element) nodo);
-                    ArrayList<Integer> tiemposIO = obtenerTiempos("tiempoIO", (Element) nodo);
+                    ArrayList<Integer> tiemposIO =  obtenerTiempos("tiempoIO", (Element) nodo);
                     
                     int tiempoEntrada = Integer.parseInt( obtenerValor("tiempoEntrada",(Element) nodo));
                    
@@ -64,6 +64,7 @@ public class LectorXML {
     
     private static ArrayList<Integer> obtenerTiempos(String etiqueta, Element elemento){
         ArrayList<Integer> t = null;
+        //ArrayList<Integer> t = new ArrayList<Integer>();
         
         NodeList e = elemento.getElementsByTagName(etiqueta);
           
@@ -79,9 +80,7 @@ public class LectorXML {
                 t.add(Integer.parseInt(listatmp.item(0).getNodeValue()));
             }
         }
-        
-        
-            
+                
        return t;
     }
 }

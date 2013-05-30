@@ -81,6 +81,8 @@ public class Cpu extends Thread{
                     return;
                 }
                 
+                runqueue.aumentarTiempoEnEspera();
+                
                 if (procesoActual != null) {
                     planificador.actualizarQuantum(procesoActual);
                 }

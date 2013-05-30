@@ -66,7 +66,7 @@ public class ListasDePrioridades {
     public boolean insertarProceso(Proceso p){
         int prioridad = p.getPrioridadDinamica();
         boolean agrego = false;
-        
+
         if (this.listas[prioridad].indexOf(p) == -1){
             
             if (prioridad < this.menorPrioridadNoVacia)
@@ -107,15 +107,15 @@ public class ListasDePrioridades {
         return null;
     }
     
+    public void aumentarTiempoEnEspera(){
+        if (numProcesos != 0)
+            for (int i = menorPrioridadNoVacia; i < listas.length; i++)
+                for (int j = 0; j < listas[i].size(); j++)
+                    listas[i].get(j).aumentarTiempoEnEspera();
+    }
+    
     @Override
     public String toString() {
-/*        String s = "ListasDePrioridades{"+ "menorPrioridadNoVacia=" + 
-                menorPrioridadNoVacia + ", numProcesos=" + numProcesos + ", listas= \n";
-        for (int i = 0; i < listas.length; i++)
-            s += "\t\t\t\t\t\t"+ i + ": {" + listas[i].toString() + "}\n";    
-        
-        s += "\t\t}";
-*/
         String s = "{ ";
         int aux = 0;
         for (int i = 0; i < listas.length; i++) {

@@ -1,4 +1,7 @@
-<!-- Prueba de procesos convencionales: 2 expropia a 1 luego de llegar de I/O-->
+<!-- 1: es convencional
+     2: es de tiempo real
+     Por lo tanto, al regresar 2 de I/O debe expropiar a 1 
+-->
 <procesos>
 	<proceso>
 		<pid>1</pid>
@@ -9,8 +12,8 @@
 	</proceso>
 	<proceso>
 		<pid>2</pid>
-		<esTiempoReal>false</esTiempoReal>
-		<prioridadEstatica>110</prioridadEstatica>
+		<esTiempoReal>true</esTiempoReal>
+		<prioridadEstatica>80</prioridadEstatica>
 		<tiempoCPU>100</tiempoCPU>
                 <tiempoIO>2000</tiempoIO>
                 <tiempoCPU>5000</tiempoCPU>
