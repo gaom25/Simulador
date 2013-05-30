@@ -29,6 +29,8 @@ public class Proceso {
     private boolean esPrimerQuantum;        // first_time_slice
     private int tiempoEsperando;            // (ticks)
     private boolean terminado;              // Indica si esperar o finalizar
+    
+    private int tiempoTotalDurmiendo;       // (ticks)
 
     public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<Integer> tiempoCPU, ArrayList<Integer> tiempoIO, int tiempoEntrada) {
         this.pid = pid;
@@ -58,7 +60,8 @@ public class Proceso {
 
         this.quantum = (140 - prioridadEstatica) * (prioridadEstatica < 120 ? 20 : 5);
         this.quantum = java.lang.Math.min(this.quantum, tiempoCPU.get(0));
-
+        
+        tiempoTotalDurmiendo = 0;
     }
 
 // ========================     Getters/Setters         ========================    
@@ -185,8 +188,15 @@ public class Proceso {
         this.terminado = terminado;
     }
 
+    public int getTiempoTotalDurmiendo() {
+        return tiempoTotalDurmiendo;
+    }
+
 // ========================     FIN Getters/Setters     ========================
     
+    public void aumentarTiempoTotalDurmiendo(){
+        tiempoTotalDurmiendo++;
+    }
     public void decrementarTiempoDurmiendo(){
         if (tiempoDurmiendo > 0) tiempoDurmiendo--;
     }

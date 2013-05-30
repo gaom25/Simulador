@@ -24,14 +24,18 @@ public class Planificador extends Thread {
 
     public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
-        ArrayList<Proceso> procesos = LectorXML.obtenerProcesos(NombreArch);
+        ArrayList<Proceso>[] procesos = LectorXML.obtenerProcesos(NombreArch);
+        for (int i = 0; i < procesos.length; i++) {
+            System.out.println(procesos[i].toString());
+            
+        }
         // Crea 140 listas: una para c/prioridad. Activos tendra los procesos en procesos.xml
-        ListasDePrioridades listasActivos = new ListasDePrioridades(procesos);
+        ListasDePrioridades listasActivos = new ListasDePrioridades(procesos[0]);
         ListasDePrioridades listasExpirados = new ListasDePrioridades();
         // Crea "cola de listos"
         Runqueue colaListos = new Runqueue(listasActivos, listasExpirados);
         // Asocia al CPU su runqueue: es una por c/CPU.
-        cpu = new Cpu((short) 1, colaListos);
+        cpu = new Cpu((short) 1, colaListos, procesos);
         cpu.setPlanificador(this);
         cpu.setName("Cpu");
 
@@ -44,6 +48,11 @@ public class Planificador extends Thread {
     }
 
 // ========================     Getters/Setters         ========================
+    
+    public Reloj getReloj() {
+        return reloj;
+    }
+    
     public Cpu getCpu() {
         return cpu;
     }
@@ -269,10 +278,34 @@ public class Planificador extends Thread {
             System.out.println("RUNQUEUE VACIA!!");
             System.out.println("FINALIZADOS: " + listaFinalizados.size() );
             System.out.println( listaFinalizados.toString() );
+            
+            if (listaFinalizados.size() == cpu.getTotalProcesos())
+                terminarSimulacion(cpu.getTiempoOcioso(), reloj.getNumTicks());
+            
             return false;
         } else {
             cpu.getRunqueue().aumentarNumProcesosCambiados();
             return true;
+        }
+    }
+    
+    public void agregarNuevoProceso(Proceso p) {
+        int prioridadDinamica = p.getPrioridadDinamica();
+        // Si CPU esta ocioso (porque runqueue esta vacia)
+        
+        if (cpu.getProcesoActual() == null) {
+            cpu.setProcesoActual(p);
+            cpu.getRunqueue().setProcesoActual(p);
+        } else {
+            cpu.getRunqueue().insertarProcesoActivo(p);
+            // Se verifica si tiene mayor o menor prioridad que el que esta en CPU
+            if (cpu.getProcesoActual().getPrioridadDinamica() > prioridadDinamica) {
+                System.out.println("EXPROPIANDO");
+                cpu.getRunqueue().insertarProcesoActivo(cpu.getProcesoActual());
+                cpu.setProcesoActual(null);
+                cpu.getRunqueue().setProcesoActual(null);
+                this.asignarCPU();
+            }
         }
     }
 
@@ -284,5 +317,25 @@ public class Planificador extends Thread {
     @Override
     public String toString() {
         return "Planificador{\n" + "\tcpu=" + cpu + ",\n}";
+    }
+
+    private void terminarSimulacion(int tiempoOciosoCPU, int numTicksReloj) {
+        double tiempoEsperaPromedio = 0.0, tiempoDormidoPromedio = 0.0;
+        
+        cpu.setSimulacion(false);
+        reloj.setSimulacion(false);
+        
+        for (int i = 0; i < listaFinalizados.size(); i++) {
+            tiempoEsperaPromedio  += listaFinalizados.get(i).getTiempoEsperando();
+            tiempoDormidoPromedio += listaFinalizados.get(i).getTiempoTotalDurmiendo();
+        }
+        
+        System.out.println("***************************************************");
+        System.out.println("FINALIZO SIMULACION");
+        System.out.println("Num Ticks Ocioso el CPU: " + tiempoOciosoCPU);
+        System.out.println("Num Ticks que Conto el Reloj (tiempo que duro la simulacion): " + numTicksReloj);
+        System.out.println("Ticks de Espera Promedio: "+ tiempoEsperaPromedio / listaFinalizados.size());
+        System.out.println("Ticks de Dormido Promedio: "+ tiempoDormidoPromedio / listaFinalizados.size());
+        System.out.println("***************************************************");
     }
 }

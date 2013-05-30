@@ -71,10 +71,15 @@ public class DispositivoIO extends Thread {
 
     public void aumentarTiempo() {
         if (colaBloqueados.size() > 0)
-            for (int i = 0; i < colaBloqueados.size(); i++)
+            for (int i = 0; i < colaBloqueados.size(); i++){
                 colaBloqueados.get(i).aumentarTiempoDurmiendo();
+                colaBloqueados.get(i).aumentarTiempoTotalDurmiendo();
+                }
         // OJO: ???
-        if (procesoActual != null) procesoActual.aumentarTiempoDurmiendo();
+        if (procesoActual != null){ 
+            procesoActual.aumentarTiempoDurmiendo();
+            procesoActual.aumentarTiempoTotalDurmiendo();
+        }
     }
                 
     @Override

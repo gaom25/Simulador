@@ -257,7 +257,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos2.xml");
+        IniciarSimulacion("src/Entrada_Salida/procesos.xml");
     }                       
     
     

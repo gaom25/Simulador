@@ -19,9 +19,11 @@ import org.w3c.dom.NodeList;
  */
 public class LectorXML {
 
-    public static ArrayList<Proceso> obtenerProcesos(String nombreArch){
+    public static ArrayList<Proceso>[] obtenerProcesos(String nombreArch){
         
-        ArrayList<Proceso> procesos = new ArrayList<Proceso>();
+        ArrayList<Proceso>[] procesos = new ArrayList[101];
+        for (int i = 0; i < procesos.length; i++)
+            procesos[i] = new ArrayList<Proceso>();
         
         try{
             
@@ -47,7 +49,7 @@ public class LectorXML {
                    
                    
                      Proceso proceso = new Proceso(pid, esTiempoReal, prioridadEstatica, tiemposCPU, tiemposIO, tiempoEntrada);
-                     procesos.add(proceso);
+                     if (0 <= tiempoEntrada && tiempoEntrada <= 100 )procesos[tiempoEntrada].add(proceso);
                 }
             }
             

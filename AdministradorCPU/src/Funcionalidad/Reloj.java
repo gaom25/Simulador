@@ -16,12 +16,16 @@ public class Reloj extends Thread{
     private int numTicks;
     private Cpu cpu;    // CPU al que se le notifica c/tick
     private DispositivoIO dispositivo;
+    
+    private boolean simulacion;
 
     public Reloj(int tick) {
         this.tick = tick;
         this.cpu = null;
         this.dispositivo = null;
         numTicks = 0;
+        
+        simulacion = true;
     }
 
 // ========================     Getters/Setters         ========================    
@@ -56,6 +60,10 @@ public class Reloj extends Thread{
     public void setNumTicks(int numTicks) {
         this.numTicks = numTicks;
     }
+    
+    public void setSimulacion(boolean simulacion) {
+        this.simulacion = simulacion;
+    }
 // ========================     FIN Getters/Setters     ========================
     
     @Override
@@ -63,15 +71,14 @@ public class Reloj extends Thread{
         cpu.start();
         dispositivo.start();
         if (cpu != null){
-            numTicks++;
-            while(true){
+            while(simulacion){
+                numTicks++;
                 //System.out.println("Reloj: hola CPU");
                 cpu.notifica();
                 dispositivo.notifica();
                 try {
                     Reloj.sleep(tick);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Reloj.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("ERROR durmiendo Reloj");
                     return;
                 }
