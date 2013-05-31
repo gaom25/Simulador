@@ -25,10 +25,10 @@ public class Planificador extends Thread {
     public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
         ArrayList<Proceso>[] procesos = LectorXML.obtenerProcesos(NombreArch);
-        for (int i = 0; i < procesos.length; i++) {
-            System.out.println(procesos[i].toString());
-            
-        }
+//        for (int i = 0; i < procesos.length; i++) {
+//            System.out.println(procesos[i].toString());
+//            
+//        }
         // Crea 140 listas: una para c/prioridad. Activos tendra los procesos en procesos.xml
         ListasDePrioridades listasActivos = new ListasDePrioridades(procesos[0]);
         ListasDePrioridades listasExpirados = new ListasDePrioridades();
@@ -157,13 +157,13 @@ public class Planificador extends Thread {
                     System.out.println(dispositivoIO.getColaBloqueados().toString());
                 } else System.out.println("NO insertado");
             } else {
-                listaFinalizados.add(p);
+                insertarListaFinalizados(p);
             }
 
             asigno = this.asignarCPU(); // OJO
         }
         
-        System.out.println("actualizacion valores: " + p.toString());
+//        System.out.println("actualizacion valores: " + p.toString());
     }
 
     /*Funciones que busca los procesos que vinieron de IO para ponerlos activos*/
@@ -206,15 +206,18 @@ public class Planificador extends Thread {
         int quantum = (140 - p.getPrioridadEstatica()) * (p.getPrioridadEstatica() < 120 ? 20 : 5);
         
         if (p.getTiemposCPU() == 0){
-            p.setEstado(Constantes.EXIT_DEAD);
-            listaFinalizados.add(p);
-            System.out.println("LISTA FINALIZADOS");
-            System.out.println(listaFinalizados);
+            insertarListaFinalizados(p);
+            
+            if (listaFinalizados.size() == cpu.getTotalProcesos())
+                terminarSimulacion(cpu.getTiempoOcioso(), reloj.getNumTicks());
+            
+            System.out.println("FINALIZADOS: " + listaFinalizados.size() );
+            System.out.println( listaFinalizados.toString() );
         }else{
             p.setQuantum( java.lang.Math.min(quantum, p.getTiemposCPU()) );
 
             if (p.getEstado() == Constantes.TASK_INTERRUPTIBLE) {
-                System.out.println("RECALCULA PRIORIDAD DINAMICA");
+    //            System.out.println("RECALCULA PRIORIDAD DINAMICA");
                 prioridadDinamica = this.reCalcularPrioridadDinamica(p, reloj.getNumTicks());
                 p.setEstado(Constantes.TASK_RUNNING);
                 // Si CPU esta ocioso (porque runqueue esta vacia)
@@ -225,7 +228,7 @@ public class Planificador extends Thread {
                     cpu.getRunqueue().insertarProcesoActivo(p);
                     // Se verifica si tiene mayor o menor prioridad que el que esta en CPU
                     if (cpu.getProcesoActual().getPrioridadDinamica() > prioridadDinamica) {
-                        System.out.println("EXPROPIANDO");
+  //                      System.out.println("EXPROPIANDO");
                         cpu.getRunqueue().insertarProcesoActivo(cpu.getProcesoActual());
                         cpu.setProcesoActual(null);
                         cpu.getRunqueue().setProcesoActual(null);
@@ -262,7 +265,7 @@ public class Planificador extends Thread {
             cpu.getRunqueue().setProcesoActual(p);
         } else {
             cpu.getRunqueue().intercambioActivosExpirados();
-            System.out.println("Hubo Intercambio!!");
+//            System.out.println("Hubo Intercambio!!");
             p = cpu.getRunqueue().obtenerMejorProceso();
 
             if (p != null) {
@@ -300,7 +303,7 @@ public class Planificador extends Thread {
             cpu.getRunqueue().insertarProcesoActivo(p);
             // Se verifica si tiene mayor o menor prioridad que el que esta en CPU
             if (cpu.getProcesoActual().getPrioridadDinamica() > prioridadDinamica) {
-                System.out.println("EXPROPIANDO");
+//                System.out.println("EXPROPIANDO");
                 cpu.getRunqueue().insertarProcesoActivo(cpu.getProcesoActual());
                 cpu.setProcesoActual(null);
                 cpu.getRunqueue().setProcesoActual(null);

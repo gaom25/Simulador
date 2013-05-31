@@ -100,18 +100,9 @@ public class DispositivoIO extends Thread {
                     procesoActual.setTiemposIO(procesoActual.getTiemposIO() - 1);
                     // Termino IO
                     if (procesoActual.getTiemposIO() == 0) {
-                        // Tiene que hacer CPU ****         != -1 ??
-                        if ( (procesoActual.getTiemposIO()  ==  0) && 
-                             (procesoActual.getTiemposCPU() != -1)   ) {
-
-                            System.out.println("Proceso "+ (planificador.despiertaProceso(procesoActual) ? "": "NO ") 
-                                    + "Despertado "+procesoActual.toString() );
-                        } else {
-                            /*Lo mando a la cola de finalizados */
-                            planificador.insertarListaFinalizados(procesoActual);
-                            System.out.println("Proceso TERMINO");
-                        }
-                        procesoActual = null;
+                        System.out.println("Proceso "+ (planificador.despiertaProceso(procesoActual) ? "": "NO ") 
+                                + "Despertado "+procesoActual.toString() );
+                        procesoActual = popProceso();
                     }
                 } else procesoActual = popProceso();
            }

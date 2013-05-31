@@ -247,7 +247,7 @@ public class ModeloTabla implements TableModel
         // tableChanged() de los mismos, pasándole el evento.
         for (i=0; i<listeners.size(); i++)
             ((TableModelListener)listeners.get(i)).tableChanged(evento);
-        System.out.println("Paso");
+//        System.out.println("Paso");
     }
     
     /** Lista con los datos. Cada elemento de la lista es una instancia de

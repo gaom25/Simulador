@@ -23,7 +23,7 @@ public class AdministradorCPU {
         while(interfaz.getReloj()==null){
           try {
                 // Tiempo que tarda en actualizar la pantalla
-                Thread.sleep(300);
+                Thread.sleep(50);
           } catch ( java.lang.InterruptedException ie) {
                 System.out.println(ie);
             }
@@ -39,7 +39,7 @@ public class AdministradorCPU {
             
            try {
                 // Tiempo que tarda en actualizar la pantalla
-                Thread.sleep(600);
+                Thread.sleep(50);
                 if( (procesoActual = interfaz.getPlanificador().getCpu().getProcesoActual()) != null  ){
                      // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz

@@ -257,7 +257,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos.xml");
+        IniciarSimulacion("src/Entrada_Salida/procesos3.xml");
     }                       
     
     
@@ -267,7 +267,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
 
     /* Metodo que inicia la simulacion a partir del nombre del archivo */
     public void IniciarSimulacion(String nombreArchivo){
-        reloj = new Reloj(1);
+        reloj = new Reloj(50);
         dispositivo = new DispositivoIO(); // En planificador se le asigna el planificador
         planificador= new Planificador(nombreArchivo, reloj);
         reloj.setCpu(planificador.getCpu());
