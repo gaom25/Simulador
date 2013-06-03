@@ -12,11 +12,9 @@
 	</proceso>
 	<proceso>
 		<pid>2</pid>
-		<esTiempoReal>true</esTiempoReal>
-		<prioridadEstatica>80</prioridadEstatica>
-		<tiempoCPU>100</tiempoCPU>
-                <tiempoIO>200</tiempoIO>
-                <tiempoCPU>100</tiempoCPU>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>800</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>        
 </procesos>

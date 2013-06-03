@@ -4,7 +4,7 @@
 		<pid>1</pid>
 		<esTiempoReal>false</esTiempoReal>
 		<prioridadEstatica>120</prioridadEstatica>
-		<tiempoCPU>100</tiempoCPU>
+		<tiempoCPU>500</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 	<proceso>
@@ -12,8 +12,17 @@
 		<esTiempoReal>false</esTiempoReal>
 		<prioridadEstatica>110</prioridadEstatica>
 		<tiempoCPU>100</tiempoCPU>
-                <tiempoIO>80</tiempoIO>
+                <tiempoIO>1000</tiempoIO>
                 <tiempoCPU>100</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>        
+        <proceso>
+		<pid>3</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>115</prioridadEstatica>
+		<tiempoCPU>100</tiempoCPU>
+                <tiempoIO>1000</tiempoIO>
+                <tiempoCPU>100</tiempoCPU>
+                <tiempoEntrada>2</tiempoEntrada>
+	</proceso>
 </procesos>

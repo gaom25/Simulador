@@ -12,16 +12,15 @@ import java.util.logging.Logger;
  *
  * @author hector
  */
-public class Cpu extends Thread{
-    private short           cpuId;
-    private Proceso         procesoActual;
-    private Runqueue        runqueue;
-    private Planificador    planificador;
-    private int             tiempoOcioso; // numTicks ocioso
-    
+public class Cpu extends Thread {
+
+    private short cpuId;
+    private Proceso procesoActual;
+    private Runqueue runqueue;
+    private Planificador planificador;
+    private int tiempoOcioso; // numTicks ocioso
     private ArrayList<Proceso>[] todosProcesos;
     private int totalProcesos;
-    
     private boolean simulacion;
 
     public Cpu(short id, Runqueue runqueue, ArrayList<Proceso>[] procesos) {
@@ -31,12 +30,14 @@ public class Cpu extends Thread{
         procesoActual = null;
         planificador = null;
         tiempoOcioso = 0;
-        
+
         // Para los distintos tiempos de Entrada
         todosProcesos = procesos;
         totalProcesos = 0;
-        for (int i = 0; i < procesos.length; i++) totalProcesos += procesos[i].size();
-        
+        for (int i = 0; i < procesos.length; i++) {
+            totalProcesos += procesos[i].size();
+        }
+
         simulacion = true;
     }
 
@@ -48,7 +49,7 @@ public class Cpu extends Thread{
     public int getTotalProcesos() {
         return totalProcesos;
     }
-    
+
     public void setCpuId(short id) {
         this.cpuId = id;
     }
@@ -90,34 +91,36 @@ public class Cpu extends Thread{
     }
 
     // ========================     FIN Getters/Setters     ========================
-   
-    public void agregarProcesosNuevos(){
+    public void agregarProcesosNuevos() {
         int numTicks = planificador.getReloj().getNumTicks();
-        if (!todosProcesos[numTicks].isEmpty())
-            for (int i = 0; i < todosProcesos[numTicks].size(); i++)
+        if (!todosProcesos[numTicks].isEmpty()) {
+            for (int i = 0; i < todosProcesos[numTicks].size(); i++) {
                 planificador.agregarNuevoProceso(todosProcesos[numTicks].get(i));
+            }
+        }
     }
-    
+
     @Override
     public void run() {
-        synchronized(this){
-            while(simulacion){
+        synchronized (this) {
+            while (simulacion) {
                 try {
                     wait();
-                }catch (InterruptedException ex) {
+                } catch (InterruptedException ex) {
                     System.out.println("ERROR DURMIENDO CPU");
                     return;
                 }
-                
+
                 runqueue.aumentarTiempoEnEspera();
-                if (planificador.getReloj().getNumTicks() <= 100) agregarProcesosNuevos();
-                
+                if (planificador.getReloj().getNumTicks() <= 100) {
+                    agregarProcesosNuevos();
+                }
+
                 if (procesoActual != null) {
                     planificador.actualizarQuantum(procesoActual);
+                } else {
+                    tiempoOcioso++;
                 }
-//                else if (planificador.hayDormido()) {
-//                    planificador.BuscaDespierta();
-                /*}*/ else tiempoOcioso++;
             }
         }
     }

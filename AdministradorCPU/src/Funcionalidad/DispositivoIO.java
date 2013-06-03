@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author hector
  */
 public class DispositivoIO extends Thread {
@@ -54,6 +53,7 @@ public class DispositivoIO extends Thread {
 // ========================     FIN Getters/Setters     ========================
     public synchronized boolean insertarColaBloqueados(Proceso p) {
         boolean agrego = false;
+       
         // Si no esta: lo agrego
         if (colaBloqueados.indexOf(p) == -1) {
             // NO VA! --> no estará ahi nunca segun lo pensado
@@ -65,23 +65,22 @@ public class DispositivoIO extends Thread {
     }
 
     public synchronized Proceso popProceso() {
-        if ( !colaBloqueados.isEmpty() ) return colaBloqueados.remove(0);
-        else                             return null;
+        if (!colaBloqueados.isEmpty()) {
+            return colaBloqueados.remove(0);
+        } else {
+            return null;
+        }
     }
 
     public void aumentarTiempo() {
-        if (colaBloqueados.size() > 0)
-            for (int i = 0; i < colaBloqueados.size(); i++){
+        if (colaBloqueados.size() > 0) {
+            for (int i = 0; i < colaBloqueados.size(); i++) {
                 colaBloqueados.get(i).aumentarTiempoDurmiendo();
                 colaBloqueados.get(i).aumentarTiempoTotalDurmiendo();
-                }
-        // OJO: ???
-        if (procesoActual != null){ 
-            procesoActual.aumentarTiempoDurmiendo();
-            procesoActual.aumentarTiempoTotalDurmiendo();
+            }
         }
     }
-                
+
     @Override
     public void run() {
         synchronized (this) {
@@ -94,18 +93,20 @@ public class DispositivoIO extends Thread {
                 }
 
                 this.aumentarTiempo();
-                
-                if (procesoActual != null){
-                    
+
+                if (procesoActual != null) {
+
                     procesoActual.setTiemposIO(procesoActual.getTiemposIO() - 1);
                     // Termino IO
                     if (procesoActual.getTiemposIO() == 0) {
-                        System.out.println("Proceso "+ (planificador.despiertaProceso(procesoActual) ? "": "NO ") 
-                                + "Despertado "+procesoActual.toString() );
+                        System.out.println("Proceso " + (planificador.despiertaProceso(procesoActual) ? "" : "NO ")
+                                + "Despertado " + procesoActual.toString());
                         procesoActual = popProceso();
                     }
-                } else procesoActual = popProceso();
-           }
+                } else {
+                    procesoActual = popProceso();
+                }
+            }
         }
     }
 
