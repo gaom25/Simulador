@@ -76,6 +76,8 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jLabel2 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        
+        jLabel11 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -108,11 +110,18 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
         jLabel2.setText("SIMULADOR DE KERNEl LINUX 2.6");
 
-        jLabel10.setBackground(java.awt.Color.white);
-        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        jLabel10.setBackground(java.awt.Color.BLACK);
+        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PROCESO EN CPU", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 18), new java.awt.Color(42, 100, 133))); // NOI18N
 
+        jLabel11.setBackground(java.awt.Color.BLACK);
+        jLabel11.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PROCESO EN I/O", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 18), new java.awt.Color(42, 100, 133))); // NOI18N
+
+        
+        
         jLabel3.setFont(new java.awt.Font("FreeMono", 1, 18)); // NOI18N
         jLabel3.setText("ACTIVOS");
 
@@ -189,6 +198,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(209, 209, 209)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                //.addComponent(jLabel11.)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -257,7 +267,7 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
         // la informacion de los procesos.
         
         //IniciarSimulacion(jTextField1.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos2.xml");
+        IniciarSimulacion("src/Entrada_Salida/procesos1.xml");
     }                       
     
     
@@ -288,6 +298,8 @@ public class AdministradorInterfaz extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     public javax.swing.JLabel jLabel10;
+    
+    public javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;

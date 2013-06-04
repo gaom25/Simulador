@@ -23,7 +23,7 @@ public class AdministradorCPU {
         while(interfaz.getReloj()==null){
           try {
                 // Tiempo que tarda para esperar
-                Thread.sleep(50);
+                Thread.sleep(20);
           } catch ( java.lang.InterruptedException ie) {
                 System.out.println(ie);
             }
@@ -43,7 +43,7 @@ public class AdministradorCPU {
                 if( (procesoActual = interfaz.getPlanificador().getCpu().getProcesoActual()) != null  ){
                      // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz
-                    interfaz.jLabel10.setText( procesoActual.toString() );
+                    interfaz.jLabel10.setText("PID "+procesoActual.getPid()+" | Prioridad "+procesoActual.getPrioridadDinamica()+" | Quantumm "+procesoActual.getQuantum());
                     
                     activos = interfaz.getPlanificador().getCpu().getRunqueue().getActivos();
                     expirados = interfaz.getPlanificador().getCpu().getRunqueue().getExpirados();
