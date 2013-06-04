@@ -21,7 +21,7 @@ import Funcionalidad.*;
  */
 public class ModeloTabla implements TableModel
 {
-    
+    int numeroFilas = 0;
     /** Retorna el numero de columnas en el modelo. Un Jtable utiliza este
      * metodo para determinar cuantas columnas debe crear y mostrar por defecto
      *
@@ -43,7 +43,7 @@ public class ModeloTabla implements TableModel
     public int getRowCount() {
         // Devuelve el número de procesos en el modelo, es decir, el número
         // de filas en la tabla.
-        return datos.size();
+        return numeroFilas;
     }
     
     /** Retorna el valor de la celda en una columna y fila determinada
@@ -80,13 +80,19 @@ public class ModeloTabla implements TableModel
     {
         // Se borra la fila 
         datos.remove(fila);
-        
+        numeroFilas--;
         // Y se avisa a los suscriptores, creando un TableModelEvent...
         TableModelEvent evento = new TableModelEvent (this, fila, fila, 
             TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
         
         // ... y pasándoselo a los suscriptores
         avisaSuscriptores (evento);
+        
+    }
+
+    /*Obtiene el numero de filas del modelo */
+    public int getNumeroFilas() {
+        return numeroFilas;
     }
     
     /**
@@ -96,7 +102,7 @@ public class ModeloTabla implements TableModel
     {
         // Añade la persona al modelo 
         datos.add (nuevaProceso);
-        
+        numeroFilas++;
         // Avisa a los suscriptores creando un TableModelEvent...
         TableModelEvent evento;
         evento = new TableModelEvent (this, this.getRowCount()-1,

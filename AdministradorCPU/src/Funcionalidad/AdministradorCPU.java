@@ -39,7 +39,7 @@ public class AdministradorCPU {
             
            try {
                 // Tiempo que tarda en actualizar la pantalla
-                Thread.sleep(50);
+                Thread.sleep(100);
                 if( (procesoActual = interfaz.getPlanificador().getCpu().getProcesoActual()) != null  ){
                      // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz
@@ -49,20 +49,41 @@ public class AdministradorCPU {
                     expirados = interfaz.getPlanificador().getCpu().getRunqueue().getExpirados();
                     bloqueadosIO = interfaz.getPlanificador().getDispositivoIO().getColaBloqueados();
                     
-                    // Limpio la tabla de activos
-                    for(int k=0;k<interfaz.getModeloTabla1().getRowCount();k++){
-                        interfaz.getModeloTabla1().borraProceso(k);
+                    /*Obtenemos el numero de filas que tenia la tabla ACTIVOS*/
+                    int nFilas = interfaz.getModeloTabla1().getNumeroFilas();
+                    
+                    /*Si no existia al menos un proceso entonces no limpio*/
+                    if (nFilas>0){
+                  
+                        // Limpio la tabla de activos
+                        for(int k=(nFilas-1);k>=0;k--){
+                            interfaz.getModeloTabla1().borraProceso(k);
+                        }
+                        
                     }
                     
-                    // Limpio la tabla de expirados
-                    for(int k=0;k<interfaz.getModeloTabla2().getRowCount();k++){
-                        interfaz.getModeloTabla2().borraProceso(k);
-                    }
-                    
-                    // Limpio la tabla de bloqueados en IO
-                    for(int k=0;k<interfaz.getModeloTabla3().getRowCount();k++){
-                        interfaz.getModeloTabla3().borraProceso(k);
-                    }
+                    // Obtenemos numero de filas de la tabla EXPIRADOS  
+                   nFilas = interfaz.getModeloTabla2().getNumeroFilas();
+                   
+                   // Si al menos existia un proceso en la lista, entonces borro
+                   if (nFilas>=0){
+                       // Limpio la tabla de expirados
+                        for(int k=(nFilas-1);k>=0;k--){
+                            interfaz.getModeloTabla2().borraProceso(k);
+                        }
+                   }
+                   
+                    // Obtenemos numero de filas de la tabla de IO 
+                   nFilas = interfaz.getModeloTabla3().getNumeroFilas();
+                   
+                   // Si al menos existia un proceso en la lista, entonces borro
+                   if (nFilas>=0){
+                       // Limpio la tabla de bloqueados en IO
+                        for(int k=(nFilas-1);k>=0;k--){
+                            interfaz.getModeloTabla3().borraProceso(k);
+                        }
+                   } 
+                   
                     
                     // Actualizamos lista de activos
                     ArrayList<Proceso>[] p = activos.getListas();
