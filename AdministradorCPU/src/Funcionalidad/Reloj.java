@@ -23,7 +23,7 @@ public class Reloj extends Thread{
         this.tick = tick;
         this.cpu = null;
         this.dispositivo = null;
-        numTicks = 0;
+        numTicks = -1;
         
         simulacion = true;
     }
@@ -73,7 +73,6 @@ public class Reloj extends Thread{
         if (cpu != null){
             while(simulacion){
                 numTicks++;
-                //System.out.println("Reloj: hola CPU");
                 cpu.notifica();
                 dispositivo.notifica();
                 try {

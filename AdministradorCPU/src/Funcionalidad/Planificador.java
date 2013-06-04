@@ -32,6 +32,11 @@ public class Planificador extends Thread {
     public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
         ArrayList<Proceso>[] procesos = LectorXML.obtenerProcesos(NombreArch);
+        System.out.println("*****");
+        for (int i = 0; i < procesos.length; i++) {
+            System.out.println(i +": "+procesos[i].toString());
+        }
+        System.out.println("*****");
 
         // Crea 140 listas: 1 para c/prioridad.
         ListasDePrioridades listasActivos = new ListasDePrioridades(procesos[0]);

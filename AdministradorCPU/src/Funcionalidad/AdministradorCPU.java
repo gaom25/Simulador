@@ -67,7 +67,7 @@ public class AdministradorCPU {
 
                     // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz
-                    interfaz.labelIO.setText("PID " + procesoIO.getPid() + " | PD " + procesoIO.getPrioridadDinamica() + "| PE " + procesoIO.getPrioridadEstatica() + " | Q " + procesoIO.getQuantum());
+                    interfaz.labelIO.setText("PID " + procesoIO.getPid() + " | PD " + procesoIO.getPrioridadDinamica() + "| PE " + procesoIO.getPrioridadEstatica() + " | Q " + procesoIO.getTiemposIO());
 
                 } else {
                     interfaz.labelIO.setText("");
