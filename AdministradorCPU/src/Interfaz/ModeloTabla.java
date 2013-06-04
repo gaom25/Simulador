@@ -31,7 +31,7 @@ public class ModeloTabla implements TableModel
     public int getColumnCount() {
         // Devuelve el número de columnas del modelo, que coincide con el
         // número de datos que tenemos de cada proceso.
-        return 3;
+        return 4;
     }
     
     /** Retorna el numero de filas del modelo. Un Jtable utiliza este
@@ -65,8 +65,10 @@ public class ModeloTabla implements TableModel
             case 0:
                 return aux.getPid();
            case 1:
-                return aux.getPrioridadEstatica();
+                return aux.getPrioridadDinamica();
            case 2:
+                return aux.getPrioridadEstatica();
+           case 3:
                 return aux.getQuantum();
             default:
                 return null;
@@ -172,8 +174,10 @@ public class ModeloTabla implements TableModel
             case 0:
                 return "PID";
             case 1:
-                return "Prioridad";
+                return "PD";
             case 2:
+                return "PE";
+            case 3:
                 return "Quantum";
             default:
                 return null;

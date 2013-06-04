@@ -21,6 +21,13 @@ public class Planificador extends Thread {
     ArrayList<Proceso> listaFinalizados;
     DispositivoIO dispositivoIO;
     Reloj reloj;
+    Boolean terminoSimulacion = false;
+    double tiempoEsperaProm ;
+    double tiempoDormidoProm;
+
+    public Boolean getTerminoSimulacion() {
+        return terminoSimulacion;
+    }
 
     public Planificador(String NombreArch, Reloj reloj) {
         // Tiene todos los procesos del archivo procesos.xml
@@ -337,17 +344,25 @@ public class Planificador extends Thread {
             tiempoDormidoPromedio += listaFinalizados.get(i).getTiempoTotalDurmiendo();
         }
 
+        tiempoEsperaProm = tiempoEsperaPromedio / listaFinalizados.size();
+        tiempoDormidoProm = 0.0;
+        
         System.out.println("***************************************************");
         System.out.println("FINALIZO SIMULACION");
         System.out.println("Num Ticks Ocioso el CPU: " + tiempoOciosoCPU);
         System.out.println("Num Ticks que Conto el Reloj (tiempo que duro la simulacion): " + numTicksReloj);
-        System.out.println("Ticks de Espera Promedio: " + tiempoEsperaPromedio / listaFinalizados.size());
-
+        System.out.println("Ticks de Espera Promedio: " + tiempoEsperaProm);
+        
+        
+                
         if (cant > 0) {
-            System.out.println("Ticks de Dormido Promedio: " + tiempoDormidoPromedio / cant);
+            tiempoDormidoProm = tiempoDormidoPromedio/cant;
+            System.out.println("Ticks de Dormido Promedio: " + tiempoDormidoProm);
+            
         } else {
             System.out.println("Ticks de Dormido Promedio: 0.0");
         }
         System.out.println("***************************************************");
+        terminoSimulacion = true;
     }
 }
