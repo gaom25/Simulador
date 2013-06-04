@@ -1,23 +1,28 @@
+<!-- Prueba de procesos convencionales: 2 expropia a 1 luego de llegar de I/O-->
 <procesos>
 	<proceso>
 		<pid>1</pid>
-		<esTiempoReal>true</esTiempoReal>
-		<prioridadEstatica>52</prioridadEstatica>
-		<tiempoCPU>3000</tiempoCPU>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>500</tiempoCPU>
                 <tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 	<proceso>
 		<pid>2</pid>
-		<esTiempoReal>true</esTiempoReal>
-		<prioridadEstatica>73</prioridadEstatica>
-		<tiempoCPU>19</tiempoCPU>
-		<tiempoEntrada>2</tiempoEntrada>
-	</proceso>
-	<proceso>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>110</prioridadEstatica>
+		<tiempoCPU>100</tiempoCPU>
+                <tiempoIO>1000</tiempoIO>
+                <tiempoCPU>100</tiempoCPU>
+                <tiempoEntrada>2</tiempoEntrada>
+	</proceso>        
+        <proceso>
 		<pid>3</pid>
 		<esTiempoReal>false</esTiempoReal>
-		<prioridadEstatica>107</prioridadEstatica>
-		<tiempoCPU>3200</tiempoCPU>
-		<tiempoEntrada>3</tiempoEntrada>
+		<prioridadEstatica>115</prioridadEstatica>
+		<tiempoCPU>100</tiempoCPU>
+                <tiempoIO>1000</tiempoIO>
+                <tiempoCPU>100</tiempoCPU>
+                <tiempoEntrada>2</tiempoEntrada>
 	</proceso>
 </procesos>

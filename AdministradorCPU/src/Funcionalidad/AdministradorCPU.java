@@ -22,7 +22,7 @@ public class AdministradorCPU {
         // Mientras no se seleccione un archivo no pasa de aqui
         while(interfaz.getReloj()==null){
           try {
-                // Tiempo que tarda en actualizar la pantalla
+                // Tiempo que tarda para esperar
                 Thread.sleep(50);
           } catch ( java.lang.InterruptedException ie) {
                 System.out.println(ie);
@@ -47,7 +47,7 @@ public class AdministradorCPU {
                     
                     activos = interfaz.getPlanificador().getCpu().getRunqueue().getActivos();
                     expirados = interfaz.getPlanificador().getCpu().getRunqueue().getExpirados();
-                    bloqueadosIO = interfaz.getDispositivo().getColaBloqueados();
+                    bloqueadosIO = interfaz.getPlanificador().getDispositivoIO().getColaBloqueados();
                     
                     // Limpio la tabla de activos
                     for(int k=0;k<interfaz.getModeloTabla1().getRowCount();k++){
