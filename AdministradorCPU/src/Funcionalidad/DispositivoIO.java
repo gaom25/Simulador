@@ -96,9 +96,10 @@ public class DispositivoIO extends Thread {
 
                 if (procesoActual != null) {
 
-                    procesoActual.setTiemposIO(procesoActual.getTiemposIO() - 1);
+                    int tmpActual = procesoActual.getTiemposIO() - 1;
+                    procesoActual.setTiemposIO(tmpActual);
                     // Termino IO
-                    if (procesoActual.getTiemposIO() == 0) {
+                    if (tmpActual == 0) {
                         System.out.println("Proceso " + (planificador.despiertaProceso(procesoActual) ? "" : "NO ")
                                 + "Despertado " + procesoActual.toString());
                         procesoActual = popProceso();

@@ -186,39 +186,6 @@ public class Planificador extends Thread {
         }
         return cant;
     }
-
-    //Funciones que busca los procesos que vinieron de IO para ponerlos activos.
-    public void BuscaDespierta() {
-        ArrayList<Proceso>[] expirados = this.getCpu().getRunqueue().getExpirados().getListas();
-        for (int i = 0; i < expirados.length; i++) {
-            boolean a = expirados[i].isEmpty();
-            if (!expirados[i].isEmpty()) {
-                for (int j = 0; j < expirados[i].size(); j++) {
-                    if (expirados[i].get(j).getEstado() == Constantes.TASK_INTERRUPTIBLE) {
-                        this.despiertaProceso(expirados[i].get(j));
-                    }
-                }
-            }
-        }
-    }
-
-    //Busca si hay algun proceso que haya terminado su tiempo de IO//
-    public boolean hayDormido() {
-        ArrayList<Proceso>[] expirados = this.getCpu().getRunqueue().getExpirados().getListas();
-        for (int i = 0; i < expirados.length; i++) {
-            if (expirados[i].size() >= 0) {
-                for (int j = 0; j < expirados[i].size(); j++) {
-                    if (expirados[i].get(j).getEstado() == Constantes.TASK_INTERRUPTIBLE) {
-                        return true;
-                    }
-
-                }
-            }
-        }
-        return false;
-
-    }
-
     // Intenta despuertar un proceso que esta en el dispositivo.
     public boolean despiertaProceso(Proceso p) {
         boolean despertado = false;
