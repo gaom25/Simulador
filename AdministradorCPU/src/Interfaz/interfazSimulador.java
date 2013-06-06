@@ -125,7 +125,7 @@ public class interfazSimulador extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre del archivo de entrada : ");
 
-        textNombreArch.setText(",xml");
+        textNombreArch.setText(".xml");
         textNombreArch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textNombreArchActionPerformed(evt);
@@ -342,8 +342,8 @@ public class interfazSimulador extends javax.swing.JFrame {
     ///* Metodo que realiza la acción de presionar el boton Iniciar SImulacion*/
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         inicioSimulacion = true;
-        //IniciarSimulacion(textNombreArch.getText(),textTicks.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos12.xml","50");
+        IniciarSimulacion(textNombreArch.getText(),textTicks.getText());
+        //IniciarSimulacion("src/Entrada_Salida/procesos13.xml","50");
         
     }
 
@@ -357,7 +357,7 @@ public class interfazSimulador extends javax.swing.JFrame {
     /* Metodo que inicia la simulacion a partir del nombre del archivo */
     public void IniciarSimulacion(String nombreArchivo,String nTicks){
         ticks = Integer.parseInt(nTicks);
-        reloj = new Reloj(10);
+        reloj = new Reloj(ticks);
         // En planificador se le asigna el planificador
         dispositivo = new DispositivoIO(); 
         planificador= new Planificador(nombreArchivo, reloj);
