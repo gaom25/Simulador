@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Funcionalidad;
 
 import java.io.File;
@@ -14,11 +10,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
  * @author hector
  */
 public class LectorXML {
 
+    /* Funcion para determinar cunatos procesos hay en el .xml, sus caracteristicas,
+     tiempos IO, tiempo CPU, etc. */
     public static ArrayList<Proceso>[] obtenerProcesos(String nombreArch) {
 
         ArrayList<Proceso>[] procesos = new ArrayList[101];
@@ -34,20 +31,26 @@ public class LectorXML {
             Document documento = db.parse(archivo);
             documento.getDocumentElement().normalize();
 
+            /*Se desgloza el .xml en funcion del tag proceso*/
             NodeList nodos = documento.getElementsByTagName("proceso");
             for (int i = 0; i < nodos.getLength(); i++) {
                 Node nodo = nodos.item(i);
+
+                /* Para cada proceso se le obtienen y almacenan sus datos*/
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
 
+                    /* Obtencion del pid, tipo del proceso, prioridad estatica */
                     int pid = Integer.parseInt(obtenerValor("pid", (Element) nodo));
                     boolean esTiempoReal = Boolean.parseBoolean(obtenerValor("esTiempoReal", (Element) nodo));
                     int prioridadEstatica = Integer.parseInt(obtenerValor("prioridadEstatica", (Element) nodo));
 
+                    /* Obtencion de los tiempos tanto de entrada, cpu como de io */
                     ArrayList<Integer> tiemposCPU = obtenerTiempos("tiempoCPU", (Element) nodo);
                     ArrayList<Integer> tiemposIO = obtenerTiempos("tiempoIO", (Element) nodo);
 
                     int tiempoEntrada = Integer.parseInt(obtenerValor("tiempoEntrada", (Element) nodo));
 
+                    /* Se agrega el proceso a nuestra lista de procesos a planificar */
                     Proceso proceso = new Proceso(pid, esTiempoReal, prioridadEstatica, tiemposCPU, tiemposIO, tiempoEntrada);
                     if (0 <= tiempoEntrada && tiempoEntrada <= 100) {
                         procesos[tiempoEntrada].add(proceso);
@@ -62,14 +65,18 @@ public class LectorXML {
         return procesos;
     }
 
+    /*Devuelve el valor asociado a una etiqueta dada*/
     private static String obtenerValor(String etiqueta, Element elemento) {
         return elemento.getElementsByTagName(etiqueta).item(0).getChildNodes().item(0).getNodeValue();
     }
 
+    /*Retorna una lista con todos los tiempos de un proceso, en concreto funcion para 
+     * obtener ordenadamente todos los tiempos de CPU e IO.     */
     private static ArrayList<Integer> obtenerTiempos(String etiqueta, Element elemento) {
+      
         ArrayList<Integer> t = null;
-        //ArrayList<Integer> t = new ArrayList<Integer>();
 
+        /*Desgloza los tiempos en funcion de la etiqueda deseada*/
         NodeList e = elemento.getElementsByTagName(etiqueta);
 
         int n = e.getLength();
@@ -77,8 +84,9 @@ public class LectorXML {
         if (e.getLength() > 0 && e != null) {
 
             t = new ArrayList<Integer>();
-            for (int i = 0; i < e.getLength(); i++) {
 
+            /*Toma todos los tiempos que fueron desglozados anteriormente*/
+            for (int i = 0; i < e.getLength(); i++) {
                 Element eletmp = (Element) e.item(i);
                 NodeList listatmp = eletmp.getChildNodes();
                 t.add(Integer.parseInt(listatmp.item(0).getNodeValue()));

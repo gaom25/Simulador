@@ -13,9 +13,19 @@ import java.util.ArrayList;
  * @author hector
  */
 public class ListasDePrioridades {
+
+    /**
+     * Entero con la menor prioridad disponible de los procesos.
+     */
     private int menorPrioridadNoVacia;
-    private int numProcesos; // nr_active
-    private ArrayList<Proceso>[] listas = new ArrayList[140]; // queue
+    /**
+     * Numero con la cantidad de procesos en la simulacion.
+     */
+    private int numProcesos;
+    /**
+     * Arreglo de 140 listas de procesos, cada lista es de un prioridad.
+     */
+    private ArrayList<Proceso>[] listas = new ArrayList[140];
 
     public ListasDePrioridades() {
         this.numProcesos = 0;
@@ -24,22 +34,29 @@ public class ListasDePrioridades {
         }
         this.menorPrioridadNoVacia = 140;
     }
-    
-    public ListasDePrioridades(ArrayList<Proceso> procesos){
+
+    public ListasDePrioridades(ArrayList<Proceso> procesos) {
         Proceso p;
         int prioridad;
-        
+
         this.numProcesos = procesos.size();
         this.menorPrioridadNoVacia = 140;
-        
-        for (int i = 0; i < this.listas.length; i++)
+        /**
+         * Se crean las listas por prioridad.
+         */
+        for (int i = 0; i < this.listas.length; i++) {
             this.listas[i] = new ArrayList<Proceso>();
-        
+        }
+        /**
+         * Se agregan los procesos a las colas respectivas y se actualiza la
+         * menorPrioridadNoVacia.
+         */
         for (int i = 0; i < this.numProcesos; i++) {
             p = procesos.get(i);
             prioridad = p.getPrioridadDinamica();
-            if (prioridad < this.menorPrioridadNoVacia)
+            if (prioridad < this.menorPrioridadNoVacia) {
                 this.menorPrioridadNoVacia = prioridad;
+            }
             listas[prioridad].add(p);
         }
     }
@@ -60,60 +77,82 @@ public class ListasDePrioridades {
     public void setListas(ArrayList<Proceso>[] listas) {
         this.listas = listas;
     }
-    
-// ========================     FIN Getters/Setters     ========================
 
-    public boolean insertarProceso(Proceso p){
+// ========================     FIN Getters/Setters     ========================
+    /**
+     * Se inserta en el proceso en la lista respectiva a la prioridad y se
+     * actualiza la menorPrioridadNoVacia.
+     */
+    public boolean insertarProceso(Proceso p) {
         int prioridad = p.getPrioridadDinamica();
         boolean agrego = false;
 
-        if (this.listas[prioridad].indexOf(p) == -1){
-            
-            if (prioridad < this.menorPrioridadNoVacia)
+        if (this.listas[prioridad].indexOf(p) == -1) {
+
+            if (prioridad < this.menorPrioridadNoVacia) {
                 this.menorPrioridadNoVacia = prioridad;
+            }
 
             agrego = this.listas[prioridad].add(p);
-            if (agrego) this.numProcesos++;
+            if (agrego) {
+                this.numProcesos++;
+            }
         }
 
         return agrego;
     }
-    
-    public boolean eliminarProceso(Proceso p){
+
+    /**
+     * Se remueve el proceso p de su lista respectiva y se actualiza la
+     * menorPrioridadNoVacia.
+     */
+    public boolean eliminarProceso(Proceso p) {
         int prioridad = p.getPrioridadDinamica();
         boolean elimino = this.listas[prioridad].remove(p);
-        
-        if (elimino){
+
+        if (elimino) {
             this.numProcesos--;
-        
-            if (this.numProcesos == 0) this.menorPrioridadNoVacia = 140;
-            else{
-                if (this.listas[prioridad].size() == 0)
-                    for (int i = prioridad+1; i < listas.length; i++) {
-                        if (this.listas[i].size() != 0){
+
+            if (this.numProcesos == 0) {
+                this.menorPrioridadNoVacia = 140;
+            } else {
+                if (this.listas[prioridad].size() == 0) {
+                    for (int i = prioridad + 1; i < listas.length; i++) {
+                        if (this.listas[i].size() != 0) {
                             this.menorPrioridadNoVacia = i;
                             break;
                         }
                     }
+                }
             }
         }
-        
+
         return elimino;
     }
-    
+
+    /**
+     * Se obtiene el mejor proceso disponibles en las colas.
+     */
     public Proceso obtenerMejorProceso() {
-        if (this.menorPrioridadNoVacia != 140)
+        if (this.menorPrioridadNoVacia != 140) {
             return this.listas[this.menorPrioridadNoVacia].get(0);
+        }
         return null;
     }
-    
-    public void aumentarTiempoEnEspera(){
-        if (numProcesos != 0)
-            for (int i = menorPrioridadNoVacia; i < listas.length; i++)
-                for (int j = 0; j < listas[i].size(); j++)
+
+    /**
+     * Se aumenta el tiempo de espera de todos los procesos en las las listas.
+     */
+    public void aumentarTiempoEnEspera() {
+        if (numProcesos != 0) {
+            for (int i = menorPrioridadNoVacia; i < listas.length; i++) {
+                for (int j = 0; j < listas[i].size(); j++) {
                     listas[i].get(j).aumentarTiempoEnEspera();
+                }
+            }
+        }
     }
-    
+
     @Override
     public String toString() {
         String s = "{ ";
@@ -121,7 +160,9 @@ public class ListasDePrioridades {
         for (int i = 0; i < listas.length; i++) {
             for (int j = 0; j < listas[i].size(); j++) {
                 s += listas[i].get(j).toString() + ", ";
-                if( ++aux == 5) s += "\n";
+                if (++aux == 5) {
+                    s += "\n";
+                }
             }
         }
         return s + "}";

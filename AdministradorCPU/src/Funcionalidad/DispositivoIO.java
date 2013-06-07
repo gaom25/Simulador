@@ -51,19 +51,20 @@ public class DispositivoIO extends Thread {
     }
 
 // ========================     FIN Getters/Setters     ========================
+   
+    /*Se agrega un proceso especifico a la cola de bloqueados*/
     public synchronized boolean insertarColaBloqueados(Proceso p) {
         boolean agrego = false;
-       
-        // Si no esta: lo agrego
+
+        /* Si el proceso no esta ya bloqueado, lo agrega a la cola.*/
         if (colaBloqueados.indexOf(p) == -1) {
-            // NO VA! --> no estará ahi nunca segun lo pensado
-            //planificador.getCpu().getRunqueue().getActivos().eliminarProceso(p);
             p.setEstado(Constantes.TASK_INTERRUPTIBLE);
             agrego = this.colaBloqueados.add(p);
         }
         return agrego;
     }
 
+    /*Se saca el primer proceso de la cola de bloqueados y se retorna ese proceso */
     public synchronized Proceso popProceso() {
         if (!colaBloqueados.isEmpty()) {
             return colaBloqueados.remove(0);
@@ -72,6 +73,7 @@ public class DispositivoIO extends Thread {
         }
     }
 
+    /*Se aumenta el tiempo que ha estado dormido un proceso (ticks) */
     public void aumentarTiempo() {
         if (colaBloqueados.size() > 0) {
             for (int i = 0; i < colaBloqueados.size(); i++) {
@@ -81,6 +83,10 @@ public class DispositivoIO extends Thread {
         }
     }
 
+    /*Hilo principal del dispositivo I/O
+     * Maneja que proceso esta en el dispositivo, como se maneja la cola de
+     * bloqueados, que tiempo llevan esperando, etc.
+     */
     @Override
     public void run() {
         synchronized (this) {
@@ -91,14 +97,17 @@ public class DispositivoIO extends Thread {
                     System.out.println("ERROR DURMIENDO DISPOSITIVO");
                     return;
                 }
-
+                /*Paso un tick, aumentamos el tiempo dormidos de los que esperan*/
                 this.aumentarTiempo();
 
+                /*Cuando hay un proceso en el dispositivo */
                 if (procesoActual != null) {
 
+                    /*Decrementamos el tiempo I/O del proceso*/
                     int tmpActual = procesoActual.getTiemposIO() - 1;
                     procesoActual.setTiemposIO(tmpActual);
-                    // Termino IO
+                  
+                    /* Termino IO, lo despertamos para que vuelva al CPU */
                     if (tmpActual == 0) {
                         System.out.println("Proceso " + (planificador.despiertaProceso(procesoActual) ? "" : "NO ")
                                 + "Despertado " + procesoActual.toString());

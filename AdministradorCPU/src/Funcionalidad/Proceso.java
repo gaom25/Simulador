@@ -18,18 +18,17 @@ public class Proceso {
 
     private int pid;
     private boolean esTiempoReal;
-    private int prioridadEstatica;          // static_prior
+    private int prioridadEstatica;          // Prioridad Estatica
     private ArrayList<Integer> tiemposCPU;  // Cada tiempo que pasa en CPU
     private ArrayList<Integer> tiemposIO;   // Cada tiempo que pasa en IO
     private int tiempoEntrada;
-    private short estado;                   // state
-    private int prioridadDinamica;          // prior
-    private int tiempoDurmiendo;            // sleep_avg (ticks)
-    private int quantum;                    // time_slice
-    private boolean esPrimerQuantum;        // first_time_slice
+    private short estado;                   // Estado
+    private int prioridadDinamica;          // Prioridad Dinamica
+    private int tiempoDurmiendo;            // Tiempo Dormido (ticks)
+    private int quantum;                    // Quantum
+    private boolean esPrimerQuantum;        // Primer Quantum
     private int tiempoEsperando;            // (ticks)
     private boolean terminado;              // Indica si esperar o finalizar
-    
     private int tiempoTotalDurmiendo;       // (ticks)
 
     public Proceso(int pid, boolean esTiempoReal, int prioridadEstatica, ArrayList<Integer> tiempoCPU, ArrayList<Integer> tiempoIO, int tiempoEntrada) {
@@ -39,8 +38,8 @@ public class Proceso {
         this.tiemposCPU = tiempoCPU;
         this.tiemposIO = tiempoIO;
         
-        /*Con estos dos ponemos un 0 al final de la lista, esto para cuidar
-         que agarre tiempo raros*/
+        /*Nos aseguramos que el ultimo tiempo del CPU y/o IO sea 0, evita problemas
+         con valores extranos al final de las listas*/
         if (this.tiemposCPU != null) {
             this.tiemposCPU.add(0);
         }
@@ -50,6 +49,8 @@ public class Proceso {
         
         this.tiempoEntrada = tiempoEntrada;
         this.estado = Constantes.TASK_RUNNING;
+       
+        /* Si el proceso es Tiempo Real */
         if (esTiempoReal) {
             this.prioridadDinamica = 100;
         } else {
@@ -58,6 +59,7 @@ public class Proceso {
         this.tiempoDurmiendo = 0;
         this.esPrimerQuantum = true;
 
+        /*Calculo del cuantum*/
         this.quantum = (140 - prioridadEstatica) * (prioridadEstatica < 120 ? 20 : 5);
         this.quantum = java.lang.Math.min(this.quantum, tiempoCPU.get(0));
         
@@ -211,15 +213,12 @@ public class Proceso {
     
     @Override
     public String toString() {
-/*
-        return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + ","
-                + quantum + ","+ tiemposCPU.toString()+ "," + tiemposIO.toString() + "]";
-*/      
         
         return "[" + pid + "," + prioridadEstatica + "," + prioridadDinamica + ","
                 + quantum + ","+ tiemposCPU.get(0) + "]";
     }
-
+    
+    /*Comparacion de dos objetos*/
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

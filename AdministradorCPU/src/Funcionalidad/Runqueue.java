@@ -5,6 +5,7 @@
  * Simula listas de procesos listos para ejecutar.
  */
 package Funcionalidad;
+
 import Constantes.*;
 
 /**
@@ -12,16 +13,17 @@ import Constantes.*;
  * @author hector
  */
 public class Runqueue {
-    private int numProcesos;                // nr_running = activos + expirados
-    private int numProcesosCambiados;       // nr_switches   
-    private int numProcesosDormidos;        // nr_uninterruptible + nr_iowait
-    private int tiempoPrimerExpirado;       // expired_timestamp
-    private Proceso procesoActual;          // curr
-    private ListasDePrioridades activos;    // active
-    private ListasDePrioridades expirados;  // expired
-    private int prioridadMejorExpirado;     // best_expired_prior
 
-    public Runqueue(ListasDePrioridades activos, ListasDePrioridades expirados ) {
+    private int numProcesos;                // #procesos =  activos + expirados
+    private int numProcesosCambiados;       // #procesos cambiados  
+    private int numProcesosDormidos;        // #procesos dormidos
+    private int tiempoPrimerExpirado;       // expired_timestamp
+    private Proceso procesoActual;          // Proceso Actial
+    private ListasDePrioridades activos;    // Lista de Procesos Activos
+    private ListasDePrioridades expirados;  // Lista de Procesos Expirados
+    private int prioridadMejorExpirado;     // Prioridad del mejor expirado
+
+    public Runqueue(ListasDePrioridades activos, ListasDePrioridades expirados) {
         this.numProcesos = activos.getNumProcesos() + expirados.getNumProcesos();
         this.numProcesosCambiados = 0;
         this.numProcesosDormidos = 0;
@@ -97,81 +99,93 @@ public class Runqueue {
         this.prioridadMejorExpirado = prioridadMejorExpirado;
     }
 // ========================     FIN Getters/Setters     ========================
-    
-    public synchronized void intercambioActivosExpirados(){
+
+    /*Cambio de las colas, la activa pasa a ser la expirada y viceversa */
+    public synchronized void intercambioActivosExpirados() {
         ListasDePrioridades tmp = activos;
         activos = expirados;
         expirados = tmp;
-        
+
         tiempoPrimerExpirado = 0;
         prioridadMejorExpirado = 140;
     }
-    
-    public synchronized  Proceso obtenerMejorProceso(){
+
+    /*Devuelve el mejor proceso de la cola*/
+    public synchronized Proceso obtenerMejorProceso() {
         return activos.obtenerMejorProceso();
     }
- 
-    public synchronized  boolean insertarProcesoActivo(Proceso p){
-        
-        if (p.getEstado() == Constantes.TASK_RUNNING)
-            if (activos.insertarProceso(p)){
+
+    /*Agrega un proceso a la lista de activos*/
+    public synchronized boolean insertarProcesoActivo(Proceso p) {
+
+        if (p.getEstado() == Constantes.TASK_RUNNING) {
+            if (activos.insertarProceso(p)) {
                 numProcesos++;
                 return true;
             }
-        
+        }
+
         return false;
     }
- 
-    public synchronized  boolean insertarProcesoExpirado(Proceso p){
+
+    /*Agrega un proceso a la lista de expirados */
+    public synchronized boolean insertarProcesoExpirado(Proceso p) {
         boolean insertado = false;
-        
+
+        /* Si el proceso esta corriendo o es interrumpible*/
         if (p.getEstado() == Constantes.TASK_RUNNING || p.getEstado() == Constantes.TASK_INTERRUPTIBLE) {
             insertado = expirados.insertarProceso(p);
         }
         
-        if (insertado && this.prioridadMejorExpirado > p.getPrioridadEstatica()){
+        /* Si se inserto y la mejor prioridad es mayor que la P. Estatica del proceso agregado */
+        if (insertado && this.prioridadMejorExpirado > p.getPrioridadEstatica()) {
+            /*Calcula la nueva mejor prioridad */
             this.prioridadMejorExpirado = p.getPrioridadEstatica();
         }
-        
-        if (insertado){
+
+        if (insertado) {
             numProcesos++;
         }
-            
+
         return insertado;
     }
- 
-    public synchronized  boolean eliminarProcesoActivo(Proceso p){
-        if (activos.eliminarProceso(p)){
+
+    /*Elimina un proceso especifico de la cola de activos*/
+    public synchronized boolean eliminarProcesoActivo(Proceso p) {
+        if (activos.eliminarProceso(p)) {
             numProcesos--;
             return true;
         }
         return false;
     }
-    
-    public synchronized  boolean eliminarProcesoExpirado(Proceso p){
-        if (expirados.eliminarProceso(p)){
+
+    /*Elimina un proceso especifico de la cola de expiradoss*/
+    public synchronized boolean eliminarProcesoExpirado(Proceso p) {
+        if (expirados.eliminarProceso(p)) {
             numProcesos--;
             return true;
         }
         return false;
     }
-    
-    public synchronized  void aumentarNumProcesosCambiados(){
+
+    /* Aumenta el numero de procesos que han sido cambiados */
+    public synchronized void aumentarNumProcesosCambiados() {
         numProcesosCambiados++;
     }
-    
-    public synchronized void aumentarTiempoEnEspera(){
+
+    /*Aumenta el tiempo que llevan en espera los procesos */
+    public synchronized void aumentarTiempoEnEspera() {
         activos.aumentarTiempoEnEspera();
         expirados.aumentarTiempoEnEspera();
     }
 
     @Override
     public String toString() {
-        return "Runqueue{" + "numProcesos=" + numProcesos + ", numProcesosCambiados=" + 
-                numProcesosCambiados + ", numProcesosDormidos=" + numProcesosDormidos + 
-                ", tiempoPrimerExpirado=" + tiempoPrimerExpirado + ", procesoActual=" + 
-                procesoActual + ", prioridadMejorExpirado=" + prioridadMejorExpirado + 
-                ", \n\t\t  activos=" + activos 
+        return "Runqueue{" + "numProcesos=" + numProcesos + ", numProcesosCambiados="
+                + numProcesosCambiados + ", numProcesosDormidos=" + numProcesosDormidos
+                + ", tiempoPrimerExpirado=" + tiempoPrimerExpirado + ", procesoActual="
+                + procesoActual + ", prioridadMejorExpirado=" + prioridadMejorExpirado
+                + ", \n\t\t  activos=" + activos
                 + ", \n\t\t  expirados=" + expirados + '}';
     }
 }

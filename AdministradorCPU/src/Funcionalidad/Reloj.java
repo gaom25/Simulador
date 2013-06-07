@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Funcionalidad;
 
 import java.util.logging.Level;
@@ -12,11 +8,10 @@ import java.util.logging.Logger;
  * @author hector
  */
 public class Reloj extends Thread{
-    private int tick;   // frecuencia de alarma de tiempo (ms)
-    private int numTicks;
-    private Cpu cpu;    // CPU al que se le notifica c/tick
+    private int tick;   /* frecuencia de alarma de tiempo (ms)*/
+    private int numTicks; /* tiempo transcurrido */
+    private Cpu cpu;    /* CPU al que se le notifica c/tick */
     private DispositivoIO dispositivo;
-    
     private boolean simulacion;
 
     public Reloj(int tick) {
@@ -66,14 +61,18 @@ public class Reloj extends Thread{
     }
 // ========================     FIN Getters/Setters     ========================
     
+    /*Hilo principal del Reloj se encarga de llevar el paso del tiempo asi como
+     * notificar a los componentes de dihco paso
+     */
     @Override
     public void run() {
         cpu.start();
         dispositivo.start();
         if (cpu != null){
             while(simulacion){
-                numTicks++;
-                cpu.notifica();
+                numTicks++; /* Paso del tiempo */
+                /* Notificacion del paso del tiempo */
+                cpu.notifica(); 
                 dispositivo.notifica();
                 try {
                     Reloj.sleep(tick);

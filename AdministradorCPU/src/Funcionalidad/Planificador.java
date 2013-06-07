@@ -12,17 +12,41 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Hector Dominguez @version 1.0
- * @author Gustavo Ortega & Carlos Aponteector @version 1.1
+ * @author Hector Dominguez
+ * @version 1.0
+ * @author Gustavo Ortega & Carlos Aponteector
+ * @version 1.1
  */
 public class Planificador extends Thread {
 
+    /**
+     * CPU del planificador.
+     */
     Cpu cpu;
+    /**
+     * Lista con todos los procesos finalizados.
+     */
     ArrayList<Proceso> listaFinalizados;
+    /**
+     * Dispositivo de Entrada/Salida.
+     */
     DispositivoIO dispositivoIO;
+    /**
+     * Reloj para contar los ticks.
+     */
     Reloj reloj;
+    /**
+     * Booleano que indica cuando termina la simulacion.
+     */
     Boolean terminoSimulacion = false;
-    double tiempoEsperaProm ;
+    /**
+     * Numero con la estadistica del tiempo de espera en la cola de activos u
+     * expirados.
+     */
+    double tiempoEsperaProm;
+    /**
+     * Numero con la estadistica del tiempo de espera en la cola de dispositivo.
+     */
     double tiempoDormidoProm;
 
     public Boolean getTerminoSimulacion() {
@@ -30,18 +54,12 @@ public class Planificador extends Thread {
     }
 
     public Planificador(String NombreArch, Reloj reloj) {
-        // Tiene todos los procesos del archivo procesos.xml
+        // Obtiene todos los procesos ya parseados del archivo .xml
         ArrayList<Proceso>[] procesos = LectorXML.obtenerProcesos(NombreArch);
-        System.out.println("*****");
-        for (int i = 0; i < procesos.length; i++) {
-            System.out.println(i +": "+procesos[i].toString());
-        }
-        System.out.println("*****");
-
         // Crea 140 listas: 1 para c/prioridad.
         ListasDePrioridades listasActivos = new ListasDePrioridades(procesos[0]);
         ListasDePrioridades listasExpirados = new ListasDePrioridades();
-        
+
         // Crea "cola de listos"
         Runqueue colaListos = new Runqueue(listasActivos, listasExpirados);
 
@@ -50,16 +68,17 @@ public class Planificador extends Thread {
         cpu.setPlanificador(this);
         cpu.setName("Cpu");
 
+        //Asocia el planificador al dispositivo
         dispositivoIO = new DispositivoIO();
         dispositivoIO.setPlanificador(this);
 
         listaFinalizados = new ArrayList<Proceso>();
 
+        //Asocia el reloj al planificador
         this.reloj = reloj;
     }
 
 // ========================     Getters/Setters         ========================
-
     public Reloj getReloj() {
         return reloj;
     }
@@ -91,9 +110,13 @@ public class Planificador extends Thread {
 
     /* Mueve el proceso p a la cola de expirados*/
     public void insertarListaExpirados(Proceso p) {
-        boolean b = cpu.getRunqueue().insertarProcesoExpirado(p);
+        cpu.getRunqueue().insertarProcesoExpirado(p);
     }
 
+    /**
+     * Inserta el proceso p en la cola de finalizados y le coloca el estado de
+     * terminado
+     */
     public boolean insertarListaFinalizados(Proceso p) {
         boolean agrego = false;
         if (listaFinalizados.indexOf(p) == -1) {
@@ -103,10 +126,17 @@ public class Planificador extends Thread {
         return agrego;
     }
 
+    /**
+     * Calcula el bono que se le da un proceso despues de hacer su ciclo de
+     * Entrad/Salida
+     */
     public int obtenerBono(Proceso p) {
         return p.getTiempoDurmiendo() / 100;
     }
 
+    /**
+     * Se actualiza la prioridad de dinamica de un proceso
+     */
     public int actualizarPrioridadDinamica(Proceso p) {
         int prioridadDinamica = java.lang.Math.max(100,
                 java.lang.Math.min(p.getPrioridadEstatica() - this.obtenerBono(p) + 5, 139));
@@ -115,28 +145,28 @@ public class Planificador extends Thread {
         return prioridadDinamica;
     }
 
-    // Funcion: scheduler_tick()                                           *****
+    /**
+     * Funcion para actualizar los valores por cada tick de reloj
+     */
     public void actualizarQuantum(Proceso p) {
         Boolean asigno = false;
-        // OJO: 4: adquiere lock de runqueue
-        // 5:
         int prioridadEstatica = p.getPrioridadEstatica();
         int quantum = p.getQuantum();
         int tcpu = p.getTiemposCPU();
 
-        // Siempre es eliminado el proceso de Activos
         p.setQuantum(--quantum);
         // Disminuye num de Ticks que necesita para terminar ejecucion
         p.setTiemposCPU(--tcpu);
-        // OJO: HAY que decrementar p.sleep_avg en Reloj.tick, WHY???
         p.decrementarTiempoDurmiendo();
 
         if (quantum <= 0) {
 
-            // set_tsk_need_resched(current):
+            /**
+             * Se coloca el proceso actual en null para buscar un nuevo proceso
+             * que use el cpu
+             */
             cpu.setProcesoActual(null);
             cpu.getRunqueue().setProcesoActual(null);
-            // FIN set_tsk_need_resched(current):
 
             // Si todavia le queda trabajo al proceso
             if (tcpu > 0) {
@@ -145,7 +175,11 @@ public class Planificador extends Thread {
                 p.setQuantum(java.lang.Math.min(quantum, tcpu));
                 p.setEsPrimerQuantum(false);
 
-                if (p.esTiempoReal()) { // Suponemos que son Round Robin                
+                /**
+                 * Tanto en los procesos de tiempo real como los normales se usa
+                 * la politica de RoundRobin
+                 */
+                if (p.esTiempoReal()) {
                     // Se inserta a activos:
                     cpu.getRunqueue().getActivos().insertarProceso(p);
                 } else {
@@ -154,25 +188,21 @@ public class Planificador extends Thread {
                     if (cpu.getRunqueue().getTiempoPrimerExpirado() == 0) {
                         cpu.getRunqueue().setTiempoPrimerExpirado(reloj.getNumTicks());
                     }
-                    // f: Asumimos que siempre añadiremos a expirados
+                    // Se inserta en la cola de expirados
                     cpu.getRunqueue().insertarProcesoExpirado(p);
-
                 }
 
-                /*p.getTiemposIO() devuelve un entero si es -1 es que no hay 
-                 * lista de tiempos para entrada salida*/
+                /**
+                 * Si el proceso aun tiene tiempo de para hacer entrada y salida
+                 * se despacha el dispositivo
+                 */
             } else if (p.getTiemposIO() != 0 && p.getTiemposIO() != -1) {
-                // Mandar proceso actual a la cola IO
-                if (dispositivoIO.insertarColaBloqueados(p)) {
-                    System.out.println("Insertado en cola de dispositivo");
-                    System.out.println(dispositivoIO.getColaBloqueados().toString());
-                } else {
-                    System.out.println("NO insertado");
-                }
+                dispositivoIO.insertarColaBloqueados(p);
             } else {
                 insertarListaFinalizados(p);
             }
-            asigno = this.asignarCPU(); // OJO
+            // Se pasa a buscar un nuevo proceso activo para el CPU
+            asigno = this.asignarCPU();
         }
     }
 
@@ -186,32 +216,43 @@ public class Planificador extends Thread {
         }
         return cant;
     }
-    // Intenta despuertar un proceso que esta en el dispositivo.
+    // Intenta despertar un proceso que esta en el dispositivo.
+
     public boolean despiertaProceso(Proceso p) {
         boolean despertado = false;
         int prioridadDinamica;
         int quantum = (140 - p.getPrioridadEstatica()) * (p.getPrioridadEstatica() < 120 ? 20 : 5);
-
+        /**
+         * Si el proceso aun no tiene tiempo de ejecucion para el CPU se
+         * despacha a la cola de finalizados
+         */
         if (p.getTiemposCPU() == 0) {
             insertarListaFinalizados(p);
-
+            /**
+             * Si ya todos los procesos estan en la cola de finalizados se
+             * termina la simulacion
+             */
             if (listaFinalizados.size() == cpu.getTotalProcesos()) {
                 terminarSimulacion(cpu.getTiempoOcioso(), reloj.getNumTicks());
             }
-
-            System.out.println("FINALIZADOS: " + listaFinalizados.size());
-            System.out.println(listaFinalizados.toString());
         } else {
             p.setQuantum(java.lang.Math.min(quantum, p.getTiemposCPU()));
 
             if (p.getEstado() == Constantes.TASK_INTERRUPTIBLE) {
                 prioridadDinamica = this.reCalcularPrioridadDinamica(p, reloj.getNumTicks());
                 p.setEstado(Constantes.TASK_RUNNING);
-                // Si CPU esta ocioso (porque runqueue esta vacia)
+                /**
+                 * Si el CPU no tiene proceso actual se selecciona a p como el
+                 * actual
+                 */
                 if (cpu.getProcesoActual() == null) {
                     cpu.setProcesoActual(p);
                     cpu.getRunqueue().setProcesoActual(p);
                 } else {
+                    /**
+                     * En caso contrario se verifica si se puede expropiar el
+                     * proceso activo en CPU
+                     */
                     cpu.getRunqueue().insertarProcesoActivo(p);
                     // Se verifica si tiene mayor o menor prioridad que el que esta en CPU
                     if (cpu.getProcesoActual().getPrioridadDinamica() > prioridadDinamica) {
@@ -227,25 +268,32 @@ public class Planificador extends Thread {
         return despertado;
     }
 
-   // Se recalcula la prioridad dinamica del proceso que viene de IO.
+    // Se recalcula la prioridad dinamica del proceso que viene de IO.
     public int reCalcularPrioridadDinamica(Proceso p, int numTicks) {
         int prioridadDinamica = this.actualizarPrioridadDinamica(p);
         return prioridadDinamica;
     }
 
-   // Le asigna el CPU al "mejor" proceso de la cola del CPU, si no hay 
-   // activos hace swap con la cola de expirados.
+    /**
+     * Le asigna el CPU al "mejor" proceso de la cola del CPU, si no hay activos
+     * hace swap con la cola de expirados.
+     */
     public boolean asignarCPU() {
-        System.out.println("RUNQUEUE");
-        System.out.println(cpu.getRunqueue().toString());
-
         Proceso p = cpu.getRunqueue().obtenerMejorProceso();
 
+        /**
+         * Se coloca el mejor proceso en la cola de activos como el activo en
+         * CPU
+         */
         if (p != null) {
             cpu.getRunqueue().eliminarProcesoActivo(p);
             cpu.setProcesoActual(p);
             cpu.getRunqueue().setProcesoActual(p);
         } else {
+            /**
+             * Si ya no hay procesos en la cola de activos se intercambian las
+             * colas de activos y expirados
+             */
             cpu.getRunqueue().intercambioActivosExpirados();
             p = cpu.getRunqueue().obtenerMejorProceso();
 
@@ -255,16 +303,14 @@ public class Planificador extends Thread {
                 cpu.getRunqueue().setProcesoActual(p);
             }
         }
-
-       if (p == null) {
-            System.out.println("RUNQUEUE VACIA!!");
-            System.out.println("FINALIZADOS: " + listaFinalizados.size());
-            System.out.println(listaFinalizados.toString());
-
+        /**
+         * Si todos los procesos ya estan en la cola de finalizados se termina
+         * la simulacion
+         */
+        if (p == null) {
             if (listaFinalizados.size() == cpu.getTotalProcesos()) {
                 terminarSimulacion(cpu.getTiempoOcioso(), reloj.getNumTicks());
             }
-
             return false;
         } else {
             cpu.getRunqueue().aumentarNumProcesosCambiados();
@@ -276,7 +322,10 @@ public class Planificador extends Thread {
     public void agregarNuevoProceso(Proceso p) {
 
         int prioridadDinamica = p.getPrioridadDinamica();
-        // Si CPU esta ocioso (porque runqueue esta vacia)   
+        /**
+         * Si no hay proceso activo en el CPU de coloca el proceso p como el
+         * activo de CPU
+         */
         if (cpu.getProcesoActual() == null) {
             cpu.setProcesoActual(p);
             cpu.getRunqueue().setProcesoActual(p);
@@ -303,14 +352,19 @@ public class Planificador extends Thread {
         return "Planificador{\n" + "\tcpu=" + cpu + ",\n}";
     }
 
-    // Finaliza la simulacion una vez que todos los procesos terminaron, termina
-    // a los hilos y calcula estadisticas.
+    /**
+     * Finaliza la simulacion una vez que todos los procesos terminaron, termina
+     * a los hilos y calcula estadisticas.
+     */
     private void terminarSimulacion(int tiempoOciosoCPU, int numTicksReloj) {
         double tiempoEsperaPromedio = 0.0, tiempoDormidoPromedio = 0.0;
         int cant = cantProcesosIO();
-        //cpu.setSimulacion(false);
         reloj.setSimulacion(false);
 
+        /**
+         * calcula la sumatoria de los tiempos esperando y dormidos de todos los
+         * procesos
+         */
         for (int i = 0; i < listaFinalizados.size(); i++) {
             tiempoEsperaPromedio += listaFinalizados.get(i).getTiempoEsperando();
             tiempoDormidoPromedio += listaFinalizados.get(i).getTiempoTotalDurmiendo();
@@ -318,23 +372,14 @@ public class Planificador extends Thread {
 
         tiempoEsperaProm = tiempoEsperaPromedio / listaFinalizados.size();
         tiempoDormidoProm = 0.0;
-        
-        System.out.println("***************************************************");
-        System.out.println("FINALIZO SIMULACION");
-        System.out.println("Num Ticks Ocioso el CPU: " + tiempoOciosoCPU);
-        System.out.println("Num Ticks que Conto el Reloj (tiempo que duro la simulacion): " + numTicksReloj);
-        System.out.println("Ticks de Espera Promedio: " + tiempoEsperaProm);
-        
-        
-                
+
+        /**
+         * Si hubo procesos que hicieron Entrada/Salida se calcula su
+         * estadistica de tiempo promedio dormido
+         */
         if (cant > 0) {
-            tiempoDormidoProm = tiempoDormidoPromedio/cant;
-            System.out.println("Ticks de Dormido Promedio: " + tiempoDormidoProm);
-            
-        } else {
-            System.out.println("Ticks de Dormido Promedio: 0.0");
+            tiempoDormidoProm = tiempoDormidoPromedio / cant;
         }
-        System.out.println("***************************************************");
         terminoSimulacion = true;
     }
 }

@@ -15,7 +15,6 @@ import javax.swing.event.*;
 public class AdministradorCPU {
 
     public static void main(String[] args) throws InterruptedException {
-        /*Un planificador y un */
         interfazSimulador interfaz = new interfazSimulador();
         interfaz.setVisible(true);
         int lastSizeTerminados = 0;
@@ -57,7 +56,10 @@ public class AdministradorCPU {
 
                     // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz
-                    interfaz.labelCPU.setText("PID " + procesoActual.getPid() + " | PD " + procesoActual.getPrioridadDinamica() + "| PE " + procesoActual.getPrioridadEstatica() + " | Q " + procesoActual.getQuantum());
+                    interfaz.labelCPU.setText("PID " + procesoActual.getPid()
+                            + " | PD " + procesoActual.getPrioridadDinamica()
+                            + "| PE " + procesoActual.getPrioridadEstatica()
+                            + " | Q " + procesoActual.getQuantum());
 
                 } else {
                     interfaz.labelCPU.setText("");
@@ -67,7 +69,10 @@ public class AdministradorCPU {
 
                     // obtenemos el proceso que esta en cpu y lo muestra en 
                     // la interfaz
-                    interfaz.labelIO.setText("PID " + procesoIO.getPid() + " | PD " + procesoIO.getPrioridadDinamica() + "| PE " + procesoIO.getPrioridadEstatica() + " | Q " + procesoIO.getTiemposIO());
+                    interfaz.labelIO.setText("PID " + procesoIO.getPid()
+                            + " | PD " + procesoIO.getPrioridadDinamica()
+                            + "| PE " + procesoIO.getPrioridadEstatica()
+                            + " | Q " + procesoIO.getTiemposIO());
 
                 } else {
                     interfaz.labelIO.setText("");
@@ -87,7 +92,6 @@ public class AdministradorCPU {
                     for (int k = (nFilas - 1); k >= 0; k--) {
                         interfaz.getModeloTabla1().borraProceso(k);
                     }
-
                 }
 
                 // Obtenemos numero de filas de la tabla EXPIRADOS  
@@ -147,20 +151,11 @@ public class AdministradorCPU {
                     int diferencia = terminados.size()-lastSizeTerminados;
                     if (diferencia > 0) {
                         lastSizeTerminados = terminados.size();
-                        
                         for(int k=0;k<diferencia;k++){
                             interfaz.getModeloTabla4().anhadeProceso(terminados.get(lastSizeTerminados+k-1));
                         }
-                        
-                        //interfaz.getModeloTabla4().anhadeProceso(terminados.get(terminados.size()-1));
-
                     }
                 }
-                
-                
-
-
-
             } catch (java.lang.InterruptedException ie) {
                 System.out.println(ie);
             }
