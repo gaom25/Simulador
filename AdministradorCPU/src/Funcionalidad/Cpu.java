@@ -14,30 +14,54 @@ import java.util.logging.Logger;
  */
 public class Cpu extends Thread {
 
+    /**
+     * Identicador del proceso.
+     */
     private short cpuId;
+    /**
+     * Proceso activo del CPU.
+     */
     private Proceso procesoActual;
+    /**
+     * Lista con las colas de activos y expirados.
+     */
     private Runqueue runqueue;
+    /**
+     * Planificador de procesos.
+     */
     private Planificador planificador;
-    private int tiempoOcioso; // numTicks ocioso
+    /**
+     * Numero de ticks ociosos.
+     */
+    private int tiempoOcioso;
+    /**
+     * Lista con todos los procesos que se van a ejecutar en la simulacion.
+     */
     private ArrayList<Proceso>[] todosProcesos;
+    /**
+     * Cantidad de procesos a simular.
+     */
     private int totalProcesos;
+    /**
+     * Booleano que indica cuando detener la simulacion.
+     */
     private boolean simulacion;
 
     public Cpu(short id, Runqueue runqueue, ArrayList<Proceso>[] procesos) {
         this.cpuId = id;
         this.runqueue = runqueue;
-
         procesoActual = null;
         planificador = null;
         tiempoOcioso = 0;
 
-        // Para los distintos tiempos de Entrada
+        /**
+         * Para que los procesos puedan entrar en distintos tiempos.
+         */
         todosProcesos = procesos;
         totalProcesos = 0;
         for (int i = 0; i < procesos.length; i++) {
             totalProcesos += procesos[i].size();
         }
-
         simulacion = true;
     }
 
@@ -91,6 +115,9 @@ public class Cpu extends Thread {
     }
 
     // ========================     FIN Getters/Setters     ========================
+    /**
+     * Procedimientos para agregar los procesos en difentes ticks del reloj.
+     */
     public void agregarProcesosNuevos() {
         int numTicks = planificador.getReloj().getNumTicks();
         if (!todosProcesos[numTicks].isEmpty()) {
@@ -102,6 +129,9 @@ public class Cpu extends Thread {
 
     @Override
     public void run() {
+        /**
+         * Monitor para que se ejecute la funcion cada tick de reloj.
+         */
         synchronized (this) {
             while (simulacion) {
                 try {
@@ -110,14 +140,28 @@ public class Cpu extends Thread {
                     System.out.println("ERROR DURMIENDO CPU");
                     return;
                 }
-
+                /**
+                 * Se aumenta el tiempo de espera de los procesos no activos del
+                 * CPU
+                 */
                 runqueue.aumentarTiempoEnEspera();
+                /**
+                 * Si aun no ha llegado a los 100 ticks, se van despertando los
+                 * procesos paulatinamente
+                 */
                 if (planificador.getReloj().getNumTicks() <= 100) {
                     agregarProcesosNuevos();
                 }
 
+                /**
+                 * Se actualiza el quantum del proceso actual, si lo hay
+                 */
                 if (procesoActual != null) {
                     planificador.actualizarQuantum(procesoActual);
+                    /**
+                     * Se aumenta el tiempo ocioso del CPU si no tiene proceso
+                     * activo
+                     */
                 } else {
                     tiempoOcioso++;
                 }
@@ -125,6 +169,9 @@ public class Cpu extends Thread {
         }
     }
 
+    /**
+     * Notifacion para que el CPU se active y haga su ejecucion
+     */
     public synchronized void notifica() {
         this.notifyAll();
     }

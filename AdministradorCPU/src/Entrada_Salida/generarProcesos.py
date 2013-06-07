@@ -15,7 +15,9 @@ while(b == -1):
 f = file("procesos13.xml", "w")
 
 f.write("<procesos>\n")
-#Ciclo para los de tiempo real
+'''Ciclo para los procesos de tiempo real, se crean los procesos de tiempo real
+con numeros randon para la prioridad estatica, la cantidad de veces que va a CPU
+o Entrada/Salida y la cantidad de ticks que estara en CPU o Entrda/Salida'''
 for i in range(1, a+1): 
     f.write("\t<proceso>\n")
     f.write("\t\t<pid>"+ str(i)  +"</pid>\n")
@@ -29,7 +31,9 @@ for i in range(1, a+1):
     f.write("\t\t<tiempoEntrada>"+ str(random.randint(0,100))  +"</tiempoEntrada>\n")
     f.write("\t</proceso>\n")
     
-''' ciclo para los normales'''
+'''Ciclo para los procesos normales, se crean los procesos normales
+con numeros randon para la prioridad estatica, la cantidad de veces que va a CPU
+o Entrada/Salida y la cantidad de ticks que estara en CPU o Entrda/Salida'''
 for i in range(1, b+1):
     f.write("\t<proceso>\n")
     f.write("\t\t<pid>"+ str(i+a)  +"</pid>\n")
@@ -44,11 +48,3 @@ for i in range(1, b+1):
     f.write("\t</proceso>\n")
 
 f.write("</procesos>\n")
-
-'''procesos 11 es expropiativo'''
-'''procesos 12 todos de entrada y salida es un caso donde el proceso 2 y el 5 deben volver de IO para consumir CPU 
-pero no lo hacen cuando deben, revizar
-'''
-''' procesos 13 todos normales sucede igual que en procesos 12'''
-''' procesos 10 mas de tiempo real que normales'''
-'''procesos 9 mas normales que de tiempo real'''
