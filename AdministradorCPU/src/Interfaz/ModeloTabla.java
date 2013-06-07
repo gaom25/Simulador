@@ -1,3 +1,13 @@
+/**
+ * Sistemas de Operacion II.
+ * Proyecto # 1
+ * Simulador del kernel 2.6 de Linux
+ * Hector Dominguez 09-10241
+ * Carlos Aponte 09-10041
+ * Krysler Pinto 09-10661
+ * Gustavo Ortega 09-10590
+ */
+
 package Interfaz;
 
 /**
