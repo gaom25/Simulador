@@ -343,7 +343,7 @@ public class interfazSimulador extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         inicioSimulacion = true;
         //IniciarSimulacion(textNombreArch.getText(),textTicks.getText());
-        IniciarSimulacion("src/Entrada_Salida/procesos12.xml","50");
+        IniciarSimulacion("src/Entrada_Salida/procesos3.xml","50");
         
     }
 
