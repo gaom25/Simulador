@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 /**
  * Sistemas de Operacion II.
  * Proyecto # 1
@@ -9,7 +8,6 @@
  * Krysler Pinto 09-10661
  * Gustavo Ortega 09-10590
  */
->>>>>>> branch 'master' of https://github.com/ovasgus/Simulador.git
 package Funcionalidad;
 
 import java.util.logging.Level;
