@@ -30,7 +30,7 @@ public class update {
             // CalculatorService en el Registry que se encuentra en
             // el host <host> y puerto <port>
 
-            acciones c = (acciones) Naming.lookup("rmi://" + host + ":" + port + "/CalculatorService");
+            Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + port + "/CalculatorService");
             System.out.println(c.update());
         } catch (MalformedURLException murle) {
             System.out.println();

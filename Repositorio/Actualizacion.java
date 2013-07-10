@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author gustavo
  */
-public class Actualizacion {
+public class Actualizacion implements java.io.Serializable{
     /**
      * Identificador de la actualizacion.
      */
@@ -61,5 +61,12 @@ public class Actualizacion {
     public void agregarArchivo(File archivo){
         this.archivos.add(archivo);
     }
+
+    @Override
+    public String toString() {
+        return "Actualizacion{" + "ID=" + ID + ", archivos=" + archivos + ", tiempAct=" + tiempAct + '}';
+    }
+    
+    
     
 }
