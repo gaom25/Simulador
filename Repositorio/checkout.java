@@ -16,7 +16,7 @@ public class checkout {
         String host = null;
         int port = 0;
 
-        if (!((0 < args.length) && (args.length < 3))) {
+        if (!((0 < args.length) && (args.length < 2))) {
             System.err.print("Parametros incorrectos: ");
             System.err.println("CalculatorClient <hostName> <port>");
             System.exit(1);
@@ -24,13 +24,13 @@ public class checkout {
 
         try {
             host = args[0];
-            port = Integer.parseInt(args[1]);
+            
 
             // Busca al objeto que ofrece el servicio con nombre 
             // CalculatorService en el Registry que se encuentra en
             // el host <host> y puerto <port>
 
-            Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + port + "/CalculatorService");
+            Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
             System.out.println(c.checkout());
         } catch (MalformedURLException murle) {
             System.out.println();

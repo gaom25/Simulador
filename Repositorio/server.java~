@@ -30,7 +30,7 @@ public class server {
             try {
 
                 // Crea un Registry en el puerto especificado
-                LocateRegistry.createRegistry(55555);
+                LocateRegistry.createRegistry(port);
             } catch (RemoteException re) {
                 System.out.println();
                 System.out.println("RemoteException");

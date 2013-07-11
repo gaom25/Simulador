@@ -2,6 +2,7 @@
 import java.rmi.RemoteException;
 import java.net.*;
 import java.io.*;
+import java.util.Date;
 
 /**
  *
@@ -21,6 +22,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             MulticastSocket enviador = new MulticastSocket();
 
             Actualizacion dato = new Actualizacion("Commit");
+            dato.setTiempAct(new Date());
 
             /**
              * Serealizamos el objeto para poder enviarlo por la red
@@ -52,6 +54,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             MulticastSocket enviador = new MulticastSocket();
 
             Actualizacion dato = new Actualizacion("Checkout");
+            dato.setTiempAct(new Date());
             /**
              * Serealizamos el objeto para poder enviarlo por la red
              */
@@ -82,6 +85,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             MulticastSocket enviador = new MulticastSocket();
 
             Actualizacion dato = new Actualizacion("Update");
+            dato.setTiempAct(new Date());
             /**
              * Serealizamos el objeto para poder enviarlo por la red
              */
