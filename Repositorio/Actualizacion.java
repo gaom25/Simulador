@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,7 +7,8 @@ import java.util.Date;
  *
  * @author gustavo
  */
-public class Actualizacion implements java.io.Serializable{
+public class Actualizacion implements java.io.Serializable {
+
     /**
      * Identificador de la actualizacion.
      */
@@ -21,10 +23,9 @@ public class Actualizacion implements java.io.Serializable{
     private Date tiempAct;
 
     /**
-     * Constructor de la actualizacion, se le pasa el ID y el
-     * arraylist para los archivos se setean.
+     * Constructor de la actualizacion, se le pasa el ID y el arraylist para los
+     * archivos se setean.
      */
-
     public Actualizacion(String ID) {
         this.archivos = new ArrayList<File>();
         this.ID = ID;
@@ -46,19 +47,19 @@ public class Actualizacion implements java.io.Serializable{
         this.archivos = archivos;
     }
 
-    /**Las funciones de getTiempAct y setTiemAct solo las usa el servidor
-     * pues este quien setea el tiempo en que llego la actualizacion.
+    /**
+     * Las funciones de getTiempAct y setTiemAct solo las usa el servidor pues
+     * este quien setea el tiempo en que llego la actualizacion.
      */
     public Date getTiempAct() {
         return tiempAct;
     }
-    
+
     public void setTiempAct(Date tiempAct) {
         this.tiempAct = tiempAct;
     }
 
-
-    public void agregarArchivo(File archivo){
+    public void agregarArchivo(File archivo) {
         this.archivos.add(archivo);
     }
 
@@ -66,7 +67,4 @@ public class Actualizacion implements java.io.Serializable{
     public String toString() {
         return "Actualizacion{" + "ID=" + ID + ", archivos=" + archivos + ", tiempAct=" + tiempAct + '}';
     }
-    
-    
-    
 }
