@@ -1,3 +1,6 @@
+
+import java.util.ArrayList;
+
 /**
  *
  * @author gustavo
@@ -10,7 +13,9 @@ public interface Acciones
 
     public String commit() throws java.rmi.RemoteException;
 
-    public String checkout() throws java.rmi.RemoteException;
+    public ArrayList<Repositorio> checkout(ArrayList<String> repos) throws java.rmi.RemoteException;
 
     public String update() throws java.rmi.RemoteException;
+    
+    public String mkdir(String name) throws java.rmi.RemoteException;
 }

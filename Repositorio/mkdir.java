@@ -1,29 +1,25 @@
+import java.rmi.*;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-
 /**
  *
- * @author gustavo
+ * @author carlos
  */
-public class checkout {
+public class mkdir {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         String host = null;
-        int tam = 0;
+        int port = 0;
 
-//         if (!((0 < args.length) && (args.length < 4))) {
-//             System.err.print("Parametros incorrectos: ");
-//             System.err.println("CalculatorClient <hostName> <port>");
-//             System.exit(1);
-//         }
+        if (!((0 < args.length) && (args.length < 2))) {
+            System.err.print("Parametros incorrectos: ");
+            System.err.println("CalculatorClient <hostName> <port>");
+            System.exit(1);
+        }
 
         try {
-            tam = args.length;
             host = args[0];
             
 
@@ -32,7 +28,7 @@ public class checkout {
             // el host <host> y puerto <port>
 
             Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
-            //System.out.println(c.checkout());
+            System.out.println(c.mkdir());
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(

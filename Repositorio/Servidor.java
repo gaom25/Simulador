@@ -30,8 +30,6 @@ public class Servidor {
 
     public Servidor() {
     }
-
-    
     
     public String getID() {
         return ID;
@@ -72,8 +70,5 @@ public class Servidor {
     public void setRepositorios(Hashtable<String, Repositorio> Repositorios) {
         this.Repositorios = Repositorios;
     }
-    
-    
-    
     
 }
