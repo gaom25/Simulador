@@ -14,12 +14,12 @@ public class commit {
         String host = null;
         int port = 0;
 
-        if (!((0 < args.length) && (args.length < 2))) {
+        if (args.length != 3) {
             System.err.print("Parametros incorrectos: ");
             System.err.println("java commit <hostName> -m \"<mensaje>\"");
             System.exit(1);
         }
-        System.out.print(args.toString());
+        System.out.print(args[2]);
 
         try {
             host = args[0];
