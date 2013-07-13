@@ -16,20 +16,15 @@ public class checkout {
         String host = null;
         int tam = 0;
 
-//         if (!((0 < args.length) && (args.length < 4))) {
-//             System.err.print("Parametros incorrectos: ");
-//             System.err.println("CalculatorClient <hostName> <port>");
-//             System.exit(1);
-//         }
+         if (1 > args.length) {
+             System.err.print("Parametros incorrectos: ");
+             System.err.println("java checkout <hostName> <repositorio>* [carpeta]");
+             System.exit(1);
+        }
 
         try {
             tam = args.length;
             host = args[0];
-            
-
-            // Busca al objeto que ofrece el servicio con nombre 
-            // CalculatorService en el Registry que se encuentra en
-            // el host <host> y puerto <port>
 
             Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
             //System.out.println(c.checkout());

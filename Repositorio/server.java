@@ -1,11 +1,9 @@
-
 import java.net.*;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
-import AccionesServer.*;
 
 /**
  *
@@ -103,13 +101,13 @@ public class server {
             
             if(comando[0].compareToIgnoreCase("mkdir") == 0){
              
-	      crearRepo(cliente, repo);
+	      AccionesServer.crearRepo(cliente, repo);
             
             }else if(comando[0].compareToIgnoreCase("commit") == 0){
             
               ArrayList<File> archivos = acc.getArchivos();
               Date hora = acc.getTiempAct();
-              actualizarRepo(cliente,repo,archivos, hora);
+              AccionesServer.actualizarRepo(cliente,repo,archivos, hora);
             
             }else if(comando[0].compareToIgnoreCase("update") == 0){
   

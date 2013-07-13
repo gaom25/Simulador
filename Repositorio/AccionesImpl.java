@@ -78,7 +78,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
-        return ("El chekeo");
+        return null;
     }
 
     //@Override
@@ -138,14 +138,15 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
              */
             DatagramPacket dgp;
             dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
-
+            /**Se crea la carpeta con el repositorio*/
+            AccionesServer.crearRepo("hola",name);
             enviador.send(dgp);
             /**TPC, TWO PHASE COMMIT*/
             
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
-        return ("");
+        return ("h");
     }
     
 }

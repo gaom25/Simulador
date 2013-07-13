@@ -13,22 +13,17 @@ public class mkdir {
         String host = null;
         int port = 0;
 
-        if (!((0 < args.length) && (args.length < 2))) {
+        if (args.length != 2) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("CalculatorClient <hostName> <port>");
+            System.err.println("java mkdir <hostName> <repo>");
             System.exit(1);
         }
 
         try {
             host = args[0];
-            
-
-            // Busca al objeto que ofrece el servicio con nombre 
-            // CalculatorService en el Registry que se encuentra en
-            // el host <host> y puerto <port>
 
             Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
-            System.out.println(c.mkdir());
+            System.out.println(c.mkdir(args[1]));
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(

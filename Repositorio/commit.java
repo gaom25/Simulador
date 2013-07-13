@@ -16,17 +16,13 @@ public class commit {
 
         if (!((0 < args.length) && (args.length < 2))) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("CalculatorClient <hostName> <port>");
+            System.err.println("java commit <hostName> -m \"<mensaje>\"");
             System.exit(1);
         }
+        System.out.print(args.toString());
 
         try {
             host = args[0];
-            
-
-            // Busca al objeto que ofrece el servicio con nombre 
-            // CalculatorService en el Registry que se encuentra en
-            // el host <host> y puerto <port>
 
             Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
             System.out.println(c.commit());
