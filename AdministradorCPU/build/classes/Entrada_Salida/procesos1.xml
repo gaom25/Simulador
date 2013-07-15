@@ -1,0 +1,20 @@
+<!-- 1: es convencional
+     2: es de tiempo real
+     Por lo tanto, al regresar 2 de I/O debe expropiar a 1 
+-->
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>1000</tiempoCPU>
+                <tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>800</tiempoCPU>
+                <tiempoEntrada>2</tiempoEntrada>
+	</proceso>        
+</procesos>

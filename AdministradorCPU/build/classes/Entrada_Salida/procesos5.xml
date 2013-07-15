@@ -1,0 +1,29 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>101</prioridadEstatica>
+		<tiempoCPU>30000</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>110</prioridadEstatica>
+		<tiempoCPU>30</tiempoCPU>
+                <tiempoIO>500</tiempoIO>
+                <tiempoCPU>3100</tiempoCPU>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>3</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>300</tiempoCPU>
+                <tiempoIO>20</tiempoIO>
+                <tiempoCPU>3200</tiempoCPU>
+		<tiempoEntrada>3</tiempoEntrada>
+	</proceso>
+</procesos>
+<!--sin tiempo real, dos en I/O uno batch, se supone que se deberia aumentar el
+contador del proceso 3 en la cola del dispotivo-->

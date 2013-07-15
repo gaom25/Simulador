@@ -3,12 +3,12 @@ import java.rmi.registry.LocateRegistry;
 import java.net.*;
 import java.rmi.*;
 import java.lang.*;
+
 /**
  *
  * @author krys
  */
 public class DNS {
-
 
     /* Metodo areYouAlive
     * Se encarga de preguntarle al coordinador si se encuentra vivo
@@ -28,12 +28,11 @@ public class DNS {
                     "MalformedURLException");
             System.out.println(murle);
         } catch (RemoteException re) {
-            
-            System.out.println();
-            System.out.println(
-                    "RemoteException");
-            System.out.println(re);
             return false;
+           // System.out.println();
+            //System.out.println(
+           //         "RemoteException");
+           // System.out.println(re);
 
         } catch (NotBoundException nbe) {
             System.out.println();
@@ -96,8 +95,7 @@ public class DNS {
             }
         System.out.println("DNS escuchando...");
 
-        // Esperamos hasta que se registre un coordinador
-        while(d.getCoordinador()!=null);
+        while(d.getCoordinador()==null);
 
         // Ciclo infinito que se encargara de preguntar al servidor
         // coordinador si sigue vivo 
@@ -109,6 +107,7 @@ public class DNS {
             //If this thread was intrrupted by nother thread
             }
 
+            
             // Preguntar si esta vivo el coordinador
             if (areYouAlive(d.getCoordinador())==false){
                 System.out.println("Murio el coordinador");
@@ -116,6 +115,8 @@ public class DNS {
             }else{
                 System.out.println("Sigue vivo el coordinador");
             }
+            
+            
 
         }
 

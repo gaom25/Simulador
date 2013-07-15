@@ -1,0 +1,9 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>100</prioridadEstatica>
+		<tiempoCPU>805</tiempoCPU>
+		<tiempoEntrada>1</tiempoEntrada>
+        </proceso>
+</procesos>

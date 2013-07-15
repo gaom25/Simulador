@@ -1,8 +1,11 @@
-import java.rmi.RemoteException;
-import java.net.*;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.rmi.registry.LocateRegistry;
+import java.net.*;
+import java.rmi.*;
+import java.lang.*;
+
+
+
 /**
  *
  * @author krys
@@ -22,8 +25,44 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
 	public DNSImpl() throws java.rmi.RemoteException {
         super();
         servidores = new ArrayList<Servidor>();
+        coordinador = null; 
     }
 
+
+    /* Metodo actualizarServidores
+     * Este metodo se encarga de actualizar la lista de servidores del coordinador
+     * estableciendo una conexión rmi con el coordinador y enviandosela.
+     * Parametros de entrada: No posee
+     * Parametros de salida: no posee
+    */
+    public void actualizarServidores(){
+        String host = "localhost";
+        try {
+            Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/CalculatorService");
+            a.nuevoEsclavo(this.servidores);
+        } catch (MalformedURLException murle) {
+            System.out.println();
+            System.out.println(
+                    "MalformedURLException");
+            System.out.println(murle);
+        } catch (RemoteException re) {
+            System.out.println();
+            System.out.println("RemoteException");
+            System.out.println(re);
+
+        } catch (NotBoundException nbe) {
+            System.out.println();
+            System.out.println(
+                    "NotBoundException");
+            System.out.println(nbe);
+
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("java.lang.Exception");
+            System.out.println(e);
+        }
+
+    }
     
     /* Metodo registro
      * se encarga de registrar un servidor , agregandolo a la lista
@@ -43,6 +82,14 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
 
         // agregamos a la lista de servidores
         servidores.add(serv);
+
+        // Si existe un coordinador debemos enviarle la nueva lista
+        // de esclavOs para que le lleguen las nuevas actualizaciones
+        if(coordinador!=null){
+            actualizarServidores();
+        }            
+
+        
         System.out.println("Registrado en DNS el servidor de ID="+serv.getID());
         return retorno;
      }

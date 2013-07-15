@@ -15,19 +15,48 @@ public class Servidor implements Serializable{
      * Datos para saber quien es el coordinador actualmente.
      */
     private Servidor Coordinador;
+
+    // host donde corre el servidor
+    private String host;
+
+    // puerto del servidor
+    private int port;
+
     /**
      * Booleano que designa si el proceso actual es el servidor o no.
      */
     private Boolean esCoordinador;
+
     /**
      * Aqui se lleva cada uno de los ID de los otros servidores y se va 
      * actualizando al aparecerse las fallas.
      */
-    private ArrayList<String> Servidores;
+    private ArrayList<Servidor> Servidores;
     /**
      * Tablas de hash que tendra los diferentes nombres de los repositorios.
      */
     private Hashtable<String,Repositorio> Repositorios;
+
+    public Servidor(String hostN,int puerto){
+        this.host = hostN;
+        this.port = puerto;
+    }
+
+    public String getHost(){
+        return this.host;
+    }
+
+    public void setHost(String hostNew){
+        this.host = hostNew;
+    }
+
+    public int getPort(){
+        return port;
+    }
+
+    public void setPort(int puerto){
+        this.port=puerto;
+    }
 
     public Servidor() {
     }
@@ -56,11 +85,11 @@ public class Servidor implements Serializable{
         this.esCoordinador = esCoordinador;
     }
 
-    public ArrayList<String> getServidores() {
+    public ArrayList<Servidor> getServidores() {
         return Servidores;
     }
 
-    public void setServidores(ArrayList<String> Servidores) {
+    public void setServidores(ArrayList<Servidor> Servidores) {
         this.Servidores = Servidores;
     }
 

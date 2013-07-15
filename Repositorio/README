@@ -13,8 +13,3 @@ Chicos les indico lo que agregue:
 OJO: COLOCAR LOS PUERTOS! NO ESTA CABLEADO EN LOS SERVIDORES
 OJO : En el metodo AreYouALive en el servidor DNS, que se encarga de preguntarle al coordinador si se encuentra vivo, el host y el puerto
 del coordinador estan cableados!! al host = localhost y port= 55555
-
-Gustavo:
-puerto para la comunicacion con el DNS desde el cliente 44444 por rmi
-puerto para la comunicacion desde el DNS y los clientes con el coordinador 55555 por rmi
-puerto para la comunicacion entre el coordinador y los esclavos y el DNS con los esclavos 55557

@@ -20,4 +20,6 @@ public interface Acciones
     public String mkdir(String name) throws java.rmi.RemoteException;
 
     public Boolean estasVivo() throws java.rmi.RemoteException;
+
+    public void nuevoEsclavo(ArrayList<Servidor> esclavos)throws java.rmi.RemoteException;
 }

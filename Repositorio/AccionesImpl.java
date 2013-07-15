@@ -153,8 +153,17 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     // o esta caido, si no responde .
     public Boolean estasVivo() throws RemoteException{
 
-    System.out.println("me preguntaron si estoy vivo");
         return true;
+    }
+
+    /* Metodo nuevoEsclavo
+     * Este metodo permite actualizar la lista de servidores esclavos del coordinador
+     * Parametros de entrada : La nueva lista de esclavos
+     * Parametros de salida: Booleano que indica si se realizaron los cambios con éxito.
+    */
+    public void nuevoEsclavo(ArrayList<Servidor> esclavos) throws RemoteException{
+        server.setServidores(esclavos);
+        System.out.println("Actualizacion de lista de servidores");
     }
     
 }

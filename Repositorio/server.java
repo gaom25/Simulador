@@ -52,7 +52,6 @@ public class server {
             System.out.println(e);
         }
         
-            //System.out.println(c.commit());
         return Integer.toString(ID);
     }
 
@@ -60,31 +59,40 @@ public class server {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        int port = 0;
         String hostDNS ="";
+        String computerName="";
 
-        if (!((0 < args.length) && (args.length < 4))) {
+        if (!((0 < args.length) && (args.length < 5))) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java server [-c|-e] -dns <hostDNS>");
+            System.err.println("java server [-c|-e] <port> -dns <hostDNS>");
             System.exit(1);
         }
 
 
+        // Obtenemos el host de la maquina local
+        try {
+            computerName = InetAddress.getLocalHost().getHostAddress();
+        }
+            catch(Exception ex) {
+        }
+        System.out.println("host ->"+computerName);
+
         Servidor server = new Servidor();
-        hostDNS=args[2];
+        port = Integer.parseInt(args[1]);
+        hostDNS=args[3];
         
         //Si accion es -c quiere decir que es el coordinador
         if (args[0].compareToIgnoreCase("-c") == 0) {
             // El servidor es coordinador
             server.setEsCoordinador(true);
 
-            // Debemos registrar el coordinador en el dns
-            registrarmeDNS(server,hostDNS);
-            System.out.println("Me registre en el DNS");
+            
 
             try {
 
                 // Crea un Registry en el puerto especificado
-                LocateRegistry.createRegistry(55555);
+                LocateRegistry.createRegistry(port);
             } catch (RemoteException re) {
                 System.out.println();
                 System.out.println("RemoteException");
@@ -102,11 +110,15 @@ public class server {
                 // en el Registry que se encuentra el el host <localhost>
                 // y puerto <port>
 
-                Naming.rebind("rmi://localhost:" + 55555 + "/CalculatorService", c);
+                Naming.rebind("rmi://localhost:" + port + "/CalculatorService", c);
 
             } catch (Exception e) {
                 System.out.println("Trouble: " + e);
             }
+            // Debemos registrar el coordinador en el dns
+            registrarmeDNS(server,hostDNS);
+            System.out.println("Me registre en el DNS");
+
         } else if (args[0].compareToIgnoreCase("-e") == 0){
             // No es coordinador
             server.setEsCoordinador(false);
@@ -179,7 +191,7 @@ public class server {
         }else{
             // No coloco -c ni -s => Error de sintaxis
             System.err.println("Error de Sintaxis ");
-            System.err.println("java server [-c|-e] -dns <hostDNS>");
+            System.err.println("java server [-c|-e] <port> -dns <hostDNS>");
             System.exit(1);
 
         }

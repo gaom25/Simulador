@@ -1,0 +1,19 @@
+<procesos>
+	<proceso>
+		<pid>1</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>110</prioridadEstatica>
+		<tiempoCPU>400</tiempoCPU>
+                <tiempoIO>2000</tiempoIO>
+		<tiempoEntrada>1</tiempoEntrada>
+	</proceso>
+	<proceso>
+		<pid>2</pid>
+		<esTiempoReal>false</esTiempoReal>
+		<prioridadEstatica>120</prioridadEstatica>
+		<tiempoCPU>300</tiempoCPU>
+                <tiempoIO>2100</tiempoIO>
+		<tiempoEntrada>2</tiempoEntrada>
+	</proceso>
+</procesos>
+<!--Dos procesos con cpu ocioso, de un forma, notese la bestialidad del tiempo que se tardan en IO-->
