@@ -148,5 +148,13 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         }
         return ("h");
     }
+
+    // Metodo que permite conocer si el servidor se encuentra activo
+    // o esta caido, si no responde .
+    public Boolean estasVivo() throws RemoteException{
+
+    System.out.println("me preguntaron si estoy vivo");
+        return true;
+    }
     
 }

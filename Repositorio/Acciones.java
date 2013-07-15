@@ -18,4 +18,6 @@ public interface Acciones
     public String update() throws java.rmi.RemoteException;
     
     public String mkdir(String name) throws java.rmi.RemoteException;
+
+    public Boolean estasVivo() throws java.rmi.RemoteException;
 }

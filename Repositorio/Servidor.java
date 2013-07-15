@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.io.Serializable;
 
 /**
  *
  * @author gustavo
  */
-public class Servidor {
+public class Servidor implements Serializable{
     /**
      * Identificador del proceso.
      */

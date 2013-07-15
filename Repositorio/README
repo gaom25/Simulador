@@ -1,0 +1,20 @@
+Chicos les indico lo que agregue:
+
+1. Para ejecutar los servidores, dado que el algoritmo de coordinador (segun el libro) es utilizado cuando un coordinador
+	se cae, hable con gus y me dijo que estaba bien si colocabamos un flag para indicar que con -c se indica el servidor coordinador y con -e los servidores esclavos. Entonces para la ejecución sería algo asi:
+	javac server -c <port> -dns <hostDNS>  ---> para el coordinador
+	javac server -e <port> -dns <hostDNS>---> para los esclavos
+
+2. Hice la clase DNS , el servidor DNS escuchara por el puerto 44444 , cableado para que todos los servidores sepan a donde buscar el servidor dns, asi que para iniciarlo solo hacemos :
+	java DNS
+
+3. Los servidores al iniciar, se registran en el servidor DNS, el cual les da el ID en el orden en el cual llegaron al registro
+
+OJO: COLOCAR LOS PUERTOS! NO ESTA CABLEADO EN LOS SERVIDORES
+OJO : En el metodo AreYouALive en el servidor DNS, que se encarga de preguntarle al coordinador si se encuentra vivo, el host y el puerto
+del coordinador estan cableados!! al host = localhost y port= 55555
+
+Gustavo:
+puerto para la comunicacion con el DNS desde el cliente 44444 por rmi
+puerto para la comunicacion desde el DNS y los clientes con el coordinador 55555 por rmi
+puerto para la comunicacion entre el coordinador y los esclavos y el DNS con los esclavos 55557

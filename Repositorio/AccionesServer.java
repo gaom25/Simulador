@@ -51,7 +51,7 @@ public class AccionesServer {
                     File dest = new File(destino + tmp.getName());
                     if (tmp.renameTo(dest)) {
                     } else {
-                        System.out.println("Error Subiando Archivos.");
+                        System.out.println("Error Subiendo Archivos.");
                     }
                 }
 
