@@ -22,4 +22,6 @@ public interface Acciones
     public Boolean estasVivo() throws java.rmi.RemoteException;
 
     public void nuevoEsclavo(ArrayList<Servidor> esclavos)throws java.rmi.RemoteException;
+
+    public Boolean asignacionCoord() throws java.rmi.RemoteException;
 }

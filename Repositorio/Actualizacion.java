@@ -22,15 +22,33 @@ public class Actualizacion implements java.io.Serializable {
      */
     private Date tiempAct;
 
+    // Avisa quien es el nuevo coordinador
+    private Servidor coordinador;
+
+    // Lista de servidores
+    private ArrayList<Servidor> servidores;
+
     /**
      * Constructor de la actualizacion, se le pasa el ID y el arraylist para los
      * archivos se setean.
      */
     public Actualizacion(String ID) {
         this.archivos = new ArrayList<File>();
+        this.servidores = new ArrayList<Servidor>();
         this.ID = ID;
     }
 
+
+    /**
+     * Constructor de la actualizacion, se le pasa el ID y el arraylist para los
+     * archivos se setean.
+     */
+    public Actualizacion(String ID,Servidor coord,ArrayList<Servidor> servidores) {
+        this.archivos = new ArrayList<File>();
+        this.servidores = servidores;
+        this.coordinador=coord;
+        this.ID = ID;
+    }
     public String getID() {
         return ID;
     }
@@ -67,4 +85,21 @@ public class Actualizacion implements java.io.Serializable {
     public String toString() {
         return "Actualizacion{" + "ID=" + ID + ", archivos=" + archivos + ", tiempAct=" + tiempAct + '}';
     }
+
+    public Servidor getCoordinador() {
+        return coordinador;
+    }
+
+    public void setCoordinador(Servidor nuevoCoord) {
+        this.coordinador = nuevoCoord;
+    }
+
+    public ArrayList<Servidor> getServidores() {
+        return servidores;
+    }
+
+    public void setServidores(ArrayList<Servidor> servs) {
+        this.servidores = servs;
+    }
+
 }

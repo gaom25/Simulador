@@ -100,7 +100,7 @@ public class DNS {
         // coordinador si sigue vivo 
         while (true){
             try{
-              Thread.currentThread().sleep(5000);
+              Thread.currentThread().sleep(1000);
             }
             catch(InterruptedException ie){
             //If this thread was intrrupted by nother thread
@@ -111,6 +111,13 @@ public class DNS {
             if (areYouAlive(d.getCoordinador())==false){
                 System.out.println("Murio el coordinador");
                 // Aqui debe iniciar el algoritmo de seleccion de coordinador
+                // Debemos seleccionar el próximo servidor esclavo con menor
+                // ID para que sea el coordinador ahora
+                if (!d.setNuevoCoordinador()){
+                    System.out.println("No hay mas servidores vivos! ADIOS!");
+                    System.exit(0);
+                }
+
             }else{
                 System.out.println("Sigue vivo el coordinador");
             }

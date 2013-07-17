@@ -105,5 +105,9 @@ public class Servidor implements Serializable{
     public void setRepositorios(Hashtable<String, Repositorio> Repositorios) {
         this.Repositorios = Repositorios;
     }
+
+    public String toString(){
+        return "Servidor{" + "ID=" + ID + ", Coordinador=" + esCoordinador + '}';
+    }
     
 }

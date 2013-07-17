@@ -3,6 +3,9 @@ import java.rmi.registry.LocateRegistry;
 import java.net.*;
 import java.rmi.*;
 import java.lang.*;
+import java.util.Date;
+import java.rmi.RemoteException;
+import java.io.*;
 
 
 
@@ -116,6 +119,51 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
 
     public Servidor getCoordinador(){
         return this.coordinador;
+    }
+
+    public Boolean setNuevoCoordinador(){
+       
+        // Borramos el antiguo coordinador Integer.valueOf(coordinador.getID())
+        servidores.remove(0);
+
+        // Si no hay servidores no puedo asignar coordinador
+        if (servidores.size()<=0)
+            return false;
+
+        Servidor nuevoCoord= servidores.get(0);
+        nuevoCoord.setEsCoordinador(true);
+
+       // avisamos por multicast a quien le toca ser el 
+        // nuevo coordinador
+        Actualizacion dato = new Actualizacion("coordinador",nuevoCoord,servidores);
+
+        try {
+            MulticastSocket enviador = new MulticastSocket(55557);
+            dato.setTiempAct(new Date());
+
+            
+             //Serealizamos el objeto para poder enviarlo por la red
+             
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream(bs);
+            os.writeObject(dato);  // this es de tipo DatoUdp
+            os.close();
+            byte[] bytes = bs.toByteArray(); // devuelve byte[]
+
+            
+            // Usamos la direccion Multicast 230.0.0.5, por poner alguna dentro
+            // del rango y el puerto 77775, uno cualquiera que esté libre.
+            DatagramPacket dgp;
+            dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
+
+            enviador.send(dgp);
+        } catch (Exception e) {
+            System.out.println("Error" + e);
+        }
+        // Asignamos nuevo coordinador
+        coordinador=nuevoCoord;
+
+        return true;
     }
 
 }

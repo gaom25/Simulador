@@ -165,5 +165,12 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         server.setServidores(esclavos);
         System.out.println("Actualizacion de lista de servidores");
     }
-    
+
+    /* Metodo asignacionCoord
+     * Este metodo se encarga de asignar al servidor como coordinador 
+    */
+    public Boolean asignacionCoord() throws java.rmi.RemoteException{
+        server.setEsCoordinador(true);
+        return true;
+    }
 }
