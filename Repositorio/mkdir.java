@@ -1,5 +1,7 @@
 import java.rmi.*;
 import java.net.MalformedURLException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 /**
  *
  * @author carlos
@@ -18,12 +20,21 @@ public class mkdir {
             System.err.println("java mkdir <hostName> <repo>");
             System.exit(1);
         }
-
+        System.out.println("Por favor introduzca su nombre:");
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader (isr);
         try {
+            String nombre = br.readLine();
             host = args[0];
 
-            Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
-            System.out.println(c.mkdir(args[1]));
+            /**Primero nos conectamos con el DNS*/
+            DNSI d = (DNSI) Naming.lookup("rmi://" + host + ":" + 44444 + "/DNS");
+            Servidor serv = d.quienEsCoord();
+
+            /**Luego buscamos el servicio como tal*/
+            System.out.println(serv.getHost());
+            Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
+            c.mkdir(args[1],nombre);
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(
@@ -43,7 +54,7 @@ public class mkdir {
         } catch (Exception e) {
             System.out.println();
             System.out.println("java.lang.Exception");
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }

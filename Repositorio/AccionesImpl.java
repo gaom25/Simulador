@@ -116,12 +116,12 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     Funcion por hacer aun no esta ready.
     */
     
-    public String mkdir(String name) throws RemoteException {
+    public String mkdir(String name,String user) throws RemoteException {
         System.out.println("Creando Repo");
         try {
             MulticastSocket enviador = new MulticastSocket();
 
-            Actualizacion dato = new Actualizacion("mkdir::"+name);
+            Actualizacion dato = new Actualizacion("mkdir::"+user+"::"+name);
             dato.setTiempAct(new Date());
             /**
              * Serealizamos el objeto para poder enviarlo por la red
@@ -134,12 +134,12 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
 
             /**
              * Usamos la direccion Multicast 230.0.0.5, por poner alguna dentro
-             * del rango y el puerto 77775, uno cualquiera que esté libre.
+             * del rango y el puerto 55557, uno cualquiera que esté libre.
              */
             DatagramPacket dgp;
             dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
             /**Se crea la carpeta con el repositorio*/
-            AccionesServer.crearRepo("hola",name);
+            AccionesServer.crearRepo(user,name);
             enviador.send(dgp);
             /**TPC, TWO PHASE COMMIT*/
             

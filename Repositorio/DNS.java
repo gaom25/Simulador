@@ -17,10 +17,9 @@ public class DNS {
     * o false en caso contrario
     */
     public static Boolean areYouAlive(Servidor coordinador){
-        String host = "localhost";
         Boolean valorRetorno = false;
         try {
-            Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/CalculatorService");
+            Acciones a = (Acciones) Naming.lookup("rmi://" +coordinador+ ":" + 55555 + "/REPO");
             valorRetorno=a.estasVivo();
         } catch (MalformedURLException murle) {
             System.out.println();
@@ -116,8 +115,6 @@ public class DNS {
                 System.out.println("Sigue vivo el coordinador");
             }
             
-            
-
         }
 
     } // fin main

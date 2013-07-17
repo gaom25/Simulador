@@ -37,6 +37,12 @@ public class Servidor implements Serializable{
      */
     private Hashtable<String,Repositorio> Repositorios;
 
+
+	public Servidor(){
+		esCoordinador=false;
+        Servidores=new ArrayList<Servidor>();
+	}
+
     public Servidor(String hostN,int puerto){
         this.host = hostN;
         this.port = puerto;
@@ -58,8 +64,7 @@ public class Servidor implements Serializable{
         this.port=puerto;
     }
 
-    public Servidor() {
-    }
+
     
     public String getID() {
         return ID;

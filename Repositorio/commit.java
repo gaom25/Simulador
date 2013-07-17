@@ -1,5 +1,7 @@
 import java.rmi.*;
 import java.net.MalformedURLException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 /**
  *
@@ -19,12 +21,20 @@ public class commit {
             System.err.println("java commit <hostName> -m \"<mensaje>\"");
             System.exit(1);
         }
-        System.out.print(args[2]);
+        System.out.println("Por favor introduzca su nombre:");
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader (isr);
 
         try {
+            String nombre = br.readLine();
             host = args[0];
 
-            Acciones c = (Acciones) Naming.lookup("rmi://" + host + ":" + 55555 + "/CalculatorService");
+            /**Primero nos conectamos con el DNS*/
+            DNSI d = (DNSI) Naming.lookup("rmi://" + host + ":" + 44444 + "/DNS");
+            Servidor serv = d.quienEsCoord();
+
+            /**Luego buscamos el servicio como tal*/
+            Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
             System.out.println(c.commit());
         } catch (MalformedURLException murle) {
             System.out.println();

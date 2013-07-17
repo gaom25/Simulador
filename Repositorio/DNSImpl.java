@@ -38,7 +38,7 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
     public void actualizarServidores(){
         String host = "localhost";
         try {
-            Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/CalculatorService");
+            Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/REPO");
             a.nuevoEsclavo(this.servidores);
         } catch (MalformedURLException murle) {
             System.out.println();
@@ -71,24 +71,24 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
      * Valor de retorno : Retorna el ID que posee el servidor.
     */
      public int registro(Servidor serv) throws java.rmi.RemoteException{
+     	
         int retorno = servidores.size();
 
         // Le colocamos su id al servidor antes de agregarlo
         serv.setID(Integer.toString(retorno));
-
      	 // Verificamos si el que vamos a agregar es coordinador
-        if (serv.getEsCoordinador()==true)
+        if (serv.getID().compareTo("0") == 0){
             coordinador=serv;
+            System.out.println("llego coordinador");
+        }
 
         // agregamos a la lista de servidores
         servidores.add(serv);
-
         // Si existe un coordinador debemos enviarle la nueva lista
         // de esclavOs para que le lleguen las nuevas actualizaciones
         if(coordinador!=null){
             actualizarServidores();
         }            
-
         
         System.out.println("Registrado en DNS el servidor de ID="+serv.getID());
         return retorno;

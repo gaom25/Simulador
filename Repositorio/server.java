@@ -17,18 +17,16 @@ public class server {
      * Parametros de entrada :  EL servidor a registrar
      * Parametros de salida : String que será el id del servidor
     */
-    public static String registrarmeDNS(Servidor serv,String hostDNS){
-        // OJO : Aqui debe ir la maquina donde correra siempre DNS
-        String host = "localhost";
-
+    public static int registrarmeDNS(Servidor serv,String hostDNS){
         // ID del servidor
-        int ID = 0;
+        int ID = -1;
 
         // Puerto del DNS
         int port = 44444;
 
         try {
             DNSI d = (DNSI) Naming.lookup("rmi://" + hostDNS + ":" + 44444 + "/DNS");
+            
             ID=d.registro(serv);
         } catch (MalformedURLException murle) {
             System.out.println();
@@ -51,26 +49,24 @@ public class server {
             System.out.println("java.lang.Exception");
             System.out.println(e);
         }
-        
-        return Integer.toString(ID);
+        return ID;
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int port = 0;
         String hostDNS ="";
         String computerName="";
 
-        if (!((0 < args.length) && (args.length < 5))) {
+        if (!((0 < args.length) && (args.length < 4))) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java server [-c|-e] <port> -dns <hostDNS>");
+            System.err.println("java server -dns <hostDNS>");
             System.exit(1);
         }
 
 
-        // Obtenemos el host de la maquina local
+        // Obtenemos el host de la maquina local, averiguar como???
         try {
             computerName = InetAddress.getLocalHost().getHostAddress();
         }
@@ -79,20 +75,17 @@ public class server {
         System.out.println("host ->"+computerName);
 
         Servidor server = new Servidor();
-        port = Integer.parseInt(args[1]);
-        hostDNS=args[3];
+        hostDNS=args[1];
         
-        //Si accion es -c quiere decir que es el coordinador
-        if (args[0].compareToIgnoreCase("-c") == 0) {
-            // El servidor es coordinador
+        // Debemos registrar el coordinador en el dns
+        if (registrarmeDNS(server,hostDNS)==0){
+        	 // El servidor es coordinador
             server.setEsCoordinador(true);
-
             
-
             try {
 
                 // Crea un Registry en el puerto especificado
-                LocateRegistry.createRegistry(port);
+                LocateRegistry.createRegistry(55555);
             } catch (RemoteException re) {
                 System.out.println();
                 System.out.println("RemoteException");
@@ -110,23 +103,16 @@ public class server {
                 // en el Registry que se encuentra el el host <localhost>
                 // y puerto <port>
 
-                Naming.rebind("rmi://localhost:" + port + "/CalculatorService", c);
+                Naming.rebind("rmi://localhost:" + 55555 + "/REPO", c);
 
             } catch (Exception e) {
                 System.out.println("Trouble: " + e);
             }
-            // Debemos registrar el coordinador en el dns
-            registrarmeDNS(server,hostDNS);
-            System.out.println("Me registre en el DNS");
-
-        } else if (args[0].compareToIgnoreCase("-e") == 0){
-            // No es coordinador
-            server.setEsCoordinador(false);
             
-
-            // Debemos registrar el coordinador en el dns
-            registrarmeDNS(server,hostDNS);
-            System.out.println("Me registre en el DNS");
+        }else{
+        	// No es coordinador
+            server.setEsCoordinador(false);
+         
             
              //Si accion es diferente de 1 entonces sera un esclavo y se mandara
              //el mensaje por el socketmulticast a los demas servidores.
@@ -161,8 +147,8 @@ public class server {
             String accion = acc.getID();
             String[] comando = accion.split("::");
             //nombre del cliente cableado, arreglar
-            String cliente = "hola";
-            String repo = comando[1];
+            String cliente = comando[1];
+            String repo = comando[2];
             
             if(comando[0].compareToIgnoreCase("mkdir") == 0){
              
@@ -187,13 +173,8 @@ public class server {
             
 //               actualizacionMultiple(cliente,repos);
             }
-            
-        }else{
-            // No coloco -c ni -s => Error de sintaxis
-            System.err.println("Error de Sintaxis ");
-            System.err.println("java server [-c|-e] <port> -dns <hostDNS>");
-            System.exit(1);
-
         }
+        
+        
     }
 }
