@@ -19,7 +19,7 @@ public class DNS {
     public static Boolean areYouAlive(Servidor coordinador){
         Boolean valorRetorno = false;
         try {
-            Acciones a = (Acciones) Naming.lookup("rmi://" +coordinador+ ":" + 55555 + "/REPO");
+            Acciones a = (Acciones) Naming.lookup("rmi://" +coordinador.getHost()+ ":" + 55555 + "/REPO");
             valorRetorno=a.estasVivo();
         } catch (MalformedURLException murle) {
             System.out.println();

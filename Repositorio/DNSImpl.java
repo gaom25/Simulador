@@ -35,8 +35,7 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
      * Parametros de entrada: No posee
      * Parametros de salida: no posee
     */
-    public void actualizarServidores(){
-        String host = "localhost";
+    public void actualizarServidores(String host){
         try {
             Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/REPO");
             a.nuevoEsclavo(this.servidores);
@@ -84,10 +83,13 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
 
         // agregamos a la lista de servidores
         servidores.add(serv);
-        // Si existe un coordinador debemos enviarle la nueva lista
-        // de esclavOs para que le lleguen las nuevas actualizaciones
-        if(coordinador!=null){
-            actualizarServidores();
+        /** Si existe un coordinador debemos enviarle la nueva lista
+        * de esclavos para que le lleguen las nuevas actualizaciones
+        * revizan tambien que solo se envie la lista cuando haya mas servidores
+        * ademas del coordinador
+        */
+        if(coordinador!=null && servidores.size() > 1){
+            actualizarServidores(coordinador.getHost());
         }            
         
         System.out.println("Registrado en DNS el servidor de ID="+serv.getID());

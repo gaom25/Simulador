@@ -66,15 +66,16 @@ public class server {
         }
 
 
-        // Obtenemos el host de la maquina local, averiguar como???
+        // Obtenemos el host de la maquina local, solo el nombre no el IP
         try {
-            computerName = InetAddress.getLocalHost().getHostAddress();
+            computerName = InetAddress.getLocalHost().getHostName();
         }
             catch(Exception ex) {
         }
         System.out.println("host ->"+computerName);
 
         Servidor server = new Servidor();
+        server.setHost(computerName);
         hostDNS=args[1];
         
         // Debemos registrar el coordinador en el dns
@@ -146,7 +147,6 @@ public class server {
 
             String accion = acc.getID();
             String[] comando = accion.split("::");
-            //nombre del cliente cableado, arreglar
             String cliente = comando[1];
             String repo = comando[2];
             
