@@ -13,7 +13,7 @@ public interface Acciones
 
     public String commit() throws java.rmi.RemoteException;
 
-    public ArrayList<Repositorio> checkout(ArrayList<String> repos) throws java.rmi.RemoteException;
+    public ArrayList<Actualizacion> checkout(String cliente, ArrayList<String> repos) throws java.rmi.RemoteException;
 
     public Actualizacion update(String cliente,String repo) throws java.rmi.RemoteException;
     

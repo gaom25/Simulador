@@ -4,6 +4,8 @@ import java.net.*;
 import java.rmi.*;
 import java.lang.*;
 
+import java.util.Date;
+
 /**
  *
  * @author krys
@@ -92,7 +94,8 @@ public class DNS {
             } catch (Exception e) {
                 System.out.println("Trouble: " + e);
             }
-        System.out.println("DNS escuchando...");
+        Date hora = new Date();
+        System.out.println("DNS escuchando..."+hora.toString());
 
         while(d.getCoordinador()==null);
 

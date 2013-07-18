@@ -55,35 +55,34 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     //@Override
-    public ArrayList<Repositorio> checkout(ArrayList<String> repos) throws RemoteException {
+    //@Override
+    public ArrayList<Actualizacion> checkout(String cliente, ArrayList<String> repos) throws RemoteException {
         System.out.println("Haciendo checkout");
+        
+        ArrayList<Actualizacion> actualizaciones = new ArrayList<Actualizacion> ();
+        Actualizacion actualiza;
+        
         try {
-            MulticastSocket enviador = new MulticastSocket();
+        
+	  for (String repo: repos){
+	    actualiza = update(cliente,repo);
+	    
+	    if (actualiza == null){
+	      System.out.println("Error en repo" + repo);
+	      return null;
+	    }else{
+	      actualizaciones.add(actualiza);
+	    }
+	    
+	  }
 
-            Actualizacion dato = new Actualizacion("Checkout");
-            dato.setTiempAct(new Date());
-            /**
-             * Serealizamos el objeto para poder enviarlo por la red
-             */
-            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(bs);
-            os.writeObject(dato);  // this es de tipo DatoUdp
-            os.close();
-            byte[] bytes = bs.toByteArray(); // devuelve byte[]
-
-            /**
-             * Usamos la direccion Multicast 230.0.0.5, por poner alguna dentro
-             * del rango y el puerto 77775, uno cualquiera que esté libre.
-             */
-            DatagramPacket dgp;
-            dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
-
-            enviador.send(dgp);
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
-        return null;
+        
+        return actualizaciones;
     }
+
 
     //@Override
     public Actualizacion update(String cliente, String repo) throws RemoteException {

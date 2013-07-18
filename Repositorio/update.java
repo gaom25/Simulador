@@ -49,8 +49,8 @@ public class update {
             File arc = new File("./Simulador/hola.txt");
             File arc2 = new File("./Simulador/chao.txt");
 
-            int res = arc.equals(arc2);
-            System.out.println("La diferencia es de: "+res);
+//             int res = arc.equals(arc2);
+//             System.out.println("La diferencia es de: "+res);
 
             if(!f1.exists()){
 
