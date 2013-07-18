@@ -17,7 +17,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         implements Acciones {
 
     Servidor server = new Servidor();
-    
+
     public AccionesImpl() throws java.rmi.RemoteException {
         super();
     }
@@ -98,49 +98,49 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             /* No es necesario hacer multicast jeje*/
             SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
             File f = new File("./" + cliente + "/" + repo);
-            actua = new Actualizacion("update::"+repo);
+            actua = new Actualizacion("update::" + repo);
             if (f.exists()) {
 
                 ficheros = f.listFiles();
                 max = ficheros[0];
                 tmpMax = df.parse(max.getName());
-                for(int i = 1; i< ficheros.length;i++){
+                for (int i = 1; i < ficheros.length; i++) {
                     /*obtenmos el nombre del fichero y lo llevamos a date*/
                     tmpAct = df.parse(ficheros[i].getName());
 
                     /*Si el fichero que se esta revizando tiene mayor tiempo
                      * que max se cambia
                      */
-                    if(tmpAct.after(tmpMax)){ 
+                    if (tmpAct.after(tmpMax)) {
                         max = ficheros[i];
                         tmpMax = tmpAct;
                     }
                 }
                 /*copiamos los archivos que esten en max a la actualizacion en forma 
-                * de arraylist
-                */
+                 * de arraylist
+                 */
                 actua.setArchivos(new ArrayList<File>(Arrays.asList(max.listFiles())));
                 return actua;
             } else {
-            
             }
         } catch (Exception e) {
-            System.out.println("Error" + e);
+            System.out.println("Error");
+            e.printStackTrace();
+            actua.setID(e.toString());
         }
         return actua;
     }
-    
+
     /**
-    Funcion por hacer aun no esta ready.
-    */
-    
-    public String mkdir(String name,String user) throws RemoteException {
+     * Funcion por hacer aun no esta ready.
+     */
+    public String mkdir(String name, String user) throws RemoteException {
         System.out.println("Creando Repo");
         String resultado = "Fallo";
         try {
             MulticastSocket enviador = new MulticastSocket();
 
-            Actualizacion dato = new Actualizacion("mkdir::"+user+"::"+name);
+            Actualizacion dato = new Actualizacion("mkdir::" + user + "::" + name);
             dato.setTiempAct(new Date());
             /**
              * Serealizamos el objeto para poder enviarlo por la red
@@ -157,11 +157,14 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
              */
             DatagramPacket dgp;
             dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
-            /**Se crea la carpeta con el repositorio*/
-            resultado = AccionesServer.crearRepo(user,name);
+            /**
+             * Se crea la carpeta con el repositorio
+             */
+            resultado = AccionesServer.crearRepo(user, name);
             enviador.send(dgp);
-            /**TPC, TWO PHASE COMMIT*/
-            
+            /**
+             * TPC, TWO PHASE COMMIT
+             */
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
@@ -170,7 +173,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
 
     // Metodo que permite conocer si el servidor se encuentra activo
     // o esta caido, si no responde .
-    public Boolean estasVivo() throws RemoteException{
+    public Boolean estasVivo() throws RemoteException {
 
         return true;
     }
@@ -179,16 +182,16 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
      * Este metodo permite actualizar la lista de servidores esclavos del coordinador
      * Parametros de entrada : La nueva lista de esclavos
      * Parametros de salida: Booleano que indica si se realizaron los cambios con éxito.
-    */
-    public void nuevoEsclavo(ArrayList<Servidor> esclavos) throws RemoteException{
+     */
+    public void nuevoEsclavo(ArrayList<Servidor> esclavos) throws RemoteException {
         server.setServidores(esclavos);
         System.out.println("Actualizacion de lista de servidores");
     }
 
     /* Metodo asignacionCoord
      * Este metodo se encarga de asignar al servidor como coordinador 
-    */
-    public Boolean asignacionCoord() throws java.rmi.RemoteException{
+     */
+    public Boolean asignacionCoord() throws java.rmi.RemoteException {
         server.setEsCoordinador(true);
         return true;
     }

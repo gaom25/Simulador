@@ -1,3 +1,4 @@
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -31,32 +32,57 @@ public class update {
         }
         System.out.println("Por favor introduzca su nombre:");
         InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader (isr);
+        BufferedReader br = new BufferedReader(isr);
         Actualizacion actualiza;
+        String resultado;
         try {
             String nombre = br.readLine();
             host = args[0];
 
-            /**Primero nos conectamos con el DNS*/
+            /** 
+             * Antes de todo revizamos que este la carpeta del repo en nuestro
+             * directorio
+             */
+
+            File f1 = new File("./" + args[2]);
+
+            if(!f1.exists()){
+
+                System.out.println("Repositorio \""+args[2]+"\" no encontrado, por favor haga checkout o mkdir");
+                System.exit(0);
+            }
+
+            /**
+             * Primero nos conectamos con el DNS
+             */
             DNSI d = (DNSI) Naming.lookup("rmi://" + host + ":" + 44444 + "/DNS");
             Servidor serv = d.quienEsCoord();
 
-            /**Luego buscamos el servicio como tal*/
-
+            /**
+             * Luego buscamos el servicio como tal
+             */
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
-            actualiza = c.update(nombre,args[2]);
+            actualiza = c.update(nombre, args[2]);
+            resultado = actualiza.getID();
+
+            /*Revizamos que no haya ocurrido ningun error*/
+            if(resultado.toLowerCase().contains("ArrayIndexOutOfBoundsException".toLowerCase())){
+                System.out.println("Repositorio vacio");
+                System.exit(0);
+            }
+            
             /*Actualizamos el repo actual*/
             ArrayList<File> archivos = actualiza.getArchivos();
-            for(int i = 0; i<archivos.size();i++){
-                File f1 = archivos.get(i);
-                File f2 = new File("./"+args[2]+"/"+f1.getName());
+            for (int i = 0; i < archivos.size(); i++) {
+                f1 = archivos.get(i);
+                File f2 = new File("./" + args[2] + "/" + f1.getName());
                 InputStream in = new FileInputStream(f1);
                 OutputStream out = new FileOutputStream(f2);
 
                 byte[] buf = new byte[1024];
                 int len;
-                while ((len = in.read(buf)) > 0){
-                  out.write(buf, 0, len);
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
                 }
                 in.close();
                 out.close();
