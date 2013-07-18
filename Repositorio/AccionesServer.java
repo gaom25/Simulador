@@ -48,6 +48,26 @@ public class AccionesServer {
                 for (int i = 0; i < archivos.size(); i++) {
 
                     File tmp = archivos.get(i);
+                    
+                    String salidaDescifrada = destino + tmp.getName();
+
+ 
+//          try {
+//          
+//                AlgorithmParameterSpec paramSpec = new IvParameterSpec(iv);
+//                desencriptado = Cipher.getInstance("DES/CBC/PKCS5Padding");
+//                desencriptado.init(Cipher.DECRYPT_MODE, llave, paramSpec);
+//       
+//             descifrar(new FileInputStream(salida), new FileOutputStream(salidaDescifrada));
+//             
+//         } catch (NoSuchAlgorithmException e) {
+//         } catch (NoSuchPaddingException e) {
+//         } catch (InvalidKeyException e) {
+//         } catch (InvalidAlgorithmParameterException e) {
+//         } catch (IOException e) {
+//         }
+
+
                     File dest = new File(destino + tmp.getName());
                     if (tmp.renameTo(dest)) {
                     } else {
