@@ -34,7 +34,7 @@ public class mkdir {
             /**Luego buscamos el servicio como tal*/
             System.out.println(serv.getHost());
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
-            c.mkdir(args[1],nombre);
+            System.out.println(c.mkdir(args[1],nombre));
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(

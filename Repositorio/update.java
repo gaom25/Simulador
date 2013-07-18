@@ -4,6 +4,12 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,14 +24,15 @@ public class update {
         String host = null;
         int port = 0;
 
-        if (args.length != 1) {
+        if (args.length != 3) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java update <hostName> ");
+            System.err.println("java update <hostName> -r repo ");
             System.exit(1);
         }
         System.out.println("Por favor introduzca su nombre:");
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader (isr);
+        Actualizacion actualiza;
         try {
             String nombre = br.readLine();
             host = args[0];
@@ -37,7 +44,24 @@ public class update {
             /**Luego buscamos el servicio como tal*/
 
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
-            System.out.println(c.update());
+            actualiza = c.update(nombre,args[2]);
+            /*Actualizamos el repo actual*/
+            ArrayList<File> archivos = actualiza.getArchivos();
+            for(int i = 0; i<archivos.size();i++){
+                File f1 = archivos.get(i);
+                File f2 = new File("./"+args[2]+"/"+f1.getName());
+                InputStream in = new FileInputStream(f1);
+                OutputStream out = new FileOutputStream(f2);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0){
+                  out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+            }
+
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(

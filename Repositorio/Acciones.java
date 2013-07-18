@@ -15,7 +15,7 @@ public interface Acciones
 
     public ArrayList<Repositorio> checkout(ArrayList<String> repos) throws java.rmi.RemoteException;
 
-    public String update() throws java.rmi.RemoteException;
+    public Actualizacion update(String cliente,String repo) throws java.rmi.RemoteException;
     
     public String mkdir(String name,String user) throws java.rmi.RemoteException;
 

@@ -2,8 +2,12 @@
 import java.rmi.RemoteException;
 import java.net.*;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 /**
  *
@@ -82,34 +86,48 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     //@Override
-    public String update() throws RemoteException {
+    public Actualizacion update(String cliente, String repo) throws RemoteException {
         System.out.println("Haciendo update");
+        Actualizacion actua = null;
+        File[] ficheros = null;
+        File max;
+        Date tmpMax;
+        Date tmpAct;
         try {
-            MulticastSocket enviador = new MulticastSocket();
 
-            Actualizacion dato = new Actualizacion("Update");
-            dato.setTiempAct(new Date());
-            /**
-             * Serealizamos el objeto para poder enviarlo por la red
-             */
-            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(bs);
-            os.writeObject(dato);  // this es de tipo DatoUdp
-            os.close();
-            byte[] bytes = bs.toByteArray(); // devuelve byte[]
+            /* No es necesario hacer multicast jeje*/
+            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+            File f = new File("./" + cliente + "/" + repo);
+            actua = new Actualizacion("update::"+repo);
+            if (f.exists()) {
 
-            /**
-             * Usamos la direccion Multicast 230.0.0.5, por poner alguna dentro
-             * del rango y el puerto 77775, uno cualquiera que esté libre.
-             */
-            DatagramPacket dgp;
-            dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
+                ficheros = f.listFiles();
+                max = ficheros[0];
+                tmpMax = df.parse(max.getName());
+                for(int i = 1; i< ficheros.length;i++){
+                    /*obtenmos el nombre del fichero y lo llevamos a date*/
+                    tmpAct = df.parse(ficheros[i].getName());
 
-            enviador.send(dgp);
+                    /*Si el fichero que se esta revizando tiene mayor tiempo
+                     * que max se cambia
+                     */
+                    if(tmpAct.after(tmpMax)){ 
+                        max = ficheros[i];
+                        tmpMax = tmpAct;
+                    }
+                }
+                /*copiamos los archivos que esten en max a la actualizacion en forma 
+                * de arraylist
+                */
+                actua.setArchivos(new ArrayList<File>(Arrays.asList(max.listFiles())));
+                return actua;
+            } else {
+            
+            }
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
-        return ("El updateo");
+        return actua;
     }
     
     /**
@@ -118,6 +136,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     
     public String mkdir(String name,String user) throws RemoteException {
         System.out.println("Creando Repo");
+        String resultado = "Fallo";
         try {
             MulticastSocket enviador = new MulticastSocket();
 
@@ -139,14 +158,14 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             DatagramPacket dgp;
             dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
             /**Se crea la carpeta con el repositorio*/
-            AccionesServer.crearRepo(user,name);
+            resultado = AccionesServer.crearRepo(user,name);
             enviador.send(dgp);
             /**TPC, TWO PHASE COMMIT*/
             
         } catch (Exception e) {
             System.out.println("Error" + e);
         }
-        return ("h");
+        return resultado;
     }
 
     // Metodo que permite conocer si el servidor se encuentra activo
