@@ -66,6 +66,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         try {
         
 	  for (String repo: repos){
+
 	    actualiza = update(cliente,repo);
 	    
 	    if (actualiza == null){
@@ -81,6 +82,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             System.out.println("Error" + e);
         }
         
+        System.out.println("Terminando checkout");
         return actualizaciones;
     }
 
@@ -93,6 +95,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         File max;
         Date tmpMax;
         Date tmpAct;
+        
         try {
 
             /* No es necesario hacer multicast jeje*/
@@ -101,12 +104,14 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
                            DateFormat.DEFAULT,new Locale("es","ES"));
             File f = new File("./" + cliente + "/" + repo);
             actua = new Actualizacion("update::" + repo);
+            
             if (f.exists()) {
 
                 ficheros = f.listFiles();
                 max = ficheros[0];
                 tmpMax = df.parse(max.getName());
                 for (int i = 1; i < ficheros.length; i++) {
+
                     /*obtenmos el nombre del fichero y lo llevamos a date*/
                     tmpAct = df.parse(ficheros[i].getName());
 
@@ -121,16 +126,25 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
                 /*copiamos los archivos que esten en max a la actualizacion en forma 
                  * de arraylist
                  */
+                 
+
                 actua.setArchivos(new ArrayList<File>(Arrays.asList(max.listFiles())));
+                
+
+                System.out.println("Terminando update");
                 return actua;
             } else {
+            
                 actua.setID("Repositorio inexsistente");
             }
+            
         } catch (Exception e) {
             System.out.println("Error");
             e.printStackTrace();
             actua.setID(e.toString());
         }
+        
+        System.out.println("Terminando update");
         return actua;
     }
 

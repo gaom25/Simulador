@@ -27,22 +27,18 @@ public class checkout {
         String host = null;
         int tam = 0;
 
-        if (args.length < 2) {
+        if (args.length < 1) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java checkout <hostName> <repositorio>* -d [carpeta]");
+            System.err.println("java checkout <hostName> <repositorio>* [-d] [carpeta]");
             System.exit(1);
         }
-
-        System.out.println("Por favor introduzca su nombre:");
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
 
         boolean hayDestino = false;
         int ultimoRepo = args.length;
 
         if (args[args.length - 2].compareToIgnoreCase("-d") == 0) {
             hayDestino = true;
-            ultimoRepo = args.length - 3;
+            ultimoRepo = args.length - 2;
             File f = new File(args[args.length - 1]);
 
             if (!f.exists()) {
@@ -50,12 +46,17 @@ public class checkout {
                 System.exit(1);
             }
         }
+        
+        System.out.println("Por favor introduzca su nombre:");
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
 
         ArrayList<Actualizacion> actualizaciones = new ArrayList<Actualizacion>();
         Actualizacion actualiza;
         ArrayList<String> repos = new ArrayList<String>();
+        
 
-        for (int i = 1; i <= ultimoRepo; i++) {
+        for (int i = 1; i < ultimoRepo; i++) {
             repos.add(args[i]);
         }
 
@@ -68,13 +69,14 @@ public class checkout {
              */
             DNSI d = (DNSI) Naming.lookup("rmi://" + host + ":" + 44444 + "/DNS");
             Servidor serv = d.quienEsCoord();
+            
 
             /**
              * Luego buscamos el servicio como tal
              */
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
             actualizaciones = c.checkout(nombre, repos);
-
+            
             if (actualizaciones == null) {
                 System.err.print("Error, algun repo no exsite ");
                 System.exit(1);
@@ -82,7 +84,7 @@ public class checkout {
 
             ArrayList<File> archivos;
             int auxRepo = 0;
-
+            
             for (Actualizacion act : actualizaciones) {
                 archivos = act.getArchivos();
 
