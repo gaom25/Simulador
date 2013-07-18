@@ -96,7 +96,9 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         try {
 
             /* No es necesario hacer multicast jeje*/
-            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+            DateFormat df = DateFormat.getDateTimeInstance(
+                           DateFormat.DEFAULT, 
+                           DateFormat.DEFAULT);
             File f = new File("./" + cliente + "/" + repo);
             actua = new Actualizacion("update::" + repo);
             if (f.exists()) {

@@ -46,6 +46,12 @@ public class update {
 
             File f1 = new File("./" + args[2]);
 
+            File arc = new File("./Simulador/hola.txt");
+            File arc2 = new File("./Simulador/chao.txt");
+
+            int res = arc.equals(arc2);
+            System.out.println("La diferencia es de: "+res);
+
             if(!f1.exists()){
 
                 System.out.println("Repositorio \""+args[2]+"\" no encontrado, por favor haga checkout o mkdir");
@@ -70,7 +76,7 @@ public class update {
                 System.out.println("Repositorio vacio");
                 System.exit(0);
             }
-            
+
             /*Actualizamos el repo actual*/
             ArrayList<File> archivos = actualiza.getArchivos();
             for (int i = 0; i < archivos.size(); i++) {
