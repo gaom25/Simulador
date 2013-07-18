@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-
 /**
  *
  * @author gustavo
@@ -52,6 +51,12 @@ public class update {
              * Antes de todo revizamos que este la carpeta del repo en nuestro
              * directorio
              */
+            Date date = new Date();
+DateFormat df = DateFormat.getDateTimeInstance(
+                           DateFormat.DEFAULT, 
+                           DateFormat.DEFAULT);
+            String so = df.parse(date);
+            System.out.println("en string: "+so);
 
             if (!f1.exists()) {
 
@@ -75,9 +80,6 @@ public class update {
             /*Revizamos que no haya ocurrido ningun error*/
             if (resultado.toLowerCase().contains("ArrayIndexOutOfBoundsException".toLowerCase())) {
                 System.out.println("Repositorio vacio");
-                System.exit(0);
-            }else if(resultado.toLowerCase().contains("Repositorio inexsistente".toLowerCase())){
-                System.out.println("Repositorio Inexsistente");
                 System.exit(0);
             }
 

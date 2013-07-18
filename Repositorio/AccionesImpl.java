@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  *
@@ -97,7 +98,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             /* No es necesario hacer multicast jeje*/
             DateFormat df = DateFormat.getDateTimeInstance(
                            DateFormat.DEFAULT, 
-                           DateFormat.DEFAULT);
+                           DateFormat.DEFAULT,new Locale("es","ES"));
             File f = new File("./" + cliente + "/" + repo);
             actua = new Actualizacion("update::" + repo);
             if (f.exists()) {
@@ -123,6 +124,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
                 actua.setArchivos(new ArrayList<File>(Arrays.asList(max.listFiles())));
                 return actua;
             } else {
+                actua.setID("Repositorio inexsistente");
             }
         } catch (Exception e) {
             System.out.println("Error");
