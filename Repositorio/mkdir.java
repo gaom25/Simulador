@@ -35,7 +35,6 @@ public class mkdir {
             Servidor serv = d.quienEsCoord();
 
             /**Luego buscamos el servicio como tal*/
-            System.out.println(serv.getHost());
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
             resultado = c.mkdir(args[1],nombre);
             /**Revizamos si se puede crear el directorio de manera local o no*/

@@ -7,6 +7,8 @@ import java.rmi.registry.LocateRegistry;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.text.DateFormat;
 
 public class AccionesServer {
 
@@ -43,14 +45,18 @@ public class AccionesServer {
             return "Repositorio Inexistente";
         }
 
-
-        File nuevaVer = new File("./" + cliente + "/" + repo + "/" + hora.toString());
+        String tiempo;
+        DateFormat df = DateFormat.getDateTimeInstance(
+                           DateFormat.DEFAULT, 
+                           DateFormat.DEFAULT,new Locale("es","ES"));
+        tiempo = df.format(hora);
+        File nuevaVer = new File("./" + cliente + "/" + repo + "/" + tiempo);
         
         if (!nuevaVer.exists()) {
 
             if (nuevaVer.mkdir()) {
 
-                String destino = "./" + cliente + "/" + repo + "/" + hora.toString() + "/";
+                String destino = "./" + cliente + "/" + repo + "/" + tiempo + "/";
                 
                 for (int i = 0; i < archivos.size(); i++) {
 
