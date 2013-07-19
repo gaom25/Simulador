@@ -28,6 +28,12 @@ public class Actualizacion implements java.io.Serializable {
     // Lista de servidores
     private ArrayList<Servidor> servidores;
 
+        // Esto es para el tpc
+    private String cliente;
+    
+    // Para el tpc
+    private String repo;
+
     /**
      * Constructor de la actualizacion, se le pasa el ID y el arraylist para los
      * archivos se setean.
@@ -49,6 +55,19 @@ public class Actualizacion implements java.io.Serializable {
         this.coordinador=coord;
         this.ID = ID;
     }
+
+     /*
+    * Constructor para enviarle una actualizacion , que se usa en el TPC
+    */
+    public Actualizacion(String ID,String cliente,String repo,ArrayList<File> archs, Date hora) {
+        this.servidores = new ArrayList<Servidor>();
+        this.archivos = archs;
+        this.cliente=cliente;
+        this.repo=repo;
+        this.tiempAct=hora;
+        this.ID = ID;
+    }
+
     public String getID() {
         return ID;
     }
@@ -100,6 +119,22 @@ public class Actualizacion implements java.io.Serializable {
 
     public void setServidores(ArrayList<Servidor> servs) {
         this.servidores = servs;
+    }
+
+    public String getCliente(){
+      return cliente;
+    }
+    
+    public void setCliente(String newCliente){
+      this.cliente = newCliente;
+    }
+    
+    public String getRepo(){
+      return repo;
+    }
+    
+    public void setRepo(String newRepo){
+      this.repo = newRepo;
     }
 
 }

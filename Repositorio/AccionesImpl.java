@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
 
+
 /**
  *
  * @author gustavo
@@ -18,41 +19,45 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         implements Acciones {
 
     Servidor server = new Servidor();
+    Boolean tpc;
+    ArrayList<Servidor> activos;
 
     public AccionesImpl() throws java.rmi.RemoteException {
         super();
+        tpc = true;
+       activos = new ArrayList<Servidor>();
     }
 
-    // @Override
-    public String commit() throws RemoteException {
-        System.out.println("Haciendo commit");
-        try {
-            MulticastSocket enviador = new MulticastSocket();
 
-            Actualizacion dato = new Actualizacion("Commit");
-            dato.setTiempAct(new Date());
-
-            /**
-             * Serealizamos el objeto para poder enviarlo por la red
-             */
-            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(bs);
-            os.writeObject(dato);  // this es de tipo DatoUdp
-            os.close();
-            byte[] bytes = bs.toByteArray(); // devuelve byte[]
-
-            /**
-             * Usamos la direccion Multicast 230.0.0.5, por poner alguna dentro
-             * del rango y el puerto 77775, uno cualquiera que esté libre.
-             */
-            DatagramPacket dgp;
-            dgp = new DatagramPacket(bytes, bytes.length, InetAddress.getByName("230.0.0.5"), 55557);
-
-            enviador.send(dgp);
-        } catch (Exception e) {
-            System.out.println("Error" + e);
+   // @Override
+    public String commit(Actualizacion a) throws RemoteException {
+        System.out.println("Hacer commit...");
+        
+        AccionesServer.votacionTPC(server,a.getCliente(),a.getRepo(),a.getArchivos(),a.getTiempAct());
+            
+    
+    if(server.getServidores().size() > 1 ){
+      System.out.println("Esperando por respuestas de votacion");
+      //Espera las respuestas un tiempo prudencial
+      for(int i=0;i<15;i++){
+        if (server.getServidores().size() == activos.size())
+          break;
+        
+        try{
+          Thread.currentThread().sleep(200);
         }
+        catch(InterruptedException ie){
+        }
+      }
+      
+      AccionesServer.ejecucionTPC(server.getServidores(),activos);
+        }
+    
+    AccionesServer.actualizarRepo(a.getCliente(),a.getRepo(),a.getArchivos(),a.getTiempAct());
+        //El maestro hace la copia de los archivos.
         return ("El commiteo");
+        
+        
     }
 
     //@Override
@@ -212,4 +217,12 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
         server.setEsCoordinador(true);
         return true;
     }
+
+    public void respuestaTPC(Boolean rsp,Servidor srv)throws java.rmi.RemoteException{
+        System.out.println("Me respondio "+rsp+" "+srv.getID());
+        tpc = tpc && rsp;
+        if (rsp)
+            activos.add(srv);
+    }
+
 }

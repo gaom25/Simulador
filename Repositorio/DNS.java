@@ -3,7 +3,6 @@ import java.rmi.registry.LocateRegistry;
 import java.net.*;
 import java.rmi.*;
 import java.lang.*;
-
 import java.util.Date;
 
 /**
@@ -94,8 +93,7 @@ public class DNS {
             } catch (Exception e) {
                 System.out.println("Trouble: " + e);
             }
-        Date hora = new Date();
-        System.out.println("DNS escuchando..."+hora.toString());
+        System.out.println("DNS escuchando...");
 
         while(d.getCoordinador()==null);
 

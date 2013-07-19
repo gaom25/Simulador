@@ -22,6 +22,12 @@ public class Servidor implements Serializable{
     // puerto del servidor
     private int port;
 
+//     // Llave publica 
+//     private PublicKey publica;
+//     
+//     //Llave privada 
+//     private PrivateKey privada;
+
     /**
      * Booleano que designa si el proceso actual es el servidor o no.
      */
@@ -64,7 +70,21 @@ public class Servidor implements Serializable{
         this.port=puerto;
     }
 
-
+//     public PublicKey getPublica(){
+//  return publica
+//     }
+//     
+//     public void setPublica(PublicKey p)
+//  publica = p;
+//     }
+//     
+//     private PrivateKey getPrivada(){
+//  return privada
+//     }
+//     
+//     private void setPrivada(PrivateKey p)
+//  privada = p;
+//     }
     
     public String getID() {
         return ID;
@@ -108,6 +128,22 @@ public class Servidor implements Serializable{
 
     public String toString(){
         return "Servidor{" + "ID=" + ID + ", Coordinador=" + esCoordinador + '}';
+    }
+    
+    public boolean eliminarServidor(String ID){
+      
+      int tam = Servidores.size();
+      
+      for(int i =0; i < tam; i++){
+      
+        Servidor tmp = Servidores.get(i);
+        if (ID.equals(tmp.getID())){
+            Servidores.remove(i);
+        return true;
+        }  
+      }
+      
+      return false;
     }
     
 }

@@ -1,7 +1,8 @@
 import java.rmi.*;
 import java.net.MalformedURLException;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -16,26 +17,69 @@ public class commit {
         String host = null;
         int port = 0;
 
-        if (args.length != 3) {
+        if (args.length != 8) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java commit <hostName> -m \"<mensaje>\"");
+            System.err.println("java commit -dns <hostDNS> -r <repositorio> -m \"<mensaje>\" -p <PathArchivos>");
             System.exit(1);
         }
+        
         System.out.println("Por favor introduzca su nombre:");
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader (isr);
 
         try {
+           
+           
             String nombre = br.readLine();
-            host = args[0];
-
-            /**Primero nos conectamos con el DNS*/
+            
+            // BUSCAR LOS ARCHIVOS Y ENCRIPTARLOS
+            ArrayList<File> archivos = new ArrayList<File>();
+            String repo = args[3];
+            String mensaje = args[5];
+            host = args[1];
+        Date hora = new Date();
+       
+       
+        /**Primero nos conectamos con el DNS*/
             DNSI d = (DNSI) Naming.lookup("rmi://" + host + ":" + 44444 + "/DNS");
             Servidor serv = d.quienEsCoord();
+            
+            
+        // Antes de todo revizamos que este la carpeta del repo en nuestro
+            // directorio
+            File f1 = new File(args[7]);
 
+            if(!f1.exists()){
+
+                System.out.println("Directorio:  \""+args[7]+"\" no encontrado...");
+                System.exit(0);
+            }
+            
+//             PublicKey llave = serer.getPublica();
+//             File temporal = new(File("./temporalEncriptado"));  
+        File[] listOfFiles = f1.listFiles(); 
+//      String tmp = "";
+        
+        for (int i = 0; i < listOfFiles.length; i++){
+      
+//        if (listOfFiles[i].isFile()){
+//          tmp = listOfFiles[i].getName();
+//          Cifrado.cifrado(new FileInputStream(tmp), new FileOutputStream(temporal+"/"+tmp),llave);
+//        }
+//      }
+
+//      listOfFiles = temporal.listFiles(); 
+//      for (int i = 0; i < listOfFiles.length; i++){
+          if (listOfFiles[i].isFile()){
+            archivos.add(listOfFiles[i]);
+          }
+        }
+        
+            Actualizacion a = new Actualizacion("commit",nombre,repo,archivos,hora);
+          
             /**Luego buscamos el servicio como tal*/
             Acciones c = (Acciones) Naming.lookup("rmi://" + serv.getHost() + ":" + 55555 + "/REPO");
-            System.out.println(c.commit());
+            System.out.println(c.commit(a));
         } catch (MalformedURLException murle) {
             System.out.println();
             System.out.println(

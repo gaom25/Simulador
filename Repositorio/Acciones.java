@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public interface Acciones
         extends java.rmi.Remote {
 
-    public String commit() throws java.rmi.RemoteException;
+    public String commit(Actualizacion a) throws java.rmi.RemoteException;
 
     public ArrayList<Actualizacion> checkout(String cliente, ArrayList<String> repos) throws java.rmi.RemoteException;
 
@@ -24,4 +24,6 @@ public interface Acciones
     public void nuevoEsclavo(ArrayList<Servidor> esclavos)throws java.rmi.RemoteException;
 
     public Boolean asignacionCoord() throws java.rmi.RemoteException;
+    
+    public void respuestaTPC(Boolean rsp,Servidor server) throws java.rmi.RemoteException;
 }

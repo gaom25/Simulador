@@ -11,6 +11,50 @@ import java.util.Date;
  */
 public class server {
 
+    /* 
+    * Metodo respuestaTPC
+    */
+    public static void respuestaTPC(Boolean miResp,Servidor serv){
+    
+      ArrayList<Servidor> servidores = serv.getServidores();
+      String host = "";
+    
+      // buscamos el coordinador
+      for (int i = 0; i<servidores.size();i++){
+    if (servidores.get(i).getEsCoordinador()){
+      host = servidores.get(i).getHost();
+      break;
+    }
+      
+      }
+    
+        try {
+            Acciones a = (Acciones) Naming.lookup("rmi://" +host+ ":" + 55555 + "/REPO");
+            a.respuestaTPC(miResp,serv);
+        } catch (MalformedURLException murle) {
+            System.out.println();
+            System.out.println(
+                    "MalformedURLException");
+            System.out.println(murle);
+        } catch (RemoteException re) {
+            System.out.println();
+            System.out.println("RemoteException");
+            System.out.println(re);
+
+        } catch (NotBoundException nbe) {
+            System.out.println();
+            System.out.println(
+                    "NotBoundException");
+            System.out.println(nbe);
+
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("java.lang.Exception");
+            System.out.println(e);
+        }
+
+    }
+
 
     /* Metodo registrarServicio
     *  Este metodo se encarga de registrar el servicio RMI que 
@@ -118,8 +162,15 @@ public class server {
 
         Servidor server = new Servidor();
         server.setHost(computerName);
-        hostDNS=args[1];
 
+//         //Generacion de las claves privada y publica del servidor.
+//         KeyPairGenerator parGenerado = KeyPairGenerator.getInstance("RSA");
+//  parGenerado.initialize(1024); // Llave de 1024
+//  KeyPair par = parGenerado.generateKeyPair();
+//  server.setPublica(par.getPublic());
+//  server.setPrivada(par.getPrivate());
+
+        hostDNS=args[1];
 
         // Debemos registrar el coordinador en el dns
         int miID = registrarmeDNS(server,hostDNS);
@@ -133,25 +184,30 @@ public class server {
             
             
         }else{
-        	// No es coordinador
+            // No es coordinador
             server.setEsCoordinador(false);
             System.out.println("Escuchando...");
-            
-             //Si accion es diferente de 1 entonces sera un esclavo y se mandara
-             //el mensaje por el socketmulticast a los demas servidores.
-            while(true){
+
+            String clienteTPC = "";
+            String repoTPC = "";
+            ArrayList<File> archivosTPC = new ArrayList<File>();
+            Date horaTPC = new Date();
+
+            //Si accion es diferente de 1 entonces sera un esclavo y se mandara
+            //el mensaje por el socketmulticast a los demas servidores.
+            while (true) {
                 Actualizacion acc = null;
                 try {
                     byte[] dato = new byte[1000];
                     MulticastSocket escucha = new MulticastSocket(55557);
 
-                    
+
                     //Nos pone a escuchar por la misma IP que se envio en mensaje
-                     
+
                     escucha.joinGroup(InetAddress.getByName("230.0.0.5"));
 
                     DatagramPacket dpg = new DatagramPacket(dato, dato.length);
-                    
+
                     //hacemos el recive para escuchar el dato que se envio
                     escucha.receive(dpg);
 
@@ -170,58 +226,69 @@ public class server {
                 String accion = acc.getID();
 
                 // Si la accion es coordinador es porque hay un nuevo coordinador
-                if (accion.compareToIgnoreCase("coordinador")==0){
+                if (accion.compareToIgnoreCase("coordinador") == 0) {
                     ArrayList<Servidor> newServidores = acc.getServidores();
                     Servidor newCoord = acc.getCoordinador();
 
-                    // Si soy el nuevo coordinador
-                    if (newCoord.getID().equals(server.getID())) {
-                        System.out.println("Soy el nuevo coordinador");
-                        server.setEsCoordinador(true);
-                        // El servidor debe registrar el servicio RMI
-                        if (!registrarServicio(server))
-                            System.out.println("Error del servidor al registrar el servicio");
+                    if (newCoord != null) {
+                        if (newCoord.getID().equals(server.getID())) {
+                            // Si soy el nuevo coordinador
+                            System.out.println("Soy el nuevo coordinador");
+                            server.setEsCoordinador(true);
+                            // El servidor debe registrar el servicio RMI
+                            if (!registrarServicio(server)) {
+                                System.out.println("Error del servidor al registrar el servicio");
+                            }
+                        }
                     }
+
                     // Actualizo lista de servidores
                     server.setServidores(newServidores);
 
-                    
+                } else if (accion.compareToIgnoreCase("tpc") == 0) {
+                    System.out.println("me llaman para votar");
+                    // el mensaje es prepared para el two phase commit 
+                    // obtenemos los datos de la actualizacion
+                    clienteTPC = acc.getCliente();
+                    repoTPC = acc.getRepo();
+                    horaTPC = acc.getTiempAct();
+                    archivosTPC = acc.getArchivos();
 
-                }else{
+                    // VER QUE PUEDA ESCRIBIR Y CAMBIARLO POR EL TRUE
+                    respuestaTPC(true, server);
+
+                } else if (accion.compareToIgnoreCase("tpc-commit") == 0) {
+
+                    System.out.println("me llaman para hacer commit");
+                    // Los datos ya se tienen cuando se recibe el mensaje de votacion
+                    AccionesServer.actualizarRepo(clienteTPC, repoTPC, archivosTPC, horaTPC);
+
+                } else {
+
                     String[] comando = accion.split("::");
                     String cliente = comando[1];
                     String repo = comando[2];
-                    
-                    if(comando[0].compareToIgnoreCase("mkdir") == 0){
-                     
-                         AccionesServer.crearRepo(cliente, repo);
-                    
-                    }else if(comando[0].compareToIgnoreCase("commit") == 0){
-                    
-                      ArrayList<File> archivos = acc.getArchivos();
-                      Date hora = acc.getTiempAct();
-                      AccionesServer.actualizarRepo(cliente,repo,archivos, hora);
-                    
-                    }else if(comando[0].compareToIgnoreCase("update") == 0){
-                        
-        //               actualizarCliente(cliente,repo);
-                    
-                    }else if(comando[0].compareToIgnoreCase("checkout") == 0){
-                      
-                      String[] repos = new String[comando.length - 1]; 
 
-                      for(int i=1; i < comando.length; i++)
-                          repos[i-1] = comando[i];
-                    
-        //               actualizacionMultiple(cliente,repos);
+                    if (comando[0].compareToIgnoreCase("mkdir") == 0) {
+
+                        AccionesServer.crearRepo(cliente, repo);
+
+                    } else if (comando[0].compareToIgnoreCase("update") == 0) {
+                        //               actualizarCliente(cliente,repo);
+                    } else if (comando[0].compareToIgnoreCase("checkout") == 0) {
+
+                        String[] repos = new String[comando.length - 1];
+
+                        for (int i = 1; i < comando.length; i++) {
+                            repos[i - 1] = comando[i];
+                        }
+
+                        //               actualizacionMultiple(cliente,repos);
+                    } else {
+                        System.out.println("No hago nada... abort");
                     }
                 }
-
-            }
-            
-            
+            } 
         } // cierre if de maestro o esclavo
-        
-        
     }
 }
