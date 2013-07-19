@@ -65,6 +65,7 @@ public class commit {
 //             PublicKey llave = serer.getPublica();
 //             File temporal = new(File("./temporalEncriptado"));  
         File[] listOfFiles = f1.listFiles(); 
+
         ArrayList<File> archivitos = new ArrayList<File>();
 
 
@@ -76,7 +77,7 @@ public class commit {
       
             try {
                 String nombreArchivo = listOfFiles[i].getName();
-                File inFile = new File(nombreArchivo);
+                File inFile = new File("./"+args[7]+"/"+nombreArchivo);
                 File outFile = new File(nombreArchivo);
 
                 FileInputStream in = new FileInputStream(inFile);
@@ -91,6 +92,7 @@ public class commit {
                 archivitos.add(outFile);
             } catch(IOException e) {
                 System.err.println("Hubo un error de entrada/salida!!!");
+                e.printStackTrace();
             }
 
             

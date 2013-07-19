@@ -97,6 +97,7 @@ public class update {
                 in.close();
                 out.close();
             }
+            System.out.println("Update exitoso");
 
         } catch (MalformedURLException murle) {
             System.out.println();
