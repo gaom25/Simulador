@@ -186,7 +186,7 @@ public class server {
         }else{
             // No es coordinador
             server.setEsCoordinador(false);
-            System.out.println("Escuchando...");
+            System.out.println("Servidor escuchando peticiones...");
 
             String clienteTPC = "";
             String repoTPC = "";
@@ -246,7 +246,7 @@ public class server {
                     server.setServidores(newServidores);
 
                 } else if (accion.compareToIgnoreCase("tpc") == 0) {
-                    System.out.println("me llaman para votar");
+                    System.out.println("Votación Two-Phase-Commit");
                     // el mensaje es prepared para el two phase commit 
                     // obtenemos los datos de la actualizacion
                     clienteTPC = acc.getCliente();
@@ -259,7 +259,7 @@ public class server {
 
                 } else if (accion.compareToIgnoreCase("tpc-commit") == 0) {
 
-                    System.out.println("me llaman para hacer commit");
+                    System.out.println("Ejecución Two-Phase-Commit");
                     // Los datos ya se tienen cuando se recibe el mensaje de votacion
                     AccionesServer.actualizarRepo(clienteTPC, repoTPC, archivosTPC, horaTPC);
 
@@ -285,7 +285,6 @@ public class server {
 
                         //               actualizacionMultiple(cliente,repos);
                     } else {
-                        System.out.println("No hago nada... abort");
                     }
                 }
             } 

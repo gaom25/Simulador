@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.text.DateFormat;
 
+
 public class AccionesServer {
 
     public static String crearRepo(String cliente, String repo) {
@@ -82,6 +83,60 @@ public class AccionesServer {
         return "";
     }
 
+    public static void commitRepo(String cliente,String repo,ArrayList<File> archivos, Date hora){
+        File file = new File("./" + cliente);
+        File file2 = new File("./" + cliente + "/" + repo);
+        if (!file.exists() && !file2.exists()) {
+
+            System.out.println("Repositorio Inexistente");
+        }
+
+        String tiempo;
+        DateFormat df = DateFormat.getDateTimeInstance(
+                           DateFormat.DEFAULT, 
+                           DateFormat.DEFAULT,new Locale("es","ES"));
+        tiempo = df.format(hora);
+        File nuevaVer = new File("./" + cliente + "/" + repo + "/" + tiempo);
+
+         if (!nuevaVer.exists()) {
+
+            if (nuevaVer.mkdir()) {
+
+                String destino = "./" + cliente + "/" + repo + "/" + tiempo + "/";
+                File f1;
+                for (int i = 0; i < archivos.size(); i++) {
+                    f1 = archivos.get(i);
+
+                    try {
+                        File f2 = new File(destino + f1.getName());
+                        InputStream in = new FileInputStream(f1);
+                        OutputStream out = new FileOutputStream(f2);
+
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        
+                        in.close();
+                        out.close();
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    
+                   
+                }
+
+            } 
+        } 
+
+    }
+
+
         // Es invocada por el coordinador una vez que el lciente le solicita un commit.
     // Le avisa a todos los esclavos que quiere hacer un commit, si todos le responden entonces
     // les confirma el commit y les da los archivos. En caso contrario elimina a los servidores
@@ -125,7 +180,7 @@ public class AccionesServer {
 
         enviador.send(dgp);
     } catch (Exception e) {
-        System.out.println("Error" + e);
+        System.out.println("Error creando el socket multicast" + e);
     }
     
        
@@ -188,7 +243,7 @@ public class AccionesServer {
         enviador.send(dgp);
         
     } catch (Exception e) {
-        System.out.println("Error" + e);
+        System.out.println("Error creando el socket Multicast" + e);
     }   
    }
 

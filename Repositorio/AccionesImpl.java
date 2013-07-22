@@ -31,13 +31,12 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
 
    // @Override
     public String commit(Actualizacion a) throws RemoteException {
-        System.out.println("Hacer commit...");
+        System.out.println("Iniciando Commit...");
         
         AccionesServer.votacionTPC(server,a.getCliente(),a.getRepo(),a.getArchivos(),a.getTiempAct());
             
     
     if(server.getServidores().size() > 1 ){
-      System.out.println("Esperando por respuestas de votacion");
       //Espera las respuestas un tiempo prudencial
       for(int i=0;i<15;i++){
         if (server.getServidores().size() == activos.size())
@@ -53,9 +52,9 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
       AccionesServer.ejecucionTPC(server.getServidores(),activos);
         }
     
-    AccionesServer.actualizarRepo(a.getCliente(),a.getRepo(),a.getArchivos(),a.getTiempAct());
+    AccionesServer.commitRepo(a.getCliente(),a.getRepo(),a.getArchivos(),a.getTiempAct());
         //El maestro hace la copia de los archivos.
-        return ("El commiteo");
+        return ("Commit realizado con éxito");
         
         
     }
@@ -63,7 +62,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     //@Override
     //@Override
     public ArrayList<Actualizacion> checkout(String cliente, ArrayList<String> repos) throws RemoteException {
-        System.out.println("Haciendo checkout");
+        System.out.println("Iniciando checkout...");
         
         ArrayList<Actualizacion> actualizaciones = new ArrayList<Actualizacion> ();
         Actualizacion actualiza;
@@ -87,14 +86,14 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             System.out.println("Error" + e);
         }
         
-        System.out.println("Terminando checkout");
+        System.out.println("Checkout realizado con éxito");
         return actualizaciones;
     }
 
 
     //@Override
     public Actualizacion update(String cliente, String repo) throws RemoteException {
-        System.out.println("Haciendo update");
+        System.out.println("Iniciando update...");
         Actualizacion actua = null;
         File[] ficheros = null;
         File max;
@@ -136,7 +135,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
                 actua.setArchivos(new ArrayList<File>(Arrays.asList(max.listFiles())));
                 
 
-                System.out.println("Terminando update");
+                System.out.println("Update finalizado con éxito");
                 return actua;
             } else {
             
@@ -149,7 +148,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
             actua.setID(e.toString());
         }
         
-        System.out.println("Terminando update");
+        System.out.println("Update finalizado con éxito");
         return actua;
     }
 
@@ -157,7 +156,7 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
      * Funcion por hacer aun no esta ready.
      */
     public String mkdir(String name, String user) throws RemoteException {
-        System.out.println("Creando Repo");
+        System.out.println("Creando Repositorio "+name);
         String resultado = "Fallo";
         try {
             MulticastSocket enviador = new MulticastSocket();
@@ -219,7 +218,6 @@ public class AccionesImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     public void respuestaTPC(Boolean rsp,Servidor srv)throws java.rmi.RemoteException{
-        System.out.println("Me respondio "+rsp+" "+srv.getID());
         tpc = tpc && rsp;
         if (rsp)
             activos.add(srv);

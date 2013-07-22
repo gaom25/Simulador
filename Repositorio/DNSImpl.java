@@ -80,8 +80,8 @@ public class DNSImpl extends java.rmi.server.UnicastRemoteObject
         serv.setID(Integer.toString(retorno));
      	 // Verificamos si el que vamos a agregar es coordinador
         if (serv.getID().compareTo("0") == 0){
+            System.out.println("Registrado el Coordinador");
             coordinador=serv;
-            System.out.println("llego coordinador");
         }
 
         // agregamos a la lista de servidores

@@ -26,25 +26,20 @@ public class commit {
 
         if (args.length != 8) {
             System.err.print("Parametros incorrectos: ");
-            System.err.println("java commit -dns <hostDNS> -r <repositorio> -m \"<mensaje>\" -p <PathArchivos>");
+            System.err.println("java commit -dns <hostDNS> -r <repositorio> -u <User> -p <PathArchivos>");
             System.exit(1);
         }
         
-        System.out.println("Por favor introduzca su nombre:");
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader (isr);
 
         try {
            
-           
-            String nombre = br.readLine();
             
             // BUSCAR LOS ARCHIVOS Y ENCRIPTARLOS
             ArrayList<File> archivos = new ArrayList<File>();
             String repo = args[3];
-            String mensaje = args[5];
+            String nombre = args[5];
             host = args[1];
-        Date hora = new Date();
+            Date hora = new Date();
        
        
         /**Primero nos conectamos con el DNS*/
@@ -74,28 +69,10 @@ public class commit {
 //      String tmp = "";
         
         for (int i = 0; i < listOfFiles.length; i++){
-      
-            try {
-                String nombreArchivo = listOfFiles[i].getName();
-                File inFile = new File("./"+args[7]+"/"+nombreArchivo);
-                File outFile = new File(nombreArchivo);
+            if (listOfFiles[i].isFile()){
+                archivitos.add(listOfFiles[i]);
 
-                FileInputStream in = new FileInputStream(inFile);
-                FileOutputStream out = new FileOutputStream(outFile);
-
-                int c;
-                while( (c = in.read() ) != -1)
-                    out.write(c);
-
-                in.close();
-                out.close();
-                archivitos.add(outFile);
-            } catch(IOException e) {
-                System.err.println("Hubo un error de entrada/salida!!!");
-                e.printStackTrace();
-            }
-
-            
+            }            
         }
         
             Actualizacion a = new Actualizacion("commit",nombre,repo,archivitos,hora);
